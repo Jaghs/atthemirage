@@ -71,14 +71,15 @@ body, html {
     font-size: 138px;
     margin: 0;
     font-weight: normal;
-    transform: translateX(17px); /* Adjust this value to shift the text to the right */
+    padding-left: 40px;  /* Adjust this value to balance the spacing before and after the text */
+    padding-right: 40px; /* Adjust this value to balance the spacing before and after the text */
 }
 
 .text-container p {
-    font-size: 19.8px;
+    font-size: 18.0px;
     font-weight: normal;
     margin-top: 20px;  /* Adjust this value to move the text vertically */
-    margin-left: 710px;  /* Adjust this value to move the text horizontally */
+    margin-left: 701px;  /* Adjust this value to move the text horizontally */
 }
 
 .enter-button {
@@ -103,7 +104,7 @@ body, html {
 .speaker-button {
     position: absolute;
     top: 280px; /* Adjust this value to move the button vertically */
-    left: 8.3%;
+    left: 11%;
     transform: translateX(50%);
     padding: 10px;
     background: none;
