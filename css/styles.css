@@ -62,12 +62,16 @@ body, html {
     font-family: 'CustomFont', Arial, sans-serif;
     font-weight: normal;
     white-space: nowrap;  /* Prevent text from wrapping */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .text-container h1 {
     font-size: 138px;
     margin: 0;
     font-weight: normal;
+    transform: translateX(17px); /* Adjust this value to shift the text to the right */
 }
 
 .text-container p {
@@ -78,14 +82,14 @@ body, html {
 }
 
 .enter-button {
-    margin-top: 20px;  /* Adjust this value to move the button vertically */
+    margin-top: 35px;  /* Adjust this value to move the button vertically */
     padding: 10px 20px;
     background-color: #000;
     color: #fff;
     text-decoration: none;
     font-size: 18px;
     font-family: 'Customfont';
-    transition: background-color 0.3s;
+    transition: background-color 0.4s;
     align-self: center; /* Center the button */
     display: flex;
     align-items: center;
@@ -98,12 +102,14 @@ body, html {
 
 .speaker-button {
     position: absolute;
-    top: 740px;   /* Adjust this value to move the button vertically */
-    left: 1070px;  /* Adjust this value to move the button horizontally */
+    top: 280px; /* Adjust this value to move the button vertically */
+    left: 8.3%;
+    transform: translateX(50%);
+    padding: 10px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    transition: background-color 0.4s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,4 +118,60 @@ body, html {
 .speaker-icon {
     width: 30px;
     height: 30px;
+    transition: filter 0.4s;
+}
+
+.speaker-button:hover .speaker-icon {
+    filter: invert(26%) sepia(89%) saturate(7463%) hue-rotate(348deg) brightness(95%) contrast(105%);
+}
+
+/* Media queries for different screen sizes */
+@media (max-width: 768px) {
+    .slideshow-container {
+        width: 80%;  /* Adjust width for smaller screens */
+        height: auto;
+    }
+
+    .text-container h1 {
+        font-size: 100px;  /* Adjust font size for smaller screens */
+    }
+
+    .text-container p {
+        font-size: 16px;
+        margin-left: 0;  /* Adjust position for smaller screens */
+    }
+
+    .speaker-button {
+        top: 120px;  /* Adjust this value to move the button vertically for smaller screens */
+    }
+
+    .speaker-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slideshow-container {
+        width: 100%;  /* Adjust width for very small screens */
+        height: auto;
+    }
+
+    .text-container h1 {
+        font-size: 80px;  /* Adjust font size for very small screens */
+    }
+
+    .text-container p {
+        font-size: 14px;
+        margin-left: 0;  /* Adjust position for very small screens */
+    }
+
+    .speaker-button {
+        top: 140px;  /* Adjust this value to move the button vertically for very small screens */
+    }
+
+    .speaker-icon {
+        width: 20px;
+        height: 20px;
+    }
 }
