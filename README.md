@@ -1,2 +1,2 @@
 # atthemirage
-photography website 
+personal photography website coded by me 
