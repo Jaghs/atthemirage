@@ -75,10 +75,10 @@ body, html {
 }
 
 .text-container p {
-    font-size: 18px;
+    font-size: 19.8px;
     font-weight: normal;
     margin-top: 20px;  /* Adjust this value to move the text vertically */
-    margin-left: 700px;  /* Adjust this value to move the text horizontally */
+    margin-left: 710px;  /* Adjust this value to move the text horizontally */
 }
 
 .enter-button {
