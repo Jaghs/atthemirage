@@ -1,7 +1,6 @@
 @font-face {
     font-family: 'CustomFont';
-    src: url('../fonts/adelia.otf') format('opentype'),
-         url('../fonts/Vogue.ttf') format('truetype');
+    src: url('../fonts/Vogue.ttf') format('truetype');
 }
 
 body, html {
@@ -15,6 +14,7 @@ body, html {
     justify-content: center;
     background: #fff;
     user-select: none;  /* Disable text selection */
+    overflow: hidden;   /* Prevent scrolling */
 }
 
 .landing-page {
@@ -35,11 +35,12 @@ body, html {
 
 .slideshow-container {
     position: relative;
-    width: 600px;  /* Fixed width */
-    height: 800px; /* Fixed height */
+    width: 100%;
+    max-width: 600px;  /* Ensure it doesn't exceed the max width */
+    height: auto;
+    aspect-ratio: 3 / 4;  /* Maintain aspect ratio */
     overflow: hidden;
     display: flex;
-    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
 }
@@ -82,7 +83,7 @@ body, html {
 }
 
 .text-container p {
-    font-size: 18.0px;
+    font-size: 18px;
     font-weight: normal;
     margin-top: 20px;  /* Adjust this value to move the text vertically */
     margin-left: 701px;  /* Adjust this value to move the text horizontally */
@@ -95,7 +96,7 @@ body, html {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
-    font-family: 'Customfont';
+    font-family: 'CustomFont';
     transition: background-color 0.4s;
     align-self: center; /* Center the button */
     display: flex;
@@ -141,6 +142,10 @@ body, html {
         height: auto;
     }
 
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
     .text-container h1 {
         font-size: 80px;  /* Adjust font size for smaller screens */
         padding-left: 20px;
@@ -170,37 +175,91 @@ body, html {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) { /*iPhone 14 pro max screen*/
     .slideshow-container {
-        width: auto;  /* Adjust width for very small screens */
+        width: 60%;  /* Adjust width for very small screens */
         height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
     }
 
     .text-container h1 {
-        font-size: 40px;  /* Adjust font size for very small screens */
-        padding-left: 10px;
-        padding-right: 10px;
+        font-size: 55px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
     }
 
     .text-container p {
-        font-size: 10px;
-        margin-left: 250px;  /* Adjust position for very small screens */
+        font-size: 8px;
+        margin-left: 270px;  /* Adjust position for very small screens */
         margin-top: 10px;  /* Adjust the margin for very small screens */
     }
 
     .enter-button {
-        font-size: 14px;
+        font-size: 8px;
         padding: 6px 12px;
+        margin-top: 20px;
     }
 
     .speaker-button {
-        top: 140px;  /* Adjust this value to move the button vertically for very small screens */
-        left: 50%;
+        top: 110px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 13%;
         transform: translateX(-50%);
     }
 
     .speaker-icon {
-        width: 20px;
-        height: 20px;
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 390px) { /*iPhone 12 pro screen*/
+    .slideshow-container {
+        width: 60%;  /* Adjust width for very small screens */
+        height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 50px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 8px;
+        margin-left: 237px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
+        font-size: 8px;
+        padding: 6px 12px;
+        margin-top: 20px;
+    }
+
+    .speaker-button {
+        top: 100px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 13%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (min-width: 768px) {
+    .slideshow-container {
+        width: 600px;  /* Fixed width for desktop */
+        height: 800px; /* Fixed height for desktop */
     }
 }
