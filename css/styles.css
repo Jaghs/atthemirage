@@ -14,6 +14,7 @@ body, html {
     align-items: center;
     justify-content: center;
     background: #fff;
+    user-select: none;  /* Disable text selection */
 }
 
 .landing-page {
@@ -25,6 +26,11 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    pointer-events: none;  /* Disable pointer events */
+}
+
+.landing-page * {
+    pointer-events: auto;  /* Re-enable pointer events for children */
 }
 
 .slideshow-container {
@@ -95,6 +101,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: auto;  /* Re-enable pointer events for button */
 }
 
 .enter-button:hover {
@@ -104,7 +111,7 @@ body, html {
 .speaker-button {
     position: absolute;
     top: 280px; /* Adjust this value to move the button vertically */
-    left: 11%;
+    left: 11.5%;
     transform: translateX(50%);
     padding: 10px;
     background: none;
@@ -114,6 +121,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: auto;  /* Re-enable pointer events for button */
 }
 
 .speaker-icon {
@@ -129,21 +137,31 @@ body, html {
 /* Media queries for different screen sizes */
 @media (max-width: 768px) {
     .slideshow-container {
-        width: 80%;  /* Adjust width for smaller screens */
+        width: 90%;  /* Adjust width for smaller screens */
         height: auto;
     }
 
     .text-container h1 {
-        font-size: 100px;  /* Adjust font size for smaller screens */
+        font-size: 80px;  /* Adjust font size for smaller screens */
+        padding-left: 20px;
+        padding-right: 20px;
     }
 
     .text-container p {
         font-size: 16px;
         margin-left: 0;  /* Adjust position for smaller screens */
+        margin-top: 10px;  /* Adjust the margin for smaller screens */
+    }
+
+    .enter-button {
+        font-size: 16px;
+        padding: 8px 16px;
     }
 
     .speaker-button {
         top: 120px;  /* Adjust this value to move the button vertically for smaller screens */
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .speaker-icon {
@@ -154,21 +172,31 @@ body, html {
 
 @media (max-width: 480px) {
     .slideshow-container {
-        width: 100%;  /* Adjust width for very small screens */
+        width: auto;  /* Adjust width for very small screens */
         height: auto;
     }
 
     .text-container h1 {
-        font-size: 80px;  /* Adjust font size for very small screens */
+        font-size: 40px;  /* Adjust font size for very small screens */
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .text-container p {
+        font-size: 10px;
+        margin-left: 250px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
         font-size: 14px;
-        margin-left: 0;  /* Adjust position for very small screens */
+        padding: 6px 12px;
     }
 
     .speaker-button {
         top: 140px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .speaker-icon {
