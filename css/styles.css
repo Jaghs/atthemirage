@@ -102,7 +102,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: auto;  /* Re-enable pointer events for button */
+    pointer-events: none;  /* Re-enable pointer events for button */
 }
 
 .enter-button:hover {
