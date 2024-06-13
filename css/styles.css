@@ -257,6 +257,47 @@ body, html {
     }
 }
 
+@media (max-width: 1920px) { /*iPhone 12 pro screen*/
+    .slideshow-container {
+        width: 60%;  /* Adjust width for very small screens */
+        height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 137px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 20px;
+        margin-left: 670px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
+        font-size: 15px;
+        padding: 6px 12px;
+        margin-top: 30px;
+    }
+
+    .speaker-button {
+        top: 285px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 15%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
+
 @media (min-width: 768px) {
     .slideshow-container {
         width: 600px;  /* Fixed width for desktop */
