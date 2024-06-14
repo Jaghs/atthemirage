@@ -137,11 +137,6 @@ body, html {
 
 /* Media queries for different screen sizes */
 @media (max-width: 1920px) { /* 1080p laptop screen */
-    .landing-page {
-        transform: scale(0.9);  /* Scale the landing page to 90% */
-        transform-origin: center;  /* Ensure scaling is centered at the top */
-    }
-
     .slideshow-container {
         width: 90%;  /* Adjust width for smaller screens */
         height: auto;
