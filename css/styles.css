@@ -189,3 +189,5 @@ body, html {
 
     .slide img {
         height: auto; /* Ensure image adjusts height based on container */
+    }
+}
