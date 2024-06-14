@@ -181,6 +181,7 @@ body, html {
     }
 }
 
+
 @media (max-width: 768px) {
     .slideshow-container {
         width: 90%;  /* Adjust width for smaller screens */
@@ -189,5 +190,156 @@ body, html {
 
     .slide img {
         height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 80px;  /* Adjust font size for smaller screens */
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 16px;
+        margin-left: 0;  /* Adjust position for smaller screens */
+        margin-top: 10px;  /* Adjust the margin for smaller screens */
+    }
+
+    .enter-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    .speaker-button {
+        top: 120px;  /* Adjust this value to move the button vertically for smaller screens */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) { /* iPhone 14 pro max screen */
+    .slideshow-container {
+        width: 60%;  /* Adjust width for very small screens */
+        height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 55px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 9.9px;
+        margin-left: 246px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
+        font-size: 9px;
+        padding: 6px 12px;
+        margin-top: 20px;
+    }
+
+    .speaker-button {
+        top: 110px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 13%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 390px) { /* iPhone 12 pro screen */
+    .slideshow-container {
+        width: 60%;  /* Adjust width for very small screens */
+        height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 50px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 9px;
+        margin-left: 223px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
+        font-size: 9px;
+        padding: 6px 12px;
+        margin-top: 20px;
+    }
+
+    .speaker-button {
+        top: 100px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 13%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 390px) { /* iPhone 12 pro screen */
+    .slideshow-container {
+        width: 60%;  /* Adjust width for very small screens */
+        height: auto;
+        max-width: 100%;
+    }
+
+    .slide img {
+        height: auto; /* Ensure image adjusts height based on container */
+    }
+
+    .text-container h1 {
+        font-size: 50px;  /* Adjust font size for very small screens */
+        padding-left: 23px;
+        padding-right: 20px;
+    }
+
+    .text-container p {
+        font-size: 9px;
+        margin-left: 223px;  /* Adjust position for very small screens */
+        margin-top: 10px;  /* Adjust the margin for very small screens */
+    }
+
+    .enter-button {
+        font-size: 9px;
+        padding: 6px 12px;
+        margin-top: 20px;
+    }
+
+    .speaker-button {
+        top: 100px;  /* Adjust this value to move the button vertically for very small screens */
+        left: 13%;
+        transform: translateX(-50%);
+    }
+
+    .speaker-icon {
+        width: 15px;
+        height: 15px;
     }
 }
