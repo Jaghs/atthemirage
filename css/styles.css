@@ -129,14 +129,15 @@ body {
     margin-top: clamp(32px, 5vw, 56px);
     display: inline-flex;
     padding: 14px 8px 20px;
-    color: var(--ink);
+    /* Slightly see-through at rest (the line follows the text colour) */
+    color: color-mix(in srgb, var(--ink) 65%, transparent);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
     font-size: 16px;
     line-height: 1;
     letter-spacing: var(--track);
     text-transform: uppercase;
     text-decoration: none;
-    transition: --track 0.6s var(--ease), opacity 0.3s var(--ease);
+    transition: --track 0.6s var(--ease), color 0.6s var(--ease), opacity 0.3s var(--ease);
 }
 
 /* Cancel the trailing letter-spacing so the word stays centred over the line */
@@ -161,6 +162,7 @@ body {
 @media (hover: hover) {
     .enter:hover {
         --track: 0.44em;
+        color: var(--ink);
     }
 
     .enter:hover::after {
