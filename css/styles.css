@@ -13,7 +13,8 @@
     --button-fg: #ffffff;
     --toggle-track: rgba(255, 255, 255, 0.55);
     --toggle-line: rgba(17, 17, 17, 0.16);
-    --orb: #f2a23e;
+    --sun: #f2a23e;
+    --moon: #ece7f7;
     /* Still stand-in for the animated ribbon if WebGL is unavailable */
     --fallback: linear-gradient(160deg,
         transparent 18%,
@@ -35,7 +36,6 @@
     --button-fg: #111111;
     --toggle-track: rgba(255, 255, 255, 0.06);
     --toggle-line: rgba(241, 239, 236, 0.22);
-    --orb: #ece7f7;
     --fallback: linear-gradient(160deg,
         transparent 18%,
         rgba(77, 66, 153, 0.6) 34%,
@@ -146,7 +146,9 @@ body {
         transform: translateX(3px);
     }
 
-    .theme-toggle:hover .orb circle {
+    .theme-toggle:hover .sun-core,
+    .theme-toggle:hover .sun-glow,
+    .theme-toggle:hover .moon {
         fill: var(--red);
     }
 }
@@ -168,21 +170,20 @@ body {
     z-index: 1;
     top: max(20px, env(safe-area-inset-top));
     right: max(20px, env(safe-area-inset-right));
-    width: 64px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     border: 0;
-    border-radius: 999px;
+    border-radius: 50%;
     background: none;
-    color: var(--ink);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 }
 
 .theme-toggle svg {
     display: block;
-    width: 64px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     overflow: visible;
 }
 
@@ -193,38 +194,45 @@ body {
     transition: fill 0.8s var(--ease), stroke 0.8s var(--ease);
 }
 
-.theme-toggle .horizon {
-    stroke: var(--toggle-line);
-    stroke-width: 1;
-    stroke-linecap: round;
-    transition: stroke 0.8s var(--ease);
+/* Sun and moon cross-fade, each easing in from slightly smaller */
+.theme-toggle .sun,
+.theme-toggle .moon {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
 }
 
-/* The sun sits on the left; at night it slides right and becomes a moon */
-.theme-toggle .orb {
-    transition: transform 0.7s var(--ease);
+.theme-toggle .sun-core,
+.theme-toggle .sun-glow {
+    fill: var(--sun);
 }
 
-.theme-toggle .orb circle {
-    fill: var(--orb);
-    transition: fill 0.7s var(--ease);
+/* The sun's haze gently breathes, like heat off the sand */
+.theme-toggle .sun-glow {
+    opacity: 0.55;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: haze 4s ease-in-out infinite alternate;
 }
 
-/* The "bite" that carves the crescent waits off to the side in daylight */
-.theme-toggle .bite {
-    transform: translate(10px, -10px);
-    transition: transform 0.7s var(--ease);
+@keyframes haze {
+    from { opacity: 0.4;  transform: scale(0.92); }
+    to   { opacity: 0.75; transform: scale(1.08); }
 }
 
-.theme-toggle .reflection {
-    opacity: 0.45;
+.theme-toggle .moon {
+    fill: var(--moon);
+    opacity: 0;
+    transform: scale(0.6) rotate(-30deg);
 }
 
-:root[data-theme="dark"] .theme-toggle .orb {
-    transform: translateX(24px);
+:root[data-theme="dark"] .theme-toggle .sun {
+    opacity: 0;
+    transform: scale(0.6);
 }
 
-:root[data-theme="dark"] .theme-toggle .bite {
+:root[data-theme="dark"] .theme-toggle .moon {
+    opacity: 1;
     transform: none;
 }
 
@@ -255,7 +263,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .title,
     .enter,
-    .theme-toggle {
+    .theme-toggle,
+    .theme-toggle .sun-glow {
         animation: none;
     }
 }
