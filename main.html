@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>at the mirage — gallery</title>
+    <meta name="description" content="photography in the twilight zone...">
+    <meta name="theme-color" content="#000000">
+    <script>
+        // Pick the theme before anything paints, so there's no flash of the wrong one:
+        // the visitor's saved choice if they made one, otherwise dark.
+        (function () {
+            var theme;
+            try { theme = localStorage.getItem('theme'); } catch (e) {}
+            document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+        })();
+    </script>
+    <link rel="preload" href="fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+</head>
+<body>
+    <canvas class="mirage" aria-hidden="true"></canvas>
+
+    <!-- Theme toggle: a hazy sun that fades into a crescent moon -->
+    <button class="theme-toggle" type="button" aria-label="Switch to dark theme">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+                <filter id="haze" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="2.4" />
+                </filter>
+                <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="0.5" />
+                </filter>
+                <mask id="crescent" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
+                    <rect width="32" height="32" fill="white" />
+                    <circle cx="19.5" cy="12.5" r="5.6" fill="black" />
+                </mask>
+            </defs>
+
+            <circle class="track" cx="16" cy="16" r="15.5" />
+
+            <g class="sun">
+                <circle class="sun-glow" cx="16" cy="16" r="8" filter="url(#haze)" />
+                <circle class="sun-core" cx="16" cy="16" r="5.5" filter="url(#soft)" />
+            </g>
+
+            <circle class="moon" cx="16" cy="16" r="6.5" mask="url(#crescent)" />
+        </svg>
+    </button>
+
+    <!-- Placeholder until the gallery layout is designed -->
+    <main class="hero">
+        <p class="tagline">find me where i don't exist</p>
+    </main>
+
+    <script src="js/theme.js"></script>
+    <script src="js/mirage.js"></script>
+</body>
+</html>

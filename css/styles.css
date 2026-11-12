@@ -9,8 +9,13 @@
     --ink: #111111;
     --muted: #3c3c40;
     --red: #e3261e;
-    --button-bg: #111111;
-    --button-fg: #ffffff;
+    /* The ribbon's own colours, for the enter button's edge */
+    --ribbon-1: #b8abe3;
+    --ribbon-2: #eda1b5;
+    --ribbon-3: #fabf85;
+    --ribbon-4: #e87866;
+    --glass: rgba(255, 255, 255, 0.38);
+    --glow: rgba(250, 170, 120, 0.5);
     --toggle-track: rgba(255, 255, 255, 0.55);
     --toggle-line: rgba(17, 17, 17, 0.16);
     --sun: #f2a23e;
@@ -32,8 +37,12 @@
     --bg: #000000;
     --ink: #f1efec;
     --red: #f03a2f;
-    --button-bg: #f1efec;
-    --button-fg: #111111;
+    --ribbon-1: #5a4eb0;
+    --ribbon-2: #a04d98;
+    --ribbon-3: #eb7352;
+    --ribbon-4: #cc5445;
+    --glass: rgba(8, 6, 14, 0.42);
+    --glow: rgba(235, 115, 82, 0.4);
     --toggle-track: rgba(255, 255, 255, 0.06);
     --toggle-line: rgba(241, 239, 236, 0.22);
     --fallback: linear-gradient(160deg,
@@ -84,6 +93,11 @@ body {
     opacity: 1;
 }
 
+/* Arriving on the gallery from "enter": the ribbon is already on screen */
+.mirage.is-continuing {
+    transition-duration: 0.3s;
+}
+
 /* ---------- hero ---------- */
 
 .hero {
@@ -109,19 +123,56 @@ body {
     white-space: nowrap;
 }
 
+/* Enter: a frosted-glass pill edged with the ribbon's colours, slowly turning */
+@property --spin {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
 .enter {
+    position: relative;
     margin-top: clamp(32px, 5vw, 56px);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
+    gap: 12px;
+    padding: 14px 26px 13px;
     border-radius: 999px;
-    background: var(--button-bg);
-    color: var(--button-fg);
-    font-size: 14px;
-    letter-spacing: 0.02em;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    backdrop-filter: blur(14px) saturate(130%);
+    color: var(--ink);
+    font-family: 'Vogue', Didot, 'Bodoni 72', serif;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
+    transition: box-shadow 0.4s var(--ease), transform 0.3s var(--ease), background-color 0.8s var(--ease);
+}
+
+/* Cancel the trailing letter-spacing so the word sits centred */
+.enter span {
+    margin-right: -0.24em;
+}
+
+.enter::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--spin),
+        var(--ribbon-1), var(--ribbon-2), var(--ribbon-3), var(--ribbon-4), var(--ribbon-1));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    animation: spin 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes spin {
+    to { --spin: 360deg; }
 }
 
 .enter svg {
@@ -129,7 +180,7 @@ body {
     height: 14px;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.6;
+    stroke-width: 1.4;
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: transform 0.3s var(--ease);
@@ -138,12 +189,11 @@ body {
 /* Hover effects only for mouse users, so they don't stick after a tap on phones */
 @media (hover: hover) {
     .enter:hover {
-        background: var(--red);
-        color: #ffffff;
+        box-shadow: 0 0 28px var(--glow);
     }
 
     .enter:hover svg {
-        transform: translateX(3px);
+        transform: translateX(4px);
     }
 
     .theme-toggle:hover .sun-core,
@@ -161,6 +211,13 @@ body {
 .theme-toggle:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
+}
+
+/* Tagline (gallery page) */
+.tagline {
+    margin: 0;
+    font-size: clamp(14px, 1.4vw, 18px);
+    letter-spacing: 0.02em;
 }
 
 /* ---------- theme toggle ---------- */
@@ -240,9 +297,12 @@ body {
 
 .title,
 .enter,
+.tagline,
 .theme-toggle {
     animation: rise 1.4s var(--ease) both;
 }
+
+.tagline      { animation-delay: 0.4s; }
 
 .enter        { animation-delay: 0.3s; }
 .theme-toggle { animation-delay: 0.6s; }
@@ -260,9 +320,34 @@ body {
     }
 }
 
+/* Leaving through "enter": everything dissolves while the ribbon blooms outward */
+.is-leaving .title,
+.is-leaving .enter,
+.is-leaving .theme-toggle {
+    animation: leave 0.7s var(--ease) forwards;
+    pointer-events: none;
+}
+
+.is-leaving .enter        { animation-delay: 0.05s; }
+.is-leaving .theme-toggle { animation-delay: 0.1s; }
+
+@keyframes leave {
+    from {
+        opacity: 1;
+        filter: blur(0);
+        transform: none;
+    }
+    to {
+        opacity: 0;
+        filter: blur(12px);
+        transform: scale(1.04);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .title,
     .enter,
+    .tagline,
     .theme-toggle,
     .theme-toggle .sun-glow {
         animation: none;

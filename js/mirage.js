@@ -23,7 +23,9 @@
 
         uniform vec2 resolution;
         uniform float time;
-        uniform float night; // 0 = day palette, 1 = night palette
+        uniform float night;  // 0 = day palette, 1 = night palette
+        uniform float bloom;  // 0 = a tight band behind the title, 1 = filling the screen
+        uniform float anchor; // height of the title's centre (0 = bottom, 1 = top)
 
         float hash(vec2 p) {
             p = fract(p * vec2(123.34, 456.21));
@@ -54,18 +56,21 @@
 
             // The ribbon behaves like silk in a breeze: waves roll along its
             // length while its thickness swells and pinches independently.
+            // At rest it lies close behind the title; on "enter" it blooms outward.
+            float b = bloom * bloom * (3.0 - 2.0 * bloom);
             float x = uv.x;
-            float centre = 0.48 + 0.40 * (x - 0.5) / portrait
-                + 0.090 * sin(x * 2.2 - t * 0.42)
-                + 0.055 * sin(x * 1.3 + t * 0.27 + 1.7)
-                + 0.025 * sin(x * 4.3 + t * 0.61 + 0.6);
+            float waves = mix(0.35, 1.0, b);
+            float centre = mix(anchor, 0.48, b) + mix(0.10, 0.40, b) * (x - 0.5) / portrait
+                + waves * (0.090 * sin(x * 2.2 - t * 0.42)
+                         + 0.055 * sin(x * 1.3 + t * 0.27 + 1.7)
+                         + 0.025 * sin(x * 4.3 + t * 0.61 + 0.6));
 
             float swell = 0.5 + 0.5 * sin(x * 2.7 + t * 0.47 + 2.0);
             float pinch = 0.55 + 0.45 * sin(x * 1.6 - t * 0.31 + 0.4);
             // (Kept smooth on purpose: an earlier sqrt() here creased the ribbon into a
             // thin line that travelled right to left whenever the swell bottomed out.)
             float shape = mix(0.25, 1.0, swell) * pinch;
-            float half_width = (0.10 + 0.19 * shape) / pow(portrait, 0.15);
+            float half_width = mix(0.045 + 0.06 * shape, 0.10 + 0.19 * shape, b) / pow(portrait, 0.15);
 
             float d = uv.y - centre;
 
@@ -94,8 +99,8 @@
             // How strongly the ribbon shows: a soft glow, full in the middle and dying
             // away smoothly. The top dissolves a little more gently than the bottom,
             // and at night both glow out further.
-            float spreadTop = 0.07 + 0.05 * night + 1.3 * half_width;
-            float spreadBottom = 0.06 + 0.05 * night + 1.2 * half_width;
+            float spreadTop = mix(0.045, 0.07 + 0.05 * night, b) + 1.3 * half_width;
+            float spreadBottom = mix(0.04, 0.06 + 0.05 * night, b) + 1.2 * half_width;
             float above = 1.0 / (1.0 + exp(-d / 0.04));
             float u = d / mix(spreadBottom, spreadTop, above);
             float edge = exp(-u * u * (0.6 + 0.4 * u * u));
@@ -145,6 +150,8 @@
     const uResolution = gl.getUniformLocation(program, 'resolution');
     const uTime = gl.getUniformLocation(program, 'time');
     const uNight = gl.getUniformLocation(program, 'night');
+    const uBloom = gl.getUniformLocation(program, 'bloom');
+    const uAnchor = gl.getUniformLocation(program, 'anchor');
 
     // Fade smoothly between the day and night palettes when the theme changes.
     const isDark = () => document.documentElement.dataset.theme === 'dark';
@@ -164,20 +171,69 @@
         gl.uniform2f(uResolution, width, height);
     }
 
+    // Pages without a title (the gallery) start fully bloomed. Arriving from the
+    // splash page, pick up the ribbon exactly where it was so the motion carries on.
+    const title = document.querySelector('.title');
+    let bloom = title ? 0 : 1;
+    let bloomTween = null;
     let time = 20; // start mid-drift rather than at t = 0
+    try {
+        const handoff = JSON.parse(sessionStorage.getItem('mirage') || 'null');
+        sessionStorage.removeItem('mirage');
+        if (handoff && !title) {
+            time = handoff.time;
+            canvas.classList.add('is-continuing');
+        }
+    } catch (e) {}
     let last = null;
+
+    function anchorHeight() {
+        if (!title) return 0.5;
+        const rect = title.getBoundingClientRect();
+        return 1 - (rect.top + rect.height / 2) / window.innerHeight;
+    }
+
+    function easeInOut(p) {
+        return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    }
 
     function loop(now) {
         const dt = last === null ? 0 : Math.min(now - last, 100) / 1000;
         time += dt;
         last = now;
         night += ((isDark() ? 1 : 0) - night) * Math.min(1, dt * 3);
+        if (bloomTween) {
+            const p = Math.min(1, (now - bloomTween.start) / bloomTween.duration);
+            bloom = bloomTween.from + (bloomTween.to - bloomTween.from) * easeInOut(p);
+            if (p === 1) {
+                bloomTween.done();
+                bloomTween = null;
+            }
+        }
         resize();
         gl.uniform1f(uTime, time);
         gl.uniform1f(uNight, night);
+        gl.uniform1f(uBloom, bloom);
+        gl.uniform1f(uAnchor, anchorHeight());
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         requestAnimationFrame(loop);
     }
+
+    // Used by the enter button: bloom the ribbon out (or back), then resolve.
+    window.mirage = {
+        bloomTo(to, duration) {
+            return new Promise((done) => {
+                bloomTween = { from: bloom, to, duration, start: performance.now(), done };
+            });
+        },
+        reset() {
+            bloomTween = null;
+            bloom = title ? 0 : 1;
+        },
+        handoff() {
+            try { sessionStorage.setItem('mirage', JSON.stringify({ time })); } catch (e) {}
+        },
+    };
 
     requestAnimationFrame((now) => {
         loop(now);
