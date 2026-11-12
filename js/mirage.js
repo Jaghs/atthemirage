@@ -1,11 +1,14 @@
 // Animated "mirage" background: a soft, grainy ribbon of colour drifting
 // across the screen, drawn with a tiny WebGL shader (no libraries, no video).
-// Falls back to the static CSS gradient on <body> if WebGL is unavailable.
+// Falls back to a still CSS gradient (see .no-webgl in styles.css) if WebGL is
+// unavailable; the still gradient is never shown otherwise, so it can't flash.
 (function () {
     const canvas = document.querySelector('.mirage');
+    const fallBack = () => document.documentElement.classList.add('no-webgl');
     const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
     if (!gl) {
         console.warn('mirage: WebGL unavailable, showing the still background');
+        fallBack();
         return;
     }
 
@@ -128,7 +131,10 @@
 
     const vs = compile(gl.VERTEX_SHADER, vertexSource);
     const fs = compile(gl.FRAGMENT_SHADER, fragmentSource);
-    if (!vs || !fs) return;
+    if (!vs || !fs) {
+        fallBack();
+        return;
+    }
 
     const program = gl.createProgram();
     gl.attachShader(program, vs);
@@ -136,6 +142,7 @@
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
         console.warn('mirage: shader failed to link', gl.getProgramInfoLog(program));
+        fallBack();
         return;
     }
     gl.useProgram(program);
@@ -177,12 +184,13 @@
     let bloom = title ? 0 : 1;
     let bloomTween = null;
     let time = 20; // start mid-drift rather than at t = 0
+    let continuing = false;
     try {
         const handoff = JSON.parse(sessionStorage.getItem('mirage') || 'null');
         sessionStorage.removeItem('mirage');
         if (handoff && !title) {
             time = handoff.time;
-            canvas.classList.add('is-continuing');
+            continuing = true;
         }
     } catch (e) {}
     let last = null;
@@ -197,7 +205,7 @@
         return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
     }
 
-    function loop(now) {
+    function draw(now) {
         const dt = last === null ? 0 : Math.min(now - last, 100) / 1000;
         time += dt;
         last = now;
@@ -216,6 +224,10 @@
         gl.uniform1f(uBloom, bloom);
         gl.uniform1f(uAnchor, anchorHeight());
         gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
+    function loop(now) {
+        draw(now);
         requestAnimationFrame(loop);
     }
 
@@ -235,9 +247,12 @@
         },
     };
 
-    requestAnimationFrame((now) => {
-        loop(now);
-        canvas.classList.add('is-ready');
-        console.info('mirage: animating');
-    });
+    // Draw the first frame straight away, before the page is first shown. Arriving
+    // from the splash page, show it instantly so the ribbon simply carries on;
+    // otherwise fade it in.
+    draw(performance.now());
+    if (continuing) canvas.classList.add('is-continuing');
+    requestAnimationFrame(() => canvas.classList.add('is-ready'));
+    requestAnimationFrame(loop);
+    console.info('mirage: animating');
 })();

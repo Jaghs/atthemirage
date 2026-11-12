@@ -61,7 +61,6 @@ body {
 
 body {
     background: var(--bg);
-    background-image: var(--fallback);
     color: var(--ink);
     transition: background-color 0.8s var(--ease), color 0.8s var(--ease);
     font-family: var(--sans);
@@ -70,6 +69,11 @@ body {
 }
 
 /* ---------- animated gradient background ---------- */
+
+/* Still gradient, only if the animated one can't run */
+.no-webgl body {
+    background-image: var(--fallback);
+}
 
 .mirage {
     position: fixed;
@@ -87,7 +91,8 @@ body {
 
 /* Arriving on the gallery from "enter": the ribbon is already on screen */
 .mirage.is-continuing {
-    transition-duration: 0.3s;
+    opacity: 1;
+    transition: none;
 }
 
 /* ---------- hero ---------- */
