@@ -59,8 +59,8 @@
             // At rest it lies close behind the title; on "enter" it blooms outward.
             float b = bloom * bloom * (3.0 - 2.0 * bloom);
             float x = uv.x;
-            float waves = mix(0.35, 1.0, b);
-            float centre = mix(anchor, 0.48, b) + mix(0.10, 0.40, b) * (x - 0.5) / portrait
+            float waves = mix(0.5, 1.0, b);
+            float centre = mix(anchor, 0.48, b) + mix(0.14, 0.40, b) * (x - 0.5) / portrait
                 + waves * (0.090 * sin(x * 2.2 - t * 0.42)
                          + 0.055 * sin(x * 1.3 + t * 0.27 + 1.7)
                          + 0.025 * sin(x * 4.3 + t * 0.61 + 0.6));
@@ -70,7 +70,7 @@
             // (Kept smooth on purpose: an earlier sqrt() here creased the ribbon into a
             // thin line that travelled right to left whenever the swell bottomed out.)
             float shape = mix(0.25, 1.0, swell) * pinch;
-            float half_width = mix(0.045 + 0.06 * shape, 0.10 + 0.19 * shape, b) / pow(portrait, 0.15);
+            float half_width = mix(0.075 + 0.10 * shape, 0.10 + 0.19 * shape, b) / pow(portrait, 0.15);
 
             float d = uv.y - centre;
 
@@ -99,8 +99,8 @@
             // How strongly the ribbon shows: a soft glow, full in the middle and dying
             // away smoothly. The top dissolves a little more gently than the bottom,
             // and at night both glow out further.
-            float spreadTop = mix(0.045, 0.07 + 0.05 * night, b) + 1.3 * half_width;
-            float spreadBottom = mix(0.04, 0.06 + 0.05 * night, b) + 1.2 * half_width;
+            float spreadTop = mix(0.07, 0.07 + 0.05 * night, b) + 1.3 * half_width;
+            float spreadBottom = mix(0.06, 0.06 + 0.05 * night, b) + 1.2 * half_width;
             float above = 1.0 / (1.0 + exp(-d / 0.04));
             float u = d / mix(spreadBottom, spreadTop, above);
             float edge = exp(-u * u * (0.6 + 0.4 * u * u));
