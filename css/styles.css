@@ -73,6 +73,7 @@ body {
 
 .title {
     margin: 0;
+    color: var(--red);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
     font-weight: normal;
     font-size: clamp(40px, 12vw, 150px);
