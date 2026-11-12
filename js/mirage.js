@@ -136,9 +136,9 @@
     }
 
     // Visitors who ask their system to reduce motion still get a living
-    // background, just a much calmer one: the ribbon drifts at a third speed.
+    // background, just a much calmer one: the ribbon drifts a little slower.
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const speed = () => (reduceMotion.matches ? 0.35 : 1);
+    const speed = () => (reduceMotion.matches ? 0.75 : 1);
 
     let time = 20; // start mid-drift rather than at t = 0
     let last = null;
