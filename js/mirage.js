@@ -4,7 +4,10 @@
 (function () {
     const canvas = document.querySelector('.mirage');
     const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
-    if (!gl) return;
+    if (!gl) {
+        console.warn('mirage: WebGL unavailable, showing the still background');
+        return;
+    }
 
     const vertexSource = `
         attribute vec2 position;
@@ -89,7 +92,9 @@
         const shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
-        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+        if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
+        console.warn('mirage: shader failed to compile', gl.getShaderInfoLog(shader));
+        return null;
     }
 
     const vs = compile(gl.VERTEX_SHADER, vertexSource);
@@ -100,7 +105,10 @@
     gl.attachShader(program, vs);
     gl.attachShader(program, fs);
     gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.warn('mirage: shader failed to link', gl.getProgramInfoLog(program));
+        return;
+    }
     gl.useProgram(program);
 
     const buffer = gl.createBuffer();
@@ -150,5 +158,6 @@
     requestAnimationFrame((now) => {
         loop(now);
         canvas.classList.add('is-ready');
+        console.info('mirage: animating' + (reduceMotion.matches ? ' (paused: reduced motion is on)' : ''));
     });
 })();
