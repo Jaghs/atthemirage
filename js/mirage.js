@@ -31,6 +31,13 @@
             return fract(p.x * p.y);
         }
 
+        // Like smoothstep, but its curvature also eases in and out, so the start and
+        // end of a blend leave no visible line.
+        float ease(float a, float b, float x) {
+            float t = clamp((x - a) / (b - a), 0.0, 1.0);
+            return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
+        }
+
         float noise(vec2 p) {
             vec2 i = floor(p);
             vec2 f = fract(p);
@@ -55,42 +62,43 @@
 
             float swell = 0.5 + 0.5 * sin(x * 2.7 + t * 0.47 + 2.0);
             float pinch = 0.55 + 0.45 * sin(x * 1.6 - t * 0.31 + 0.4);
-            float half_width = (0.09 + 0.14 * sqrt(swell * pinch)) / pow(portrait, 0.15);
+            // (Kept smooth on purpose: an earlier sqrt() here creased the ribbon into a
+            // thin line that travelled right to left whenever the swell bottomed out.)
+            float shape = mix(0.25, 1.0, swell) * pinch;
+            float half_width = (0.10 + 0.19 * shape) / pow(portrait, 0.15);
 
             float d = uv.y - centre;
 
-            // Colour across the ribbon, like a desert sky at dusk:
-            // dusty lavender above, rose, amber, then a deep red at the horizon.
-            // Position across the ribbon for colouring. The colour bands get a minimum
-            // width so that where the ribbon pinches, ember and crimson can't squeeze
-            // into a sharp line; and k isn't clamped, so the blends ease out smoothly.
-            float k = 0.5 - 0.5 * d / max(half_width, 0.11);
-            // At night: deep indigo, plum, ember and a deeper ember over a black sky.
-            // The last colour stays close to the ember so the ribbon doesn't darken
-            // and fade to black at the same time, which made a sharp moving edge.
+            // Every curve below is smooth all the way through, with no point where an
+            // easing starts or stops. On a black sky the eye picks out any such point
+            // as a faint line that slides along with the ribbon.
+
+            // Position across the ribbon for colouring (0 = top, 1 = bottom), with a
+            // smooth minimum width so the colours never squeeze together where it pinches.
+            float k = 0.5 - 0.5 * d / sqrt(half_width * half_width + 0.011);
+
+            // Day: a desert sky at dusk, dusty lavender, rose, amber, then a soft red.
+            // Night: deep indigo, plum, ember and a deeper ember over a black sky.
             vec3 lavender = mix(vec3(0.72, 0.67, 0.89), vec3(0.30, 0.26, 0.60), night);
             vec3 rose     = mix(vec3(0.93, 0.63, 0.71), vec3(0.58, 0.27, 0.55), night);
             vec3 amber    = mix(vec3(0.98, 0.75, 0.52), vec3(0.92, 0.45, 0.32), night);
             vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.80, 0.33, 0.27), night);
 
-            // Long, overlapping blends so no colour has a visible start or stop.
-            vec3 colour = mix(lavender, rose, smoothstep(-0.1, 0.45, k));
-            colour = mix(colour, amber, smoothstep(0.25, 0.80, k));
-            colour = mix(colour, red, smoothstep(0.65, 1.20, k));
+            vec3 colour = mix(lavender, rose, ease(-0.1, 0.45, k));
+            colour = mix(colour, amber, ease(0.25, 0.80, k));
+            colour = mix(colour, red, ease(0.65, 1.20, k));
 
-            // Faint silky striations running along the ribbon.
+            // Faint silky striations running along the ribbon (daytime only).
             colour += 0.012 * (1.0 - night) * (noise(vec2(x * 1.5 + t * 0.05, clamp(k, -0.5, 1.5) * 14.0)) - 0.5);
 
-            // Soft edges: wide ribbons blur out further than thin ones,
-            // and the blue top dissolves more gently than the salmon bottom.
-            // At night the fades start earlier and run longer, since a bright colour
-            // dissolving into black shows every step.
-            float fadeTop = 0.12 + 0.06 * night + 1.2 * half_width;
-            float fadeBottom = 0.10 + 0.14 * night + 1.0 * half_width;
-            float edge = d > 0.0
-                ? 1.0 - smoothstep(half_width * 0.2, half_width + fadeTop, d)
-                : 1.0 - smoothstep(half_width * 0.3 * (1.0 - night), half_width + fadeBottom, -d);
-            edge = edge * edge * (3.0 - 2.0 * edge);
+            // How strongly the ribbon shows: a soft glow, full in the middle and dying
+            // away smoothly. The top dissolves a little more gently than the bottom,
+            // and at night both glow out further.
+            float spreadTop = 0.07 + 0.05 * night + 1.3 * half_width;
+            float spreadBottom = 0.06 + 0.05 * night + 1.2 * half_width;
+            float above = 1.0 / (1.0 + exp(-d / 0.04));
+            float u = d / mix(spreadBottom, spreadTop, above);
+            float edge = exp(-u * u * (0.6 + 0.4 * u * u));
 
             vec3 background = mix(vec3(0.945, 0.937, 0.925), vec3(0.0), night); // true black at night for OLED
             vec3 c = mix(background, colour, edge * 0.95);
