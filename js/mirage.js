@@ -65,11 +65,13 @@
             // width so that where the ribbon pinches, ember and crimson can't squeeze
             // into a sharp line; and k isn't clamped, so the blends ease out smoothly.
             float k = 0.5 - 0.5 * d / max(half_width, 0.11);
-            // At night: deep indigo, plum, ember and crimson over a dark sky.
+            // At night: deep indigo, plum, ember and a deeper ember over a black sky.
+            // The last colour stays close to the ember so the ribbon doesn't darken
+            // and fade to black at the same time, which made a sharp moving edge.
             vec3 lavender = mix(vec3(0.72, 0.67, 0.89), vec3(0.30, 0.26, 0.60), night);
             vec3 rose     = mix(vec3(0.93, 0.63, 0.71), vec3(0.58, 0.27, 0.55), night);
             vec3 amber    = mix(vec3(0.98, 0.75, 0.52), vec3(0.92, 0.45, 0.32), night);
-            vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.72, 0.17, 0.18), night);
+            vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.80, 0.33, 0.27), night);
 
             // Long, overlapping blends so no colour has a visible start or stop.
             vec3 colour = mix(lavender, rose, smoothstep(-0.1, 0.45, k));
@@ -81,11 +83,13 @@
 
             // Soft edges: wide ribbons blur out further than thin ones,
             // and the blue top dissolves more gently than the salmon bottom.
-            float fadeTop = 0.12 + 1.2 * half_width;
-            float fadeBottom = 0.10 + 1.0 * half_width;
+            // At night the fades start earlier and run longer, since a bright colour
+            // dissolving into black shows every step.
+            float fadeTop = 0.12 + 0.06 * night + 1.2 * half_width;
+            float fadeBottom = 0.10 + 0.14 * night + 1.0 * half_width;
             float edge = d > 0.0
                 ? 1.0 - smoothstep(half_width * 0.2, half_width + fadeTop, d)
-                : 1.0 - smoothstep(half_width * 0.3, half_width + fadeBottom, -d);
+                : 1.0 - smoothstep(half_width * 0.3 * (1.0 - night), half_width + fadeBottom, -d);
             edge = edge * edge * (3.0 - 2.0 * edge);
 
             vec3 background = mix(vec3(0.945, 0.937, 0.925), vec3(0.0), night); // true black at night for OLED
