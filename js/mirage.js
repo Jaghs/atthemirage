@@ -58,14 +58,18 @@
 
             float d = uv.y - centre;
 
-            // Colour across the ribbon: sky blue on top, lilac, then salmon.
+            // Colour across the ribbon, like a desert sky at dusk:
+            // dusty lavender above, rose, amber, then a deep red at the horizon.
             float k = clamp(0.5 - 0.5 * d / half_width, 0.0, 1.0);
-            vec3 blue   = vec3(0.55, 0.72, 0.98);
-            vec3 lilac  = vec3(0.83, 0.62, 0.94);
-            vec3 salmon = vec3(1.00, 0.66, 0.60);
+            vec3 lavender = vec3(0.72, 0.67, 0.89);
+            vec3 rose     = vec3(0.93, 0.63, 0.71);
+            vec3 amber    = vec3(0.98, 0.75, 0.52);
+            vec3 red      = vec3(0.91, 0.47, 0.40);
+
             // Long, overlapping blends so no colour has a visible start or stop.
-            vec3 colour = mix(blue, lilac, smoothstep(-0.1, 0.65, k));
-            colour = mix(colour, salmon, smoothstep(0.35, 1.1, k));
+            vec3 colour = mix(lavender, rose, smoothstep(-0.1, 0.45, k));
+            colour = mix(colour, amber, smoothstep(0.25, 0.80, k));
+            colour = mix(colour, red, smoothstep(0.65, 1.20, k));
 
             // Faint silky striations running along the ribbon.
             colour += 0.012 * (noise(vec2(x * 1.5 + t * 0.05, k * 14.0)) - 0.5);
@@ -79,7 +83,7 @@
                 : 1.0 - smoothstep(half_width * 0.3, half_width + fadeBottom, -d);
             edge = edge * edge * (3.0 - 2.0 * edge);
 
-            vec3 background = vec3(0.937, 0.933, 0.925);
+            vec3 background = vec3(0.945, 0.937, 0.925);
             vec3 c = mix(background, colour, edge * 0.95);
 
             // Fine, subtle grain, mostly within the ribbon
