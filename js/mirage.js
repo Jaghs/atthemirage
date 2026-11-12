@@ -47,14 +47,14 @@
             // The ribbon behaves like silk in a breeze: waves roll along its
             // length while its thickness swells and pinches independently.
             float x = uv.x;
-            float centre = 0.47 + 0.24 * (x - 0.5) / portrait
-                + 0.065 * sin(x * 2.2 - t * 0.42)
-                + 0.040 * sin(x * 1.3 + t * 0.27 + 1.7)
+            float centre = 0.48 + 0.40 * (x - 0.5) / portrait
+                + 0.090 * sin(x * 2.2 - t * 0.42)
+                + 0.055 * sin(x * 1.3 + t * 0.27 + 1.7)
                 + 0.025 * sin(x * 4.3 + t * 0.61 + 0.6);
 
             float swell = 0.5 + 0.5 * sin(x * 2.7 + t * 0.47 + 2.0);
             float pinch = 0.55 + 0.45 * sin(x * 1.6 - t * 0.31 + 0.4);
-            float half_width = (0.045 + 0.095 * sqrt(swell * pinch)) / pow(portrait, 0.15);
+            float half_width = (0.09 + 0.14 * sqrt(swell * pinch)) / pow(portrait, 0.15);
 
             float d = uv.y - centre;
 
@@ -63,19 +63,21 @@
             vec3 blue   = vec3(0.55, 0.72, 0.98);
             vec3 lilac  = vec3(0.83, 0.62, 0.94);
             vec3 salmon = vec3(1.00, 0.66, 0.60);
-            vec3 colour = mix(blue, lilac, smoothstep(0.08, 0.45, k));
-            colour = mix(colour, salmon, smoothstep(0.58, 0.95, k));
+            // Long, overlapping blends so no colour has a visible start or stop.
+            vec3 colour = mix(blue, lilac, smoothstep(-0.1, 0.65, k));
+            colour = mix(colour, salmon, smoothstep(0.35, 1.1, k));
 
             // Faint silky striations running along the ribbon.
             colour += 0.012 * (noise(vec2(x * 1.5 + t * 0.05, k * 14.0)) - 0.5);
 
             // Soft edges: wide ribbons blur out further than thin ones,
             // and the blue top dissolves more gently than the salmon bottom.
-            float fadeTop = 0.05 + 0.9 * half_width;
-            float fadeBottom = 0.04 + 0.6 * half_width;
+            float fadeTop = 0.12 + 1.2 * half_width;
+            float fadeBottom = 0.10 + 1.0 * half_width;
             float edge = d > 0.0
-                ? 1.0 - smoothstep(half_width * 0.75, half_width + fadeTop, d)
-                : 1.0 - smoothstep(half_width * 0.8, half_width + fadeBottom, -d);
+                ? 1.0 - smoothstep(half_width * 0.2, half_width + fadeTop, d)
+                : 1.0 - smoothstep(half_width * 0.3, half_width + fadeBottom, -d);
+            edge = edge * edge * (3.0 - 2.0 * edge);
 
             vec3 background = vec3(0.937, 0.933, 0.925);
             vec3 c = mix(background, colour, edge * 0.95);
