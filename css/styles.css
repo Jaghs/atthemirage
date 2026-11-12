@@ -9,11 +9,9 @@
     --ink: #111111;
     --muted: #3c3c40;
     --red: #e3261e;
-    /* Liquid glass (enter button) */
-    --glass-top: rgba(255, 255, 255, 0.5);
-    --glass-bottom: rgba(255, 255, 255, 0.14);
-    --glass-rim: rgba(255, 255, 255, 0.95);
-    --glass-shadow: rgba(70, 50, 80, 0.16);
+    /* Frosted glass (enter button) */
+    --frost: rgba(255, 255, 255, 0.28);
+    --frost-hover: rgba(255, 255, 255, 0.42);
     --toggle-track: rgba(255, 255, 255, 0.55);
     --toggle-line: rgba(17, 17, 17, 0.16);
     --sun: #f2a23e;
@@ -35,10 +33,8 @@
     --bg: #000000;
     --ink: #f1efec;
     --red: #f03a2f;
-    --glass-top: rgba(255, 255, 255, 0.16);
-    --glass-bottom: rgba(255, 255, 255, 0.03);
-    --glass-rim: rgba(255, 255, 255, 0.6);
-    --glass-shadow: rgba(0, 0, 0, 0.5);
+    --frost: rgba(255, 255, 255, 0.08);
+    --frost-hover: rgba(255, 255, 255, 0.14);
     --toggle-track: rgba(255, 255, 255, 0.06);
     --toggle-line: rgba(241, 239, 236, 0.22);
     --fallback: linear-gradient(160deg,
@@ -119,23 +115,17 @@ body {
     white-space: nowrap;
 }
 
-/* Enter: liquid glass, a clear frosted pill catching light along its top edge */
+/* Enter: a plain frosted pill, no outline, so it sits quietly in the sky */
 .enter {
-    position: relative;
     margin-top: clamp(32px, 5vw, 56px);
     display: inline-flex;
     align-items: center;
     gap: 12px;
     padding: 15px 28px 14px;
     border-radius: 999px;
-    background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
-    -webkit-backdrop-filter: blur(18px) saturate(125%);
-    backdrop-filter: blur(18px) saturate(125%);
-    box-shadow:
-        inset 0 1px 1px var(--glass-rim),
-        inset 0 -1px 1px rgba(255, 255, 255, 0.12),
-        0 10px 30px -8px var(--glass-shadow),
-        0 2px 6px -2px var(--glass-shadow);
+    background: var(--frost);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
     color: var(--ink);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
     font-size: 15px;
@@ -143,43 +133,12 @@ body {
     letter-spacing: 0.24em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    transition: background-color 0.4s var(--ease), transform 0.3s var(--ease);
 }
 
 /* Cancel the trailing letter-spacing so the word sits centred */
 .enter span {
     margin-right: -0.24em;
-}
-
-/* A thin rim of light: brightest at the top-left and bottom-right, like a
-   curved glass edge catching the light */
-.enter::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg,
-        var(--glass-rim) 0%,
-        rgba(255, 255, 255, 0.08) 35%,
-        rgba(255, 255, 255, 0.04) 65%,
-        rgba(255, 255, 255, 0.45) 100%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-    pointer-events: none;
-}
-
-/* The glossy sheen across the upper half */
-.enter::after {
-    content: "";
-    position: absolute;
-    inset: 1px 1px 50% 1px;
-    border-radius: 999px 999px 40% 40% / 999px 999px 100% 100%;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
-    opacity: 0.7;
-    pointer-events: none;
-    transition: opacity 0.4s var(--ease);
 }
 
 .enter svg {
@@ -196,11 +155,7 @@ body {
 /* Hover effects only for mouse users, so they don't stick after a tap on phones */
 @media (hover: hover) {
     .enter:hover {
-        transform: scale(1.03);
-    }
-
-    .enter:hover::after {
-        opacity: 1;
+        background: var(--frost-hover);
     }
 
     .enter:hover svg {
@@ -331,27 +286,21 @@ body {
     }
 }
 
-/* Leaving through "enter": the camera flies through the gap between THE and
-   MIRAGE (enter.js sets the transform-origin there), while everything else
-   dissolves and the ribbon blooms outward */
+/* Leaving through "enter": the title slowly dissolves into the sky while the
+   ribbon blooms outward; the button and toggle fade a little sooner */
 .is-leaving .title {
-    animation: fly-through 1.5s cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+    animation: dissolve 1.4s var(--ease) forwards;
     pointer-events: none;
 }
 
-@keyframes fly-through {
-    0% {
+@keyframes dissolve {
+    from {
         opacity: 1;
-        transform: scale(1);
         filter: blur(0);
     }
-    45% {
-        opacity: 1;
-    }
-    100% {
+    to {
         opacity: 0;
-        transform: scale(22);
-        filter: blur(4px);
+        filter: blur(18px);
     }
 }
 
@@ -367,12 +316,10 @@ body {
     from {
         opacity: 1;
         filter: blur(0);
-        transform: none;
     }
     to {
         opacity: 0;
         filter: blur(12px);
-        transform: scale(1.04);
     }
 }
 
