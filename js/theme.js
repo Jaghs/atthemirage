@@ -10,7 +10,7 @@
         root.dataset.theme = theme;
         const dark = theme === 'dark';
         button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-        themeColor.setAttribute('content', dark ? '#0e0d16' : '#f1efec');
+        themeColor.setAttribute('content', dark ? '#000000' : '#f1efec');
         window.dispatchEvent(new CustomEvent('themechange', { detail: theme }));
     }
 

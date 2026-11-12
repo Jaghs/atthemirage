@@ -29,7 +29,7 @@
 
 /* Night in the desert */
 :root[data-theme="dark"] {
-    --bg: #0e0d16;
+    --bg: #000000;
     --ink: #f1efec;
     --red: #f03a2f;
     --button-bg: #f1efec;
