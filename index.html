@@ -6,6 +6,18 @@
     <title>at the mirage</title>
     <meta name="description" content="photography in the twilight zone...">
     <meta name="theme-color" content="#f1efec">
+    <script>
+        // Pick the theme before anything paints, so there's no flash of the wrong one:
+        // the visitor's saved choice if they made one, otherwise their device setting.
+        (function () {
+            var theme;
+            try { theme = localStorage.getItem('theme'); } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
     <link rel="preload" href="fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
@@ -18,6 +30,42 @@
 <body>
     <canvas class="mirage" aria-hidden="true"></canvas>
 
+    <!-- Theme toggle: a sun (or moon) above a horizon, with its shimmering mirage below -->
+    <button class="theme-toggle" type="button" aria-label="Switch to dark theme">
+        <svg viewBox="0 0 64 32" aria-hidden="true">
+            <defs>
+                <clipPath id="sky"><rect x="0" y="0" width="64" height="19" /></clipPath>
+                <clipPath id="ground"><rect x="0" y="19" width="64" height="13" /></clipPath>
+                <mask id="crescent" maskUnits="userSpaceOnUse" x="-20" y="-20" width="104" height="72">
+                    <rect x="-20" y="-20" width="104" height="72" fill="white" />
+                    <circle class="bite" cx="23" cy="10" r="5.4" fill="black" />
+                </mask>
+                <filter id="haze" x="-30%" y="-60%" width="160%" height="220%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.03 0.35" numOctaves="1" seed="3">
+                        <animate attributeName="baseFrequency" dur="2.6s" repeatCount="indefinite"
+                                 values="0.03 0.35;0.03 0.45;0.03 0.35" />
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G" />
+                    <feGaussianBlur stdDeviation="0.45" />
+                </filter>
+            </defs>
+
+            <rect class="track" x="0.5" y="0.5" width="63" height="31" rx="15.5" />
+
+            <g clip-path="url(#sky)">
+                <g class="orb"><circle cx="20" cy="13" r="6" mask="url(#crescent)" /></g>
+            </g>
+
+            <line class="horizon" x1="8" y1="19" x2="56" y2="19" />
+
+            <g clip-path="url(#ground)">
+                <g class="reflection" transform="matrix(1 0 0 -1 0 38)" filter="url(#haze)">
+                    <g class="orb"><circle cx="20" cy="13" r="6" mask="url(#crescent)" /></g>
+                </g>
+            </g>
+        </svg>
+    </button>
+
     <main class="hero">
         <h1 class="title">AT THE MIRAGE</h1>
         <a class="enter" href="main.html">
@@ -26,6 +74,7 @@
         </a>
     </main>
 
+    <script src="js/theme.js"></script>
     <script src="js/mirage.js"></script>
 </body>
 </html>

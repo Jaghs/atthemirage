@@ -9,8 +9,41 @@
     --ink: #111111;
     --muted: #3c3c40;
     --red: #e3261e;
+    --button-bg: #111111;
+    --button-fg: #ffffff;
+    --toggle-track: rgba(255, 255, 255, 0.55);
+    --toggle-line: rgba(17, 17, 17, 0.16);
+    --orb: #f2a23e;
+    /* Still stand-in for the animated ribbon if WebGL is unavailable */
+    --fallback: linear-gradient(160deg,
+        transparent 18%,
+        rgba(184, 171, 227, 0.6) 34%,
+        rgba(237, 161, 181, 0.6) 48%,
+        rgba(250, 191, 133, 0.6) 62%,
+        rgba(232, 120, 102, 0.5) 74%,
+        transparent 88%);
     --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Night in the desert */
+:root[data-theme="dark"] {
+    --bg: #0e0d16;
+    --ink: #f1efec;
+    --red: #f03a2f;
+    --button-bg: #f1efec;
+    --button-fg: #111111;
+    --toggle-track: rgba(255, 255, 255, 0.06);
+    --toggle-line: rgba(241, 239, 236, 0.22);
+    --orb: #ece7f7;
+    --fallback: linear-gradient(160deg,
+        transparent 18%,
+        rgba(77, 66, 153, 0.6) 34%,
+        rgba(148, 69, 140, 0.6) 48%,
+        rgba(235, 115, 82, 0.55) 62%,
+        rgba(184, 43, 46, 0.5) 74%,
+        transparent 88%);
+    color-scheme: dark;
 }
 
 *,
@@ -27,15 +60,9 @@ body {
 
 body {
     background: var(--bg);
-    /* Static stand-in for the animated ribbon if WebGL is unavailable */
-    background-image: linear-gradient(160deg,
-        transparent 22%,
-        rgba(118, 166, 255, 0.55) 38%,
-        rgba(204, 158, 250, 0.55) 48%,
-        rgba(255, 168, 199, 0.55) 58%,
-        rgba(255, 184, 148, 0.55) 68%,
-        transparent 82%);
+    background-image: var(--fallback);
     color: var(--ink);
+    transition: background-color 0.8s var(--ease), color 0.8s var(--ease);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
@@ -89,12 +116,12 @@ body {
     gap: 8px;
     padding: 12px 22px;
     border-radius: 999px;
-    background: var(--ink);
-    color: #fff;
+    background: var(--button-bg);
+    color: var(--button-fg);
     font-size: 14px;
     letter-spacing: 0.02em;
     text-decoration: none;
-    transition: background-color 0.3s var(--ease), transform 0.3s var(--ease);
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
 .enter svg {
@@ -108,31 +135,109 @@ body {
     transition: transform 0.3s var(--ease);
 }
 
-.enter:hover {
-    background: var(--red);
-}
+/* Hover effects only for mouse users, so they don't stick after a tap on phones */
+@media (hover: hover) {
+    .enter:hover {
+        background: var(--red);
+        color: #ffffff;
+    }
 
-.enter:hover svg {
-    transform: translateX(3px);
+    .enter:hover svg {
+        transform: translateX(3px);
+    }
+
+    .theme-toggle:hover .orb circle {
+        fill: var(--red);
+    }
 }
 
 .enter:active {
     transform: scale(0.97);
 }
 
-.enter:focus-visible {
+.enter:focus-visible,
+.theme-toggle:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
+}
+
+/* ---------- theme toggle ---------- */
+
+.theme-toggle {
+    position: fixed;
+    z-index: 1;
+    top: max(20px, env(safe-area-inset-top));
+    right: max(20px, env(safe-area-inset-right));
+    width: 64px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle svg {
+    display: block;
+    width: 64px;
+    height: 32px;
+    overflow: visible;
+}
+
+.theme-toggle .track {
+    fill: var(--toggle-track);
+    stroke: var(--toggle-line);
+    stroke-width: 1;
+    transition: fill 0.8s var(--ease), stroke 0.8s var(--ease);
+}
+
+.theme-toggle .horizon {
+    stroke: var(--toggle-line);
+    stroke-width: 1;
+    stroke-linecap: round;
+    transition: stroke 0.8s var(--ease);
+}
+
+/* The sun sits on the left; at night it slides right and becomes a moon */
+.theme-toggle .orb {
+    transition: transform 0.7s var(--ease);
+}
+
+.theme-toggle .orb circle {
+    fill: var(--orb);
+    transition: fill 0.7s var(--ease);
+}
+
+/* The "bite" that carves the crescent waits off to the side in daylight */
+.theme-toggle .bite {
+    transform: translate(10px, -10px);
+    transition: transform 0.7s var(--ease);
+}
+
+.theme-toggle .reflection {
+    opacity: 0.45;
+}
+
+:root[data-theme="dark"] .theme-toggle .orb {
+    transform: translateX(24px);
+}
+
+:root[data-theme="dark"] .theme-toggle .bite {
+    transform: none;
 }
 
 /* ---------- entrance ---------- */
 
 .title,
-.enter {
+.enter,
+.theme-toggle {
     animation: rise 1.4s var(--ease) both;
 }
 
-.enter   { animation-delay: 0.3s; }
+.enter        { animation-delay: 0.3s; }
+.theme-toggle { animation-delay: 0.6s; }
 
 @keyframes rise {
     from {
@@ -149,7 +254,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     .title,
-    .enter {
+    .enter,
+    .theme-toggle {
         animation: none;
     }
 }

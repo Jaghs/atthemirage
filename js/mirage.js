@@ -23,6 +23,7 @@
 
         uniform vec2 resolution;
         uniform float time;
+        uniform float night; // 0 = day palette, 1 = night palette
 
         float hash(vec2 p) {
             p = fract(p * vec2(123.34, 456.21));
@@ -61,10 +62,11 @@
             // Colour across the ribbon, like a desert sky at dusk:
             // dusty lavender above, rose, amber, then a deep red at the horizon.
             float k = clamp(0.5 - 0.5 * d / half_width, 0.0, 1.0);
-            vec3 lavender = vec3(0.72, 0.67, 0.89);
-            vec3 rose     = vec3(0.93, 0.63, 0.71);
-            vec3 amber    = vec3(0.98, 0.75, 0.52);
-            vec3 red      = vec3(0.91, 0.47, 0.40);
+            // At night: deep indigo, plum, ember and crimson over a dark sky.
+            vec3 lavender = mix(vec3(0.72, 0.67, 0.89), vec3(0.30, 0.26, 0.60), night);
+            vec3 rose     = mix(vec3(0.93, 0.63, 0.71), vec3(0.58, 0.27, 0.55), night);
+            vec3 amber    = mix(vec3(0.98, 0.75, 0.52), vec3(0.92, 0.45, 0.32), night);
+            vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.72, 0.17, 0.18), night);
 
             // Long, overlapping blends so no colour has a visible start or stop.
             vec3 colour = mix(lavender, rose, smoothstep(-0.1, 0.45, k));
@@ -83,7 +85,7 @@
                 : 1.0 - smoothstep(half_width * 0.3, half_width + fadeBottom, -d);
             edge = edge * edge * (3.0 - 2.0 * edge);
 
-            vec3 background = vec3(0.945, 0.937, 0.925);
+            vec3 background = mix(vec3(0.945, 0.937, 0.925), vec3(0.055, 0.051, 0.086), night);
             vec3 c = mix(background, colour, edge * 0.95);
 
             // Fine, subtle grain, mostly within the ribbon
@@ -126,6 +128,11 @@
 
     const uResolution = gl.getUniformLocation(program, 'resolution');
     const uTime = gl.getUniformLocation(program, 'time');
+    const uNight = gl.getUniformLocation(program, 'night');
+
+    // Fade smoothly between the day and night palettes when the theme changes.
+    const isDark = () => document.documentElement.dataset.theme === 'dark';
+    let night = isDark() ? 1 : 0;
 
     // Render at the screen's real pixel density (up to 2x) so the grain stays
     // fine instead of being stretched into visible specks.
@@ -145,10 +152,13 @@
     let last = null;
 
     function loop(now) {
-        if (last !== null) time += Math.min(now - last, 100) / 1000;
+        const dt = last === null ? 0 : Math.min(now - last, 100) / 1000;
+        time += dt;
         last = now;
+        night += ((isDark() ? 1 : 0) - night) * Math.min(1, dt * 3);
         resize();
         gl.uniform1f(uTime, time);
+        gl.uniform1f(uNight, night);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         requestAnimationFrame(loop);
     }
