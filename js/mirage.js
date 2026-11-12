@@ -135,16 +135,11 @@
         gl.uniform2f(uResolution, width, height);
     }
 
-    // Visitors who ask their system to reduce motion still get a living
-    // background, just a much calmer one: the ribbon drifts a little slower.
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const speed = () => (reduceMotion.matches ? 0.75 : 1);
-
     let time = 20; // start mid-drift rather than at t = 0
     let last = null;
 
     function loop(now) {
-        if (last !== null) time += Math.min(now - last, 100) / 1000 * speed();
+        if (last !== null) time += Math.min(now - last, 100) / 1000;
         last = now;
         resize();
         gl.uniform1f(uTime, time);
@@ -155,6 +150,6 @@
     requestAnimationFrame((now) => {
         loop(now);
         canvas.classList.add('is-ready');
-        console.info('mirage: animating' + (reduceMotion.matches ? ' slowly (reduced motion is on)' : ''));
+        console.info('mirage: animating');
     });
 })();
