@@ -9,9 +9,6 @@
     --ink: #111111;
     --muted: #3c3c40;
     --red: #e3261e;
-    /* Frosted glass (enter button) */
-    --frost: rgba(255, 255, 255, 0.28);
-    --frost-hover: rgba(255, 255, 255, 0.42);
     --toggle-track: rgba(255, 255, 255, 0.55);
     --toggle-line: rgba(17, 17, 17, 0.16);
     --sun: #f2a23e;
@@ -33,8 +30,6 @@
     --bg: #000000;
     --ink: #f1efec;
     --red: #f03a2f;
-    --frost: rgba(255, 255, 255, 0.08);
-    --frost-hover: rgba(255, 255, 255, 0.14);
     --toggle-track: rgba(255, 255, 255, 0.06);
     --toggle-line: rgba(241, 239, 236, 0.22);
     --fallback: linear-gradient(160deg,
@@ -120,51 +115,57 @@ body {
     white-space: nowrap;
 }
 
-/* Enter: a plain frosted pill, no outline, so it sits quietly in the sky */
+/* Enter: just the word, standing on a thin horizon line. On hover the
+   letters drift apart and the horizon stretches out from the centre. */
+@property --track {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
 .enter {
+    --track: 0.32em;
+    position: relative;
     margin-top: clamp(32px, 5vw, 56px);
     display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 15px 28px 14px;
-    border-radius: 999px;
-    background: var(--frost);
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
+    padding: 14px 8px 20px;
     color: var(--ink);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1;
-    letter-spacing: 0.24em;
+    letter-spacing: var(--track);
     text-transform: uppercase;
     text-decoration: none;
-    transition: background-color 0.4s var(--ease), transform 0.3s var(--ease);
+    transition: --track 0.6s var(--ease), opacity 0.3s var(--ease);
 }
 
-/* Cancel the trailing letter-spacing so the word sits centred */
+/* Cancel the trailing letter-spacing so the word stays centred over the line */
 .enter span {
-    margin-right: -0.24em;
+    margin-right: calc(-1 * var(--track));
 }
 
-.enter svg {
-    width: 14px;
-    height: 14px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.4;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: transform 0.3s var(--ease);
+.enter::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 64px;
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, currentColor 25%, currentColor 75%, transparent);
+    opacity: 0.6;
+    transition: width 0.6s var(--ease), opacity 0.6s var(--ease);
 }
 
 /* Hover effects only for mouse users, so they don't stick after a tap on phones */
 @media (hover: hover) {
     .enter:hover {
-        background: var(--frost-hover);
+        --track: 0.44em;
     }
 
-    .enter:hover svg {
-        transform: translateX(4px);
+    .enter:hover::after {
+        width: calc(100% + 48px);
+        opacity: 1;
     }
 
     .theme-toggle:hover .sun-core,
@@ -175,10 +176,15 @@ body {
 }
 
 .enter:active {
-    transform: scale(0.97);
+    opacity: 0.6;
 }
 
-.enter:focus-visible,
+.enter:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
 .theme-toggle:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
