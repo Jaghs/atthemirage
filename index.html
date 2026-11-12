@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>at the mirage</title>
     <meta name="description" content="photography in the twilight zone...">
-    <meta name="theme-color" content="#f1efec">
+    <meta name="theme-color" content="#0e0d16">
     <script>
         // Pick the theme before anything paints, so there's no flash of the wrong one:
-        // the visitor's saved choice if they made one, otherwise their device setting.
+        // the visitor's saved choice if they made one, otherwise dark.
         (function () {
             var theme;
             try { theme = localStorage.getItem('theme'); } catch (e) {}
-            if (theme !== 'light' && theme !== 'dark') {
-                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-            document.documentElement.dataset.theme = theme;
+            document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
         })();
     </script>
     <link rel="preload" href="fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>

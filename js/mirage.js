@@ -62,11 +62,12 @@
             // Colour across the ribbon, like a desert sky at dusk:
             // dusty lavender above, rose, amber, then a deep red at the horizon.
             float k = clamp(0.5 - 0.5 * d / half_width, 0.0, 1.0);
-            // At night: deep indigo, plum, ember and crimson over a dark sky.
-            vec3 lavender = mix(vec3(0.72, 0.67, 0.89), vec3(0.30, 0.26, 0.60), night);
-            vec3 rose     = mix(vec3(0.93, 0.63, 0.71), vec3(0.58, 0.27, 0.55), night);
-            vec3 amber    = mix(vec3(0.98, 0.75, 0.52), vec3(0.92, 0.45, 0.32), night);
-            vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.72, 0.17, 0.18), night);
+            // At night: deep indigo, plum, a dim ember and crimson over a dark sky,
+            // kept close in brightness so no band reads as a glowing line.
+            vec3 lavender = mix(vec3(0.72, 0.67, 0.89), vec3(0.29, 0.25, 0.57), night);
+            vec3 rose     = mix(vec3(0.93, 0.63, 0.71), vec3(0.50, 0.26, 0.52), night);
+            vec3 amber    = mix(vec3(0.98, 0.75, 0.52), vec3(0.70, 0.33, 0.33), night);
+            vec3 red      = mix(vec3(0.91, 0.47, 0.40), vec3(0.58, 0.16, 0.19), night);
 
             // Long, overlapping blends so no colour has a visible start or stop.
             vec3 colour = mix(lavender, rose, smoothstep(-0.1, 0.45, k));
@@ -74,7 +75,7 @@
             colour = mix(colour, red, smoothstep(0.65, 1.20, k));
 
             // Faint silky striations running along the ribbon.
-            colour += 0.012 * (noise(vec2(x * 1.5 + t * 0.05, k * 14.0)) - 0.5);
+            colour += 0.012 * (1.0 - night) * (noise(vec2(x * 1.5 + t * 0.05, k * 14.0)) - 0.5);
 
             // Soft edges: wide ribbons blur out further than thin ones,
             // and the blue top dissolves more gently than the salmon bottom.
