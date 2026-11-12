@@ -56,8 +56,20 @@
 
     <main class="hero">
         <h1 class="title">AT THE MIRAGE</h1>
-        <a class="enter" href="main.html">
-            <span>enter</span>
+        <!-- Enter: an arrow whose tail breaks up into heat haze -->
+        <a class="enter" href="main.html" aria-label="Enter">
+            <svg viewBox="0 0 120 16" aria-hidden="true">
+                <g class="haze">
+                    <line x1="2" y1="8" x2="6" y2="8" style="--o: 0.18" />
+                    <line x1="10" y1="8" x2="17" y2="8" style="--o: 0.32" />
+                    <line x1="21" y1="8" x2="31" y2="8" style="--o: 0.5" />
+                    <line x1="35" y1="8" x2="47" y2="8" style="--o: 0.72" />
+                </g>
+                <g class="shaft">
+                    <line x1="51" y1="8" x2="112" y2="8" />
+                    <path d="M105.5 3.5 L112.5 8 L105.5 12.5" />
+                </g>
+            </svg>
         </a>
     </main>
 

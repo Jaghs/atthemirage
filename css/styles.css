@@ -115,59 +115,62 @@ body {
     white-space: nowrap;
 }
 
-/* Enter: just the word, standing on a thin horizon line. On hover the
-   letters drift apart and the horizon stretches out from the centre. */
-@property --track {
-    syntax: '<length>';
-    inherits: true;
-    initial-value: 0px;
-}
-
+/* Enter: a fine arrow whose tail breaks up into slits of heat haze, each one
+   flickering slightly out of step. On hover the arrow glides forward and the
+   haze stretches out behind it. */
 .enter {
-    --track: 0.32em;
-    position: relative;
     margin-top: clamp(32px, 5vw, 56px);
     display: inline-flex;
-    padding: 14px 8px 20px;
-    /* Slightly see-through at rest (the line follows the text colour) */
+    padding: 16px 10px;
+    /* Slightly see-through at rest */
     color: color-mix(in srgb, var(--ink) 65%, transparent);
-    font-family: 'Vogue', Didot, 'Bodoni 72', serif;
-    font-size: 16px;
-    line-height: 1;
-    letter-spacing: var(--track);
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: --track 0.6s var(--ease), color 0.6s var(--ease), opacity 0.3s var(--ease);
+    transition: color 0.6s var(--ease), opacity 0.3s var(--ease);
 }
 
-/* Cancel the trailing letter-spacing so the word stays centred over the line */
-.enter span {
-    margin-right: calc(-1 * var(--track));
+.enter svg {
+    display: block;
+    width: 132px;
+    height: 18px;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.enter::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 6px;
-    width: 64px;
-    height: 1px;
-    transform: translateX(-50%);
-    background: linear-gradient(90deg, transparent, currentColor 25%, currentColor 75%, transparent);
-    opacity: 0.6;
-    transition: width 0.6s var(--ease), opacity 0.6s var(--ease);
+.enter .haze,
+.enter .shaft {
+    transition: transform 0.7s var(--ease);
+}
+
+.enter .haze line {
+    opacity: var(--o);
+    animation: heat-haze 2.8s ease-in-out infinite;
+}
+
+.enter .haze line:nth-child(2) { animation-delay: -0.7s; }
+.enter .haze line:nth-child(3) { animation-delay: -1.4s; }
+.enter .haze line:nth-child(4) { animation-delay: -2.1s; }
+
+/* The slits only flicker in brightness, so they always stay in a clean line */
+@keyframes heat-haze {
+    0%, 100% { opacity: var(--o); }
+    50%      { opacity: calc(var(--o) * 0.4); }
 }
 
 /* Hover effects only for mouse users, so they don't stick after a tap on phones */
 @media (hover: hover) {
     .enter:hover {
-        --track: 0.44em;
         color: var(--ink);
     }
 
-    .enter:hover::after {
-        width: calc(100% + 48px);
-        opacity: 1;
+    .enter:hover .haze {
+        transform: translateX(3px);
+    }
+
+    .enter:hover .shaft {
+        transform: translateX(9px);
     }
 
     .theme-toggle:hover .sun-core,
@@ -341,7 +344,8 @@ body {
     .enter,
     .tagline,
     .theme-toggle,
-    .theme-toggle .sun-glow {
+    .theme-toggle .sun-glow,
+    .enter .haze line {
         animation: none;
     }
 }
