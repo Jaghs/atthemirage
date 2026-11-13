@@ -245,7 +245,18 @@
             bloom = title ? 0 : 1;
         },
         handoff() {
-            try { sessionStorage.setItem('mirage', JSON.stringify({ time })); } catch (e) {}
+            // Remember where the ribbon is in its motion, plus a small snapshot of
+            // it, so the next page can show the same sky from its very first frame.
+            let still = null;
+            try {
+                draw(performance.now());
+                const small = document.createElement('canvas');
+                small.width = 480;
+                small.height = Math.round(480 * canvas.height / canvas.width);
+                small.getContext('2d').drawImage(canvas, 0, 0, small.width, small.height);
+                still = small.toDataURL('image/jpeg', 0.8);
+            } catch (e) {}
+            try { sessionStorage.setItem('mirage', JSON.stringify({ time, still })); } catch (e) {}
         },
     };
 

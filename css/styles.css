@@ -84,10 +84,20 @@ body {
     opacity: 1;
 }
 
-/* Arriving on the gallery from "enter": the ribbon is already on screen */
+/* Arriving on the gallery from "enter": the page opens on a snapshot of the sky
+   (set in the page's <head>), and the live ribbon fades in over it unnoticed */
+html.has-still {
+    background-color: var(--bg);
+    background-size: cover;
+    background-position: center;
+}
+
+html.has-still body {
+    background: transparent;
+}
+
 .mirage.is-continuing {
-    opacity: 1;
-    transition: none;
+    transition-duration: 0.25s;
 }
 
 /* ---------- hero ---------- */
