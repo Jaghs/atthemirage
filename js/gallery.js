@@ -875,9 +875,12 @@
         const top = parseFloat(getComputedStyle(document.querySelector('.site-head')).paddingTop) || 0;
         document.documentElement.style.setProperty('--head-bottom', head.bottom + 'px');
         document.documentElement.style.setProperty('--head-centre', (head.top + top + (head.bottom - head.top - top) / 2) + 'px');
+        const name = document.querySelector('.site-mark').getBoundingClientRect();
+        document.documentElement.style.setProperty('--places-left', (name.right + (window.innerWidth < 600 ? 14 : 22)) + 'px');
     }
     measureHeader();
     window.addEventListener('resize', measureHeader);
+    if (document.fonts) document.fonts.ready.then(measureHeader);
 
     // ------------------------------------------------- first visit on a phone
 
