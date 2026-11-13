@@ -199,6 +199,7 @@
     let current = 0;
     let sourceTile = null;
     let zoomed = false;
+    let closedByKeyboard = false;
 
     // Thumbnails of every photo, for jumping between them
     photos.forEach((photo, index) => {
@@ -215,10 +216,10 @@
     });
 
     function fillDetails(photo, index) {
-        metaEl.textContent = [photo.date, photo.place].filter(Boolean).join(' · ');
+        metaEl.textContent = photo.date || '';
         titleEl.textContent = photo.title;
         specsEl.textContent = '';
-        [['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal]]
+        [['Location', photo.place], ['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal]]
             .filter(([, value]) => value)
             .forEach(([label, value]) => {
                 const row = document.createElement('div');
@@ -327,23 +328,24 @@
         closeButton.focus({ preventScroll: true });
     }
 
-    // The wall tile to fly back to: the one we came from if it still shows this
-    // photo, otherwise the nearest visible tile showing it
+    // The wall tile to fly back to: the one the photo came from. If you moved to
+    // another photo while it was open, the wall (hidden behind the viewer) quietly
+    // shifts sideways so that same spot now holds the photo being closed.
     function returnTile() {
-        if (sourceTile && Number(sourceTile.dataset.index) === current) return sourceTile;
-        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-        let best = null, bestDist = Infinity;
-        tiles.forEach((tile) => {
-            if (tile.index !== current) return;
-            const r = tile.img.getBoundingClientRect();
-            if (r.right < 0 || r.left > window.innerWidth || r.bottom < 0 || r.top > window.innerHeight) return;
-            const d = Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy);
-            if (d < bestDist) {
-                bestDist = d;
-                best = tile.el;
-            }
-        });
-        return best;
+        if (!sourceTile) return null;
+        const shown = Number(sourceTile.dataset.index);
+        if (shown !== current) {
+            const rect = sourceTile.getBoundingClientRect();
+            offX -= mod(current - shown, N) * cellW;
+            render();
+            const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+            const tile = tiles.find((t) => {
+                const r = t.el.getBoundingClientRect();
+                return cx > r.left && cx < r.right && cy > r.top && cy < r.bottom;
+            });
+            return tile && tile.index === current ? tile.el : null;
+        }
+        return sourceTile;
     }
 
     function close() {
@@ -359,7 +361,9 @@
             tiles.forEach((t) => t.el.classList.remove('is-lifted'));
             viewerOpen = false;
             busy = false;
-            if (tile) tile.focus({ preventScroll: true });
+            // Return keyboard focus to the photo, without a visible ring for mouse users
+            if (tile) tile.focus({ preventScroll: true, focusVisible: closedByKeyboard });
+            closedByKeyboard = false;
         };
 
         viewer.classList.remove('is-open');
@@ -416,6 +420,7 @@
     function resetZoom(instant) {
         if (!zoomed) return;
         zoomed = false;
+        viewer.classList.remove('is-zoomed-in');
         viewImg.classList.remove('is-zoomed');
         if (instant) {
             viewImg.style.transition = 'none';
@@ -440,6 +445,7 @@
             return;
         }
         zoomed = true;
+        viewer.classList.add('is-zoomed-in');
         viewImg.style.transformOrigin = zoomOrigin(event);
         viewImg.classList.add('is-zoomed');
         viewImg.style.transform = `scale(${ZOOM})`;
@@ -458,7 +464,10 @@
 
     document.addEventListener('keydown', (event) => {
         if (!viewerOpen) return;
-        if (event.key === 'Escape') close();
+        if (event.key === 'Escape') {
+            closedByKeyboard = true;
+            close();
+        }
         else if (event.key === 'ArrowRight') show(current + 1);
         else if (event.key === 'ArrowLeft') show(current - 1);
     });

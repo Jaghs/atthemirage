@@ -1,5 +1,6 @@
-// The photos in the gallery, in order. Edit titles and places freely;
-// leave out any detail you don't want shown.
+// The photos in the gallery, in order (arranged so the self-portraits never sit
+// next to each other on the wall). Edit titles freely, and add a "place" to any
+// photo to show its location; leave out any detail you don't want shown.
 window.PHOTOS = [
     {
         "id": "jaghs",
@@ -76,7 +77,7 @@ window.PHOTOS = [
     {
         "id": "portugal",
         "title": "portugal",
-        "place": "Portugal",
+        "place": "Porto, Portugal",
         "date": "July 2024",
         "camera": "iPhone 13 Pro Max",
         "settings": "f/1.5 \u00b7 1/25 s \u00b7 ISO 1000",
@@ -89,7 +90,7 @@ window.PHOTOS = [
     {
         "id": "somewhere-in-paris",
         "title": "somewhere in paris",
-        "place": "Paris",
+        "place": "Paris, France",
         "date": "January 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
@@ -150,7 +151,7 @@ window.PHOTOS = [
     {
         "id": "family-mart",
         "title": "family mart",
-        "place": "Japan",
+        "place": "Kyoto, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
         "settings": "f/1.5 \u00b7 1/120 s \u00b7 ISO 40",
@@ -163,7 +164,7 @@ window.PHOTOS = [
     {
         "id": "japan",
         "title": "japan",
-        "place": "Japan",
+        "place": "Tokyo, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
         "settings": "f/1.5 \u00b7 1/33 s \u00b7 ISO 640",
@@ -176,7 +177,7 @@ window.PHOTOS = [
     {
         "id": "japan-road",
         "title": "japan road",
-        "place": "Japan",
+        "place": "Tokyo, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
         "settings": "f/1.5 \u00b7 1/1209 s \u00b7 ISO 50",
@@ -189,6 +190,7 @@ window.PHOTOS = [
     {
         "id": "garden",
         "title": "garden",
+        "place": "Versailles, France",
         "date": "August 2022",
         "camera": "iPhone 13 Pro Max",
         "settings": "f/1.5 \u00b7 1/2353 s \u00b7 ISO 50",
