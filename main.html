@@ -6,6 +6,16 @@
     <title>at the mirage — gallery</title>
     <meta name="description" content="photography in the twilight zone...">
     <meta name="theme-color" content="#000000">
+    <!-- Link previews (iMessage, Instagram, Discord, X, ...) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="at the mirage">
+    <meta property="og:title" content="at the mirage — gallery">
+    <meta property="og:description" content="photography in the twilight zone...">
+    <meta property="og:url" content="https://atthemirage.com/main.html">
+    <meta property="og:image" content="https://atthemirage.com/social/preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <script>
         // Arriving from the splash page: open on a snapshot of the sky as it was,
         // so there's no blank frame before the live gradient starts.
@@ -99,6 +109,10 @@
                 <p class="viewer-meta"></p>
                 <h2 class="viewer-title" id="viewer-title"></h2>
                 <dl class="viewer-specs"></dl>
+                <button class="viewer-share" type="button">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2.5M5 5.5l3-3 3 3M3.5 8.5v4.5h9V8.5" /></svg>
+                    <span>Share</span>
+                </button>
             </div>
             <div class="viewer-foot">
                 <p class="viewer-count"></p>

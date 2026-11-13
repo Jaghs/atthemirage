@@ -309,6 +309,7 @@
     });
 
     function fillDetails(photo, index) {
+        shareLabel.textContent = 'Share';
         metaEl.textContent = photo.date || '';
         titleEl.textContent = photo.title;
         specsEl.textContent = '';
@@ -437,7 +438,7 @@
         }
         // Opening a photo is a step in the browser's history, so the back button
         // (or swiping back on a phone) closes it instead of leaving the gallery
-        history.pushState({ photo: true }, '', location.href);
+        history.pushState({ photo: true }, '', location.pathname + '#photo-' + photo.id);
     }
 
     // Close buttons, Escape and clicking outside all go through history, so the
@@ -568,6 +569,10 @@
         resetZoom(true);
         current = index;
         const photo = photos[index];
+        // Keep the address pointing at the photo on screen
+        if (history.state && history.state.photo) {
+            history.replaceState(history.state, '', location.pathname + '#photo-' + photo.id);
+        }
         viewImg.classList.add('is-swapping');
         heading.classList.add('is-fading');
         countEl.classList.add('is-fading');
@@ -858,11 +863,13 @@
     function fromHash() {
         const wanted = decodeURIComponent(location.hash.slice(1));
         if (wanted === 'about') return { view: 'about', group: 'all' };
+        if (wanted.startsWith('photo-')) return { view: 'gallery', group: 'all', photo: wanted.slice(6) };
         return { view: 'gallery', group: groupNames.find((name) => slug(name) === wanted) || 'all' };
     }
 
     window.addEventListener('hashchange', () => {
         const target = fromHash();
+        if (target.photo) return; // set by opening a photo, not a place to go to
         showView(target.view);
         if (target.view === 'gallery') choose(target.group);
     });
@@ -957,7 +964,54 @@
             // After the slow arrival fade, switch to the quick timing used when
             // photos open and close
             setTimeout(() => document.body.classList.add('is-settled'), 1500);
-            showTouchHint();
+            if (!openFromLink()) showTouchHint();
         });
+    });
+
+    // A shared photo link (main.html#photo-family-mart): open that photo once the
+    // wall has arrived, from the nearest tile showing it
+    function openFromLink() {
+        const wanted = initial.photo;
+        const index = photos.findIndex((p) => p.id === wanted);
+        if (index < 0) return false;
+        history.replaceState(null, '', location.pathname); // so back returns to the wall
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        let best = null, bestDist = Infinity;
+        tiles.forEach((tile) => {
+            if (tile.index !== index) return;
+            const r = tile.frame.getBoundingClientRect();
+            const d = Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy);
+            if (d < bestDist) {
+                bestDist = d;
+                best = tile.el;
+            }
+        });
+        if (!best) return false;
+        setTimeout(() => open(best), 500);
+        return true;
+    }
+
+    // ------------------------------------------------------------------ share
+
+    // Phones get the native share sheet; computers copy the link
+    const shareButton = viewer.querySelector('.viewer-share');
+    const shareLabel = shareButton.querySelector('span');
+    shareButton.addEventListener('click', async () => {
+        const photo = photos[current];
+        const url = location.origin + '/p/' + photo.id + '.html';
+        if (navigator.share && window.matchMedia('(hover: none)').matches) {
+            try {
+                await navigator.share({ title: photo.title + ' — at the mirage', url });
+            } catch (e) {}
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+            shareLabel.textContent = 'Link copied';
+        } catch (e) {
+            shareLabel.textContent = url;
+        }
+        clearTimeout(shareButton.reset);
+        shareButton.reset = setTimeout(() => (shareLabel.textContent = 'Share'), 2000);
     });
 })();

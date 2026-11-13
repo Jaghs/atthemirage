@@ -806,6 +806,42 @@
     font-variant-numeric: tabular-nums;
 }
 
+.viewer-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    padding: 9px 15px;
+    border: 1px solid var(--panel-line);
+    border-radius: 999px;
+    background: none;
+    color: var(--ink);
+    font: 500 13px/1 var(--sans);
+    cursor: pointer;
+    transition: background-color 0.3s var(--ease);
+}
+
+.viewer-share svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.viewer-share:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) {
+    .viewer-share:hover {
+        background: var(--panel-line);
+    }
+}
+
 .viewer-count {
     margin: 0;
     color: var(--muted);

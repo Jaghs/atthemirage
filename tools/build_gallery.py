@@ -90,6 +90,68 @@ def save(image, path, long_edge):
     return copy.size
 
 
+def save_jpeg(image, path, long_edge):
+    copy = image.copy()
+    copy.thumbnail((long_edge, long_edge), Image.LANCZOS)
+    copy.save(path, 'JPEG', quality=82, optimize=True, progressive=True)
+
+
+def site_url():
+    try:
+        with open(os.path.join(ROOT, 'CNAME')) as f:
+            return 'https://' + f.read().strip()
+    except OSError:
+        return ''
+
+
+def escape(text):
+    return (str(text).replace('&', '&amp;').replace('<', '&lt;')
+            .replace('>', '&gt;').replace('"', '&quot;'))
+
+
+SHARE_PAGE = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{title} — at the mirage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#000000">
+    <!-- The link to share for this photo: shows the photo as the preview, then
+         opens it in the gallery -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="at the mirage">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{description}">
+    <meta property="og:url" content="{url}/p/{id}.html">
+    <meta property="og:image" content="{url}/images/gallery/{id}-share.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta http-equiv="refresh" content="0; url=../main.html#photo-{id}">
+    <script>location.replace('../main.html#photo-{id}');</script>
+    <style>html {{ background: #000; }}</style>
+</head>
+<body></body>
+</html>
+'''
+
+
+def write_share_pages(photos):
+    folder = os.path.join(ROOT, 'p')
+    os.makedirs(folder, exist_ok=True)
+    url = site_url()
+    keep = set()
+    for p in photos:
+        where = p.get('place') or p.get('group') or ''
+        description = ' · '.join(x for x in [where, p.get('date', '')] if x) or 'at the mirage'
+        page = SHARE_PAGE.format(title=escape(p['title']), description=escape(description), url=url, id=p['id'])
+        with open(os.path.join(folder, p['id'] + '.html'), 'w', encoding='utf-8') as f:
+            f.write(page)
+        keep.add(p['id'] + '.html')
+    for old in os.listdir(folder):
+        if old not in keep:
+            os.remove(os.path.join(folder, old))
+
+
 def is_colour(image):
     small = image.copy()
     small.thumbnail((200, 200))
@@ -137,7 +199,9 @@ def main():
         image = ImageOps.exif_transpose(original).convert('RGB')
         width, height = save(image, os.path.join(OUT, f'{slug}-900.webp'), 1200)
         save(image, os.path.join(OUT, f'{slug}-1800.webp'), 2000)
-        made.update({f'{slug}-900.webp', f'{slug}-1800.webp'})
+        # A JPEG for link previews (not every app shows WebP in previews)
+        save_jpeg(image, os.path.join(OUT, f'{slug}-share.jpg'), 1200)
+        made.update({f'{slug}-900.webp', f'{slug}-1800.webp', f'{slug}-share.jpg'})
         entry = {'id': slug, 'title': title}
         if group:
             entry['group'] = group
@@ -161,6 +225,8 @@ def main():
     for old in os.listdir(OUT):
         if old not in made:
             os.remove(os.path.join(OUT, old))
+
+    write_share_pages(photos)
 
     with open(DATA, 'w', encoding='utf-8') as f:
         f.write('// Made by tools/build_gallery.py from the photos in images/ -- edits here are\n')
