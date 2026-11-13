@@ -380,8 +380,9 @@
 
 .viewer-close {
     position: absolute;
+    z-index: 2;
     top: 14px;
-    left: 14px;
+    right: calc(var(--panel-width) - 46px);
     width: 32px;
     height: 32px;
     display: grid;
@@ -402,6 +403,16 @@
     stroke: currentColor;
     stroke-width: 1.4;
     stroke-linecap: round;
+}
+
+.viewer-close {
+    opacity: 0;
+    transition: opacity 0.4s var(--ease), color 0.3s var(--ease), background-color 0.3s var(--ease);
+}
+
+.viewer.is-open .viewer-close {
+    opacity: 1;
+    transition-delay: 0.25s, 0s, 0s;
 }
 
 .viewer-close:hover {
@@ -534,7 +545,11 @@
         --panel-width: 0px;
         overflow-y: auto;
         overscroll-behavior: contain;
-        background: var(--bg);
+    }
+
+    /* The backdrop stays put while the photo and details scroll */
+    .viewer::before {
+        position: fixed;
     }
 
     .viewer-stage {
@@ -604,7 +619,7 @@
     /* Phones: name (and toggle) on the first row, places scrolling on the second */
     .site-head {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 24px;
         padding-top: calc(env(safe-area-inset-top, 0px) + 26px);
         padding-bottom: 12px;
     }
@@ -614,7 +629,14 @@
     }
 
     .gallery-page .theme-toggle {
-        top: calc(env(safe-area-inset-top, 0px) + 16px);
+        top: calc(env(safe-area-inset-top, 0px) + 19px);
+        width: 32px;
+        height: 32px;
+    }
+
+    .gallery-page .theme-toggle svg {
+        width: 32px;
+        height: 32px;
     }
 
     .wall-hint {

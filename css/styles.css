@@ -48,6 +48,12 @@
     box-sizing: border-box;
 }
 
+/* No grey box flashing behind links and buttons when tapped on phones */
+a,
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
 html,
 body {
     margin: 0;
