@@ -388,7 +388,27 @@
         }, 1000);
         loadLarge(photo, current);
         closeButton.focus({ preventScroll: true });
+        // Opening a photo is a step in the browser's history, so the back button
+        // (or swiping back on a phone) closes it instead of leaving the gallery
+        history.pushState({ photo: true }, '', location.href);
     }
+
+    // Close buttons, Escape and clicking outside all go through history, so the
+    // extra step added on opening is used up and back works as expected afterwards
+    function requestClose() {
+        if (!viewerOpen || busy) return;
+        if (history.state && history.state.photo) history.back();
+        else close();
+    }
+
+    window.addEventListener('popstate', function closeWhenReady() {
+        if (!viewerOpen) return;
+        if (busy) setTimeout(closeWhenReady, 100); // still flying open: close once it lands
+        else close();
+    });
+
+    // A reload while a photo was open: drop the leftover history step
+    if (history.state && history.state.photo) history.replaceState(null, '', location.href);
 
     // The wall tile to fly back to: the one the photo came from. If you moved to
     // another photo while it was open, the wall (hidden behind the viewer) quietly
@@ -523,18 +543,18 @@
         if (zoomed) viewImg.style.transformOrigin = zoomOrigin(event);
     });
 
-    closeButton.addEventListener('click', close);
+    closeButton.addEventListener('click', requestClose);
 
     // Clicking the empty space around the photo closes it (desktop)
     stage.addEventListener('click', (event) => {
-        if (event.target === stage && !phone.matches) close();
+        if (event.target === stage && !phone.matches) requestClose();
     });
 
     document.addEventListener('keydown', (event) => {
         if (!viewerOpen) return;
         if (event.key === 'Escape') {
             closedByKeyboard = true;
-            close();
+            requestClose();
         }
         else if (event.key === 'ArrowRight') show(list.indexOf(current) + 1);
         else if (event.key === 'ArrowLeft') show(list.indexOf(current) - 1);
