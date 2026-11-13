@@ -875,39 +875,9 @@
 
 /* ---------- phones: photo on top, scroll down for the details ---------- */
 
-@media (max-width: 760px) {
-    .places {
-        left: max(16px, env(safe-area-inset-left, 0px));
-    }
-
-    .places-menu {
-        position: fixed;
-        top: auto;
-        left: max(10px, env(safe-area-inset-left, 0px));
-        right: max(10px, env(safe-area-inset-right, 0px));
-        bottom: max(10px, env(safe-area-inset-bottom, 0px));
-        min-width: 0;
-        padding: 8px;
-        border-radius: 26px;
-        transform: translateY(40px);
-        transform-origin: bottom center;
-    }
-
-    .places-menu button {
-        padding: 16px 14px;
-        font-size: 16px;
-    }
-
-    .places-scrim {
-        background: rgba(0, 0, 0, 0.35);
-        opacity: 0;
-        transition: opacity 0.3s var(--ease);
-    }
-
-    .is-choosing .places-scrim {
-        opacity: 1;
-    }
-
+/* Phones and upright tablets: the open photo sits on top, details scroll below
+   (gallery.js uses the same test, see "stacked") */
+@media (orientation: portrait) and (max-width: 1100px) {
     .viewer {
         --panel-width: 0px;
         overflow-y: auto;
@@ -967,7 +937,6 @@
     }
 
     .viewer-close {
-        /* Matches the phone-sized theme toggle exactly */
         position: fixed;
         top: calc(env(safe-area-inset-top, 0px) + 14px);
         z-index: 1;
@@ -977,6 +946,158 @@
     }
 
     .viewer.is-open .viewer-close {
+        opacity: 1;
+    }
+}
+
+/* Short screens, like a phone on its side: a slimmer header, and a narrower
+   details panel that fits the screen without scrolling */
+@media (max-height: 560px) and (orientation: landscape) {
+    :root {
+        --head-height: 52px;
+    }
+
+    .site-mark {
+        font-size: 16px;
+    }
+
+    .tabs button {
+        padding: 7px 14px;
+    }
+
+    .places {
+        top: calc(var(--head-bottom, 52px) + 10px);
+    }
+
+    .places-button {
+        padding: 7px 12px 7px 14px;
+    }
+
+    .viewer {
+        --panel-width: clamp(250px, 32vw, 320px);
+    }
+
+    .viewer-panel {
+        gap: 12px;
+        padding: 16px max(22px, env(safe-area-inset-right, 0px)) 14px 22px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .viewer-heading {
+        margin: auto 0;
+        padding-top: 30px; /* clear of the close button */
+    }
+
+    .viewer-meta {
+        margin-bottom: 8px;
+        font-size: 11px;
+    }
+
+    .viewer-title {
+        font-size: 26px;
+    }
+
+    .viewer-specs {
+        margin-top: 8px;
+        gap: 4px;
+        font-size: 12px;
+    }
+
+    .viewer-specs div {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .viewer-share {
+        margin-top: 12px;
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .viewer-foot {
+        gap: 8px;
+    }
+
+    .viewer-strip {
+        margin: 0 -22px;
+        padding: 0 22px 2px;
+    }
+
+    .viewer-strip button {
+        width: 40px;
+        height: 52px;
+    }
+
+    .viewer-close {
+        width: 32px;
+        height: 32px;
+        top: calc(env(safe-area-inset-top, 0px) + 10px);
+        right: max(14px, env(safe-area-inset-right, 0px));
+    }
+}
+
+/* The shortest screens (smaller phones on their side) */
+@media (max-height: 360px) and (orientation: landscape) {
+    .viewer-panel {
+        gap: 8px;
+        padding-top: 12px;
+        padding-bottom: 10px;
+    }
+
+    .viewer-heading {
+        padding-top: 26px;
+    }
+
+    .viewer-title {
+        font-size: 24px;
+    }
+
+    .viewer-specs {
+        gap: 2px;
+    }
+
+    .viewer-share {
+        margin-top: 10px;
+    }
+}
+
+/* Touch screens have no "drag" to explain; the one-time hint covers it */
+@media (hover: none) {
+    .wall-hint {
+        display: none;
+    }
+}
+
+@media (max-width: 760px) {
+    .places {
+        left: max(16px, env(safe-area-inset-left, 0px));
+    }
+
+    .places-menu {
+        position: fixed;
+        top: auto;
+        left: max(10px, env(safe-area-inset-left, 0px));
+        right: max(10px, env(safe-area-inset-right, 0px));
+        bottom: max(10px, env(safe-area-inset-bottom, 0px));
+        min-width: 0;
+        padding: 8px;
+        border-radius: 26px;
+        transform: translateY(40px);
+        transform-origin: bottom center;
+    }
+
+    .places-menu button {
+        padding: 16px 14px;
+        font-size: 16px;
+    }
+
+    .places-scrim {
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+    }
+
+    .is-choosing .places-scrim {
         opacity: 1;
     }
 

@@ -18,7 +18,8 @@
     const specsEl = viewer.querySelector('.viewer-specs');
     const countEl = viewer.querySelector('.viewer-count');
     const closeButton = viewer.querySelector('.viewer-close');
-    const phone = window.matchMedia('(max-width: 760px)');
+    // Phones and upright tablets show an open photo stacked above its details
+    const phone = window.matchMedia('(orientation: portrait) and (max-width: 1100px)');
     const N = photos.length;
     const tabsNav = document.querySelector('.tabs');
 
@@ -62,7 +63,9 @@
 
     function measure() {
         const w = window.innerWidth;
-        cellW = w < 600 ? 150 : Math.min(280, Math.max(200, w * 0.16));
+        // Small photos on phones, including on their side (short screens)
+        const short = window.innerHeight < 560;
+        cellW = w < 600 || short ? 150 : Math.min(280, Math.max(200, w * 0.16));
         boxW = cellW * 0.7;
         boxH = cellW * 1.2 * 0.7;
         // Rows sit far enough apart that, with the first row just below the places
@@ -375,7 +378,9 @@
         }
         const box = stage.getBoundingClientRect();
         const pad = Math.max(32, box.width * 0.05);
-        const size = fit(photo, box.width - pad * 2, box.height - pad * 2);
+        // On short screens (a phone on its side) the photo uses the full height
+        const padY = window.innerHeight < 560 ? 12 : pad;
+        const size = fit(photo, box.width - pad * 2, box.height - padY * 2);
         return { left: box.left + (box.width - size.width) / 2, top: box.top + (box.height - size.height) / 2, ...size };
     }
 
