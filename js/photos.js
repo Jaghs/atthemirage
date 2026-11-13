@@ -1,6 +1,6 @@
 // The photos in the gallery, in order (arranged so the self-portraits never sit
 // next to each other on the wall). Edit titles freely, and add a "place" to any
-// photo to show its location; leave out any detail you don't want shown.
+// photo to show its location ("wall" is the b&w copy shown on the wall); leave out any detail you don't want shown.
 window.PHOTOS = [
     {
         "id": "jaghs",
@@ -12,7 +12,8 @@ window.PHOTOS = [
         "src": "images/gallery/jaghs-900.jpg",
         "large": "images/gallery/jaghs-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/jaghs-bw-900.jpg"
     },
     {
         "id": "tree",
@@ -24,7 +25,8 @@ window.PHOTOS = [
         "src": "images/gallery/tree-900.jpg",
         "large": "images/gallery/tree-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/tree-bw-900.jpg"
     },
     {
         "id": "jaghs-blurry",
@@ -48,7 +50,8 @@ window.PHOTOS = [
         "src": "images/gallery/downtown-900.jpg",
         "large": "images/gallery/downtown-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/downtown-bw-900.jpg"
     },
     {
         "id": "jaghs-ii",
@@ -72,7 +75,8 @@ window.PHOTOS = [
         "src": "images/gallery/scary-bench-900.jpg",
         "large": "images/gallery/scary-bench-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/scary-bench-bw-900.jpg"
     },
     {
         "id": "portugal",
@@ -98,7 +102,8 @@ window.PHOTOS = [
         "src": "images/gallery/somewhere-in-paris-900.jpg",
         "large": "images/gallery/somewhere-in-paris-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/somewhere-in-paris-bw-900.jpg"
     },
     {
         "id": "lightbulb",
@@ -110,7 +115,8 @@ window.PHOTOS = [
         "src": "images/gallery/lightbulb-900.jpg",
         "large": "images/gallery/lightbulb-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/lightbulb-bw-900.jpg"
     },
     {
         "id": "amour",
@@ -122,7 +128,8 @@ window.PHOTOS = [
         "src": "images/gallery/amour-900.jpg",
         "large": "images/gallery/amour-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/amour-bw-900.jpg"
     },
     {
         "id": "cemetery",
@@ -134,7 +141,8 @@ window.PHOTOS = [
         "src": "images/gallery/cemetery-900.jpg",
         "large": "images/gallery/cemetery-1800.jpg",
         "width": 900,
-        "height": 1200
+        "height": 1200,
+        "wall": "images/gallery/cemetery-bw-900.jpg"
     },
     {
         "id": "hotel",
@@ -146,7 +154,8 @@ window.PHOTOS = [
         "src": "images/gallery/hotel-900.jpg",
         "large": "images/gallery/hotel-1800.jpg",
         "width": 1200,
-        "height": 900
+        "height": 900,
+        "wall": "images/gallery/hotel-bw-900.jpg"
     },
     {
         "id": "family-mart",

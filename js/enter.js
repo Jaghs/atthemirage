@@ -22,7 +22,7 @@
     // (its page, styles, code and every wall photo) so it opens from the cache.
     window.addEventListener('load', () => {
         const files = ['main.html', 'css/gallery.css', 'js/gallery.js']
-            .concat((window.PHOTOS || []).map((photo) => photo.src));
+            .concat((window.PHOTOS || []).flatMap((photo) => [photo.wall, photo.src].filter(Boolean)));
         files.forEach((href) => {
             const link = document.createElement('link');
             link.rel = 'prefetch';
@@ -31,8 +31,10 @@
         });
         // Also decode the photos now, which warms the browser's image cache further.
         (window.PHOTOS || []).forEach((photo) => {
-            const img = new Image();
-            img.src = photo.src;
+            [photo.wall, photo.src].filter(Boolean).forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
         });
     });
 

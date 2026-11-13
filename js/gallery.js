@@ -65,19 +65,29 @@
                 tile.className = 'tile';
                 tile.style.width = cellW + 'px';
                 tile.style.height = cellH + 'px';
+                // The photo: a black-and-white copy, with the colour version laid
+                // over it (invisible until hovered)
+                const frame = document.createElement('span');
+                frame.className = 'tile-photo';
                 const img = document.createElement('img');
                 img.decoding = 'async';
                 img.draggable = false;
+                const colour = document.createElement('img');
+                colour.className = 'tile-colour';
+                colour.decoding = 'async';
+                colour.draggable = false;
+                colour.alt = '';
+                frame.append(img, colour);
                 const label = document.createElement('span');
                 label.className = 'tile-label';
-                tile.append(img, label);
+                tile.append(frame, label);
                 tile.addEventListener('click', (event) => {
                     // Mouse and touch open photos on pointerup (so drags don't);
                     // this handles the keyboard (Enter / Space).
                     if (event.detail === 0) open(tile);
                 });
                 plane.append(tile);
-                tiles.push({ el: tile, img, label, index: -1 });
+                tiles.push({ el: tile, img, colour, frame, label, index: -1 });
             }
         }
         dirty = true;
@@ -97,10 +107,13 @@
                     const photo = photos[index];
                     const size = fit(photo, boxW, boxH);
                     tile.index = index;
-                    tile.img.src = photo.src;
+                    tile.img.src = photo.wall || photo.src;
                     tile.img.alt = photo.title;
-                    tile.img.style.width = size.width + 'px';
-                    tile.img.style.height = size.height + 'px';
+                    if (photo.wall) tile.colour.src = photo.src;
+                    else tile.colour.removeAttribute('src');
+                    tile.colour.hidden = !photo.wall;
+                    tile.frame.style.width = size.width + 'px';
+                    tile.frame.style.height = size.height + 'px';
                     tile.label.textContent = photo.title;
                     tile.el.setAttribute('aria-label', photo.title);
                     tile.el.dataset.index = index;
@@ -299,7 +312,7 @@
         sourceTile = tile;
         current = Number(tile.dataset.index);
         const photo = photos[current];
-        const from = tile.querySelector('img').getBoundingClientRect();
+        const from = tile.querySelector('.tile-photo').getBoundingClientRect();
 
         viewImg.src = photo.src;
         viewImg.alt = photo.title;
@@ -375,7 +388,7 @@
             return;
         }
         tiles.forEach((t) => t.el.classList.toggle('is-lifted', t.el === tile));
-        const from = tile.querySelector('img').getBoundingClientRect();
+        const from = tile.querySelector('.tile-photo').getBoundingClientRect();
         const to = viewImg.getBoundingClientRect();
         // Fly from the current spot back into the wall
         viewImg.classList.add('is-flying');
@@ -512,7 +525,9 @@
     // Arriving: keep showing only the moving sky until every photo on the wall is
     // fully decoded, then fade the whole wall in as one (a single cheap fade,
     // rather than dozens of photos animating while they load).
-    const ready = Promise.all(tiles.map((tile) => tile.img.decode().catch(() => {})));
+    const ready = Promise.all(tiles.flatMap((tile) => [tile.img, tile.colour])
+        .filter((img) => img.getAttribute('src'))
+        .map((img) => img.decode().catch(() => {})));
     const atLeast = new Promise((resolve) => setTimeout(resolve, 300));
     const atMost = new Promise((resolve) => setTimeout(resolve, 8000));
     Promise.race([Promise.all([ready, atLeast]), atMost]).then(() => {
