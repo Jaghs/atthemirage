@@ -276,7 +276,7 @@
     position: fixed;
     z-index: 3;
     left: 50%;
-    bottom: max(48px, calc(env(safe-area-inset-bottom, 0px) + 40px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
     margin: 0;
     padding: 12px 18px;
     border: 1px solid var(--head-line);
