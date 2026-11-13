@@ -1,6 +1,7 @@
 // The photos in the gallery, in order (arranged so the self-portraits never sit
 // next to each other on the wall). Edit titles freely, and add a "place" to any
-// photo to show its location ("wall" is the b&w copy shown on the wall); leave out any detail you don't want shown.
+// photo to show its location ("colour" marks photos the wall shows in b&w until
+// hovered); leave out any detail you don't want shown.
 window.PHOTOS = [
     {
         "id": "jaghs",
@@ -13,7 +14,7 @@ window.PHOTOS = [
         "large": "images/gallery/jaghs-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/jaghs-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "tree",
@@ -26,7 +27,7 @@ window.PHOTOS = [
         "large": "images/gallery/tree-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/tree-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "jaghs-blurry",
@@ -51,7 +52,7 @@ window.PHOTOS = [
         "large": "images/gallery/downtown-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/downtown-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "jaghs-ii",
@@ -76,7 +77,7 @@ window.PHOTOS = [
         "large": "images/gallery/scary-bench-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/scary-bench-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "portugal",
@@ -103,7 +104,7 @@ window.PHOTOS = [
         "large": "images/gallery/somewhere-in-paris-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/somewhere-in-paris-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "lightbulb",
@@ -116,7 +117,7 @@ window.PHOTOS = [
         "large": "images/gallery/lightbulb-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/lightbulb-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "amour",
@@ -129,7 +130,7 @@ window.PHOTOS = [
         "large": "images/gallery/amour-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/amour-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "cemetery",
@@ -142,7 +143,7 @@ window.PHOTOS = [
         "large": "images/gallery/cemetery-1800.jpg",
         "width": 900,
         "height": 1200,
-        "wall": "images/gallery/cemetery-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "hotel",
@@ -155,7 +156,7 @@ window.PHOTOS = [
         "large": "images/gallery/hotel-1800.jpg",
         "width": 1200,
         "height": 900,
-        "wall": "images/gallery/hotel-bw-900.jpg"
+        "colour": true
     },
     {
         "id": "family-mart",

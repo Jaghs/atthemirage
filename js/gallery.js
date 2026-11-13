@@ -514,23 +514,50 @@
 
     // ----------------------------------------------------------------- start
 
+    // The wall shows colour photos in black and white. Rather than storing a second
+    // b&w file for each, make the grey version here, once, while the page loads.
+    function greyscale(photo) {
+        const img = new Image();
+        img.src = photo.src;
+        return img.decode().then(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0);
+            const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const d = pixels.data;
+            for (let i = 0; i < d.length; i += 4) {
+                const y = d[i] * 0.2126 + d[i + 1] * 0.7152 + d[i + 2] * 0.0722;
+                d[i] = d[i + 1] = d[i + 2] = y;
+            }
+            ctx.putImageData(pixels, 0, 0);
+            return new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+        }).then((blob) => {
+            if (blob) photo.wall = URL.createObjectURL(blob);
+        }).catch(() => {});
+    }
+
     measure();
     // Start with a photo-filled view centred on the screen
     offX = (window.innerWidth % cellW) / 2;
     offY = (window.innerHeight % cellH) / 2;
     buildTiles();
-    render();
-    requestAnimationFrame(frame);
 
     // Arriving: keep showing only the moving sky until every photo on the wall is
-    // fully decoded, then fade the whole wall in as one (a single cheap fade,
-    // rather than dozens of photos animating while they load).
-    const ready = Promise.all(tiles.flatMap((tile) => [tile.img, tile.colour])
-        .filter((img) => img.getAttribute('src'))
-        .map((img) => img.decode().catch(() => {})));
+    // ready, then fade the whole wall in as one (a single cheap fade, rather than
+    // dozens of photos animating while they load).
+    const prepared = Promise.all(photos.filter((photo) => photo.colour).map(greyscale)).then(() => {
+        render();
+        return Promise.all(tiles.flatMap((tile) => [tile.img, tile.colour])
+            .filter((img) => img.getAttribute('src'))
+            .map((img) => img.decode().catch(() => {})));
+    });
     const atLeast = new Promise((resolve) => setTimeout(resolve, 300));
     const atMost = new Promise((resolve) => setTimeout(resolve, 8000));
-    Promise.race([Promise.all([ready, atLeast]), atMost]).then(() => {
+    Promise.race([Promise.all([prepared, atLeast]), atMost]).then(() => {
+        dirty = true;
+        requestAnimationFrame(frame);
         requestAnimationFrame(() => {
             wall.classList.add('is-in');
             document.body.classList.add('is-arrived');
