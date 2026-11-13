@@ -673,7 +673,7 @@
 .viewer-specs {
     display: grid;
     gap: 8px;
-    margin: 28px 0 0;
+    margin: 14px 0 0; /* the same gap as between the date and the title */
     font-size: 13px;
 }
 
