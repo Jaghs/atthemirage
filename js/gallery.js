@@ -27,13 +27,13 @@
 
     // ---------------------------------------------------------------- places
 
-    // A tab for each country that has photos, in this order (any other country a
-    // photo is given gets its own tab at the end automatically)
-    const ORDER = ['Canada', 'Portugal', 'Japan', 'France', 'Netherlands', 'Spain', 'United Kingdom', 'India'];
+    // A place for each country that has photos, with the most photographed first
+    // (ties in alphabetical order), so the list sorts itself as photos are added
     const LABELS = {};
     const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const countOf = (name) => photos.filter((p) => p.group === name).length;
     const groupNames = [...new Set(photos.map((p) => p.group).filter(Boolean))]
-        .sort((a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99));
+        .sort((a, b) => countOf(b) - countOf(a) || a.localeCompare(b));
 
     // "all" shows the endless wall; a place lays its photos out once, centred
     let group = 'all';
