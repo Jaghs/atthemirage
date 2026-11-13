@@ -444,11 +444,16 @@
         else close();
     }
 
+    const touchScreen = window.matchMedia('(hover: none)');
     window.addEventListener('popstate', function closeWhenReady() {
         if (!viewerOpen) return;
+        if (touchScreen.matches) return closeInstantly();
         if (busy) setTimeout(closeWhenReady, 100); // still flying open: close once it lands
         else close();
     });
+
+    // Going back shouldn't make the browser move anything by itself
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
     // A reload while a photo was open: drop the leftover history step
     if (history.state && history.state.photo) history.replaceState(null, '', location.href);
@@ -476,6 +481,26 @@
             return tile && tile.index === current ? tile.el : null;
         }
         return sourceTile;
+    }
+
+    // On touch screens, going back (Safari's edge swipe) already animates the wall
+    // back into view from a snapshot, so the photo closes instantly to match it,
+    // leaving the wall exactly as it was
+    function closeInstantly() {
+        if (!viewerOpen) return;
+        resetZoom(true);
+        document.body.classList.add('is-instant');
+        viewer.classList.remove('is-open');
+        document.body.classList.remove('is-viewing');
+        viewer.hidden = true;
+        viewImg.classList.remove('is-flying');
+        viewImg.style.transform = '';
+        viewImg.style.opacity = '';
+        viewImg.style.filter = '';
+        tiles.forEach((t) => t.el.classList.remove('is-lifted'));
+        viewerOpen = false;
+        busy = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove('is-instant')));
     }
 
     function close() {
@@ -587,6 +612,12 @@
     let swipeX = null, swipeY = 0;
     stage.addEventListener('touchstart', (event) => {
         if (event.touches.length !== 1) return;
+        // Swipes from the screen's edges belong to Safari (back / forward)
+        const x = event.touches[0].clientX;
+        if (x < 30 || x > window.innerWidth - 30) {
+            swipeX = null;
+            return;
+        }
         swipeX = event.touches[0].clientX;
         swipeY = event.touches[0].clientY;
     }, { passive: true });

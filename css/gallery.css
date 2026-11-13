@@ -62,6 +62,13 @@
     transition: opacity var(--swap) ease-in-out;
 }
 
+/* Closing instantly (going back on a phone): nothing animates for a moment */
+.is-instant *,
+.is-instant *::before,
+.is-instant *::after {
+    transition: none !important;
+}
+
 /* The theme toggle sits above the wall so it can be clicked */
 .gallery-page .theme-toggle {
     z-index: 3;
