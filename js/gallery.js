@@ -707,9 +707,10 @@
 
     closeButton.addEventListener('click', requestClose);
 
-    // Clicking the empty space around the photo closes it (desktop)
+    // Clicking or tapping the empty space around the photo closes it, like the
+    // back button (a swipe isn't a tap, so swiping between photos is unaffected)
     stage.addEventListener('click', (event) => {
-        if (event.target === stage && !phone.matches) requestClose();
+        if (event.target === stage) requestClose();
     });
 
     document.addEventListener('keydown', (event) => {
