@@ -605,8 +605,8 @@ window.PHOTOS = [
     {
         "id": "hotel",
         "title": "hotel",
-        "group": "Canada",
-        "place": "Calgary, Canada",
+        "group": "USA",
+        "place": "Denver, USA",
         "date": "December 2023",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 · 1/8 s · ISO 200",

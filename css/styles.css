@@ -261,60 +261,120 @@ html.has-still body {
     box-shadow: 0 0 6px 1px rgba(255, 214, 180, 0.8);
 }
 
-/* The haze around it, trailing a little behind */
+/* The haze, trailing a little behind the point */
 .haze-glow {
     width: 44px;
     height: 44px;
     margin: -22px 0 0 -22px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 196, 160, 0.38) 0%, rgba(238, 130, 110, 0.18) 45%, rgba(150, 110, 220, 0) 72%);
-    filter: blur(3px);
-    mix-blend-mode: screen;
 }
 
+/* Layer 1: the soft haze, always slowly breathing (it only animates "scale",
+   so it never fights the hover and press changes below) */
+.haze-glow::before,
 .haze-glow::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    transform: scale(1);
-    transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1), opacity 0.45s var(--ease);
-    background: inherit;
+    transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.2, 1), opacity 0.5s cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+.haze-glow::before {
+    background: radial-gradient(circle, rgba(255, 196, 160, 0.38) 0%, rgba(238, 130, 110, 0.18) 45%, rgba(150, 110, 220, 0) 72%);
+    filter: blur(3px);
     animation: haze-breathe 3.2s ease-in-out infinite alternate;
 }
 
 @keyframes haze-breathe {
-    from { opacity: 0.55; transform: scale(0.9); }
-    to   { opacity: 1;    transform: scale(1.12); }
+    from { scale: 0.9; }
+    to   { scale: 1.12; }
 }
 
-/* Over something clickable: the haze opens into a soft glowing ring, which
-   shows on bright photos as well as on the sky */
-.haze-glow {
-    transition: opacity 0.3s var(--ease), filter 0.4s var(--ease);
-}
-
-.haze-over .haze-glow {
-    filter: blur(0.6px);
-    mix-blend-mode: normal;
+/* Layer 2: a faint ring, hidden until hovering something clickable; it eases
+   in and back out the same way */
+.haze-glow::after {
+    opacity: 0;
+    transform: scale(0.75);
+    box-shadow: 0 0 0 1px rgba(255, 240, 230, 0.4), 0 0 10px 1px rgba(255, 190, 160, 0.22);
 }
 
 .haze-over .haze-glow::after {
-    transform: scale(1.5);
-    animation: none;
     opacity: 1;
-    background: radial-gradient(circle, rgba(255, 236, 222, 0.14) 0%, rgba(255, 236, 222, 0) 62%);
-    box-shadow: 0 0 0 1px rgba(255, 240, 230, 0.7), 0 0 14px 2px rgba(255, 190, 160, 0.45), inset 0 0 10px rgba(255, 200, 170, 0.35);
+    transform: scale(1);
 }
 
-/* Pressing or dragging: it tightens */
+.haze-over .haze-glow::before {
+    opacity: 0.55;
+}
+
+/* Pressing or dragging: everything tightens */
+.haze-press .haze-glow::before,
 .haze-press .haze-glow::after {
-    transform: scale(0.6);
-    animation: none;
+    transform: scale(0.65);
+}
+
+/* Over the movable wall: the dot becomes a hazy hand of drifting slits */
+.haze-hand {
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s var(--ease);
+}
+
+.haze-hand svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: #fff4ea;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 2.4 1.7;
+    filter: drop-shadow(0 0 2px rgba(255, 200, 170, 0.75));
+    animation: hand-shimmer 2.4s linear infinite;
+    transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+
+@keyframes hand-shimmer {
+    to { stroke-dashoffset: -8.2; }
+}
+
+.haze-hand g {
+    transition: opacity 0.2s var(--ease);
+}
+
+.haze-hand .hand-closed,
+.haze-press .haze-hand .hand-open {
+    opacity: 0;
+}
+
+.haze-press .haze-hand .hand-closed {
+    opacity: 1;
+}
+
+.haze-press .haze-hand svg {
+    transform: scale(0.9);
+}
+
+.haze-visible.haze-grab .haze-hand {
+    opacity: 1;
+}
+
+.haze-grab .haze-dot {
+    opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .haze-glow::after {
+    .haze-glow::before,
+    .haze-hand svg {
         animation: none;
     }
 }
