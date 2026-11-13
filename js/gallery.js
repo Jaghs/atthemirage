@@ -21,7 +21,6 @@
     // Phones and upright tablets show an open photo stacked above its details
     const phone = window.matchMedia('(orientation: portrait) and (max-width: 1100px)');
     const N = photos.length;
-    const tabsNav = document.querySelector('.tabs');
 
     const mod = (a, n) => ((a % n) + n) % n;
 
@@ -193,10 +192,10 @@
 
     // The space between the header and the places button; the first row of photos
     // sits the same distance below the button, so nothing is behind it on arrival
+    // Where the first row of photos starts: just under the header (the places
+    // button sits inside it)
     function belowPlaces() {
-        const head = document.querySelector('.site-head').getBoundingClientRect();
-        const places = document.querySelector('.places').getBoundingClientRect();
-        return places.bottom + (places.top - head.bottom);
+        return document.querySelector('.site-head').getBoundingClientRect().bottom + 14;
     }
 
     // Where the endless wall starts, so the first row's photos (centred in their
@@ -751,52 +750,6 @@
         }
     });
 
-    // ------------------------------------------------- pages (Gallery · About)
-
-    const pill = tabsNav.querySelector('.tabs-pill');
-    const aboutSection = document.querySelector('.about');
-    let view = 'gallery';
-
-    // Glide the pill under the chosen page
-    function movePill(name) {
-        tabsNav.querySelectorAll('button').forEach((b) => {
-            const on = b.dataset.view === name;
-            b.setAttribute('aria-pressed', String(on));
-            if (on) {
-                pill.style.transform = `translateX(${b.offsetLeft}px)`;
-                pill.style.width = b.offsetWidth + 'px';
-            }
-        });
-    }
-
-    // Put the pill in place without gliding (first load, and once the font has
-    // loaded or the window changes size, since the tabs' widths change)
-    function placePill() {
-        pill.classList.add('is-placing');
-        movePill(view);
-        pill.getBoundingClientRect();
-        pill.classList.remove('is-placing');
-    }
-
-    window.addEventListener('resize', placePill);
-    if (document.fonts) document.fonts.ready.then(placePill);
-
-    function showView(name, instant) {
-        if (name === view && !instant) return;
-        view = name;
-        movePill(name);
-        const about = name === 'about';
-        if (about) closeMenu();
-        aboutSection.hidden = !about;
-        document.body.classList.toggle('is-about', about);
-    }
-
-    tabsNav.addEventListener('click', (event) => {
-        const button = event.target.closest('button');
-        if (!button || viewerOpen) return;
-        showView(button.dataset.view);
-        setHash();
-    });
 
     // --------------------------------------------------------- places filter
 
@@ -882,7 +835,6 @@
 
     let switching = false;
     function choose(name) {
-        if (view !== 'gallery') showView('gallery');
         if (name === group || switching || viewerOpen) return;
         switching = true;
         group = name; // so the label and link update straight away
@@ -898,15 +850,14 @@
         }, 350);
     }
 
-    // Links: main.html#about, main.html#japan, or plain main.html for everything
+    // Links: main.html#japan, or plain main.html for everything
     function setHash() {
-        const hash = view === 'about' ? '#about' : group === 'all' ? '' : '#' + slug(group);
+        const hash = group === 'all' ? '' : '#' + slug(group);
         history.replaceState(history.state, '', location.pathname + hash);
     }
 
     function fromHash() {
         const wanted = decodeURIComponent(location.hash.slice(1));
-        if (wanted === 'about') return { view: 'about', group: 'all' };
         if (wanted.startsWith('photo-')) return { view: 'gallery', group: 'all', photo: wanted.slice(6) };
         return { view: 'gallery', group: groupNames.find((name) => slug(name) === wanted) || 'all' };
     }
@@ -914,15 +865,16 @@
     window.addEventListener('hashchange', () => {
         const target = fromHash();
         if (target.photo) return; // set by opening a photo, not a place to go to
-        showView(target.view);
-        if (target.view === 'gallery') choose(target.group);
+        choose(target.group);
     });
 
     // Keep the places button and a place's photos clear of the header, whose
     // height differs between phones and computers
     function measureHeader() {
-        const bottom = document.querySelector('.site-head').getBoundingClientRect().bottom;
-        document.documentElement.style.setProperty('--head-bottom', bottom + 'px');
+        const head = document.querySelector('.site-head').getBoundingClientRect();
+        const top = parseFloat(getComputedStyle(document.querySelector('.site-head')).paddingTop) || 0;
+        document.documentElement.style.setProperty('--head-bottom', head.bottom + 'px');
+        document.documentElement.style.setProperty('--head-centre', (head.top + top + (head.bottom - head.top - top) / 2) + 'px');
     }
     measureHeader();
     window.addEventListener('resize', measureHeader);
@@ -985,8 +937,6 @@
     if (isSet()) wall.scrollTo(0, 0);
     else applyScroll();
     markPlace();
-    showView(initial.view, true);
-    placePill();
 
     // Arriving: keep showing only the moving sky until every photo on the wall is
     // ready, then fade the whole wall in as one (a single cheap fade, rather than

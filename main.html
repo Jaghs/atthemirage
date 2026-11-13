@@ -51,11 +51,6 @@
 
     <header class="site-head">
         <a class="site-mark" href="index.html">AT THE MIRAGE</a>
-        <nav class="tabs" aria-label="Pages">
-            <span class="tabs-pill is-placing" aria-hidden="true"></span>
-            <button type="button" data-view="gallery" aria-pressed="true">Gallery</button>
-            <button type="button" data-view="about" aria-pressed="false">About</button>
-        </nav>
     </header>
     <!-- Places: filters the gallery (the list is filled in by gallery.js) -->
     <div class="places">
@@ -86,53 +81,6 @@
     <!-- First visit on a phone: how the wall works (shown once) -->
     <p class="touch-hint" aria-hidden="true" hidden>swipe to explore</p>
 
-    <!-- About: left empty for now -->
-    <!-- About: a portrait that shimmers like a mirage and becomes real as you
-         get closer, with field notes taken from the photos themselves -->
-    <section class="about" aria-label="About" hidden>
-        <div class="about-inner">
-            <figure class="mirage-portrait">
-                <div class="portrait-frame">
-                    <img class="portrait-img" src="images/gallery/jaghs-1800.webp" alt="Jagvir, a self-portrait" width="900" height="1200">
-                </div>
-                <!-- The mirage's reflection, as on a hot road -->
-                <div class="portrait-reflection" aria-hidden="true">
-                    <img class="portrait-img" src="images/gallery/jaghs-1800.webp" alt="" width="900" height="1200">
-                </div>
-            </figure>
-
-            <div class="about-text">
-                <h2 class="about-name">JAGVIR</h2>
-                <p class="about-line">find me where i don't exist</p>
-
-                <!-- Your own words go here (leave empty to hide):
-                     <p class="about-bio">...</p> -->
-
-                <dl class="field-notes">
-                    <div><dt>Photographs</dt><dd data-note="photos"></dd></div>
-                    <div><dt>Places</dt><dd data-note="places"></dd></div>
-                    <div><dt>Cities</dt><dd data-note="cities"></dd></div>
-                    <div><dt>Years</dt><dd data-note="years"></dd></div>
-                    <div><dt>Cameras</dt><dd data-note="cameras"></dd></div>
-                </dl>
-
-                <!-- Links go here, e.g.
-                     <p class="about-links"><a href="https://instagram.com/...">Instagram</a></p> -->
-            </div>
-        </div>
-
-        <!-- The shimmer itself: rippling noise that bends the portrait -->
-        <svg class="mirage-defs" aria-hidden="true" width="0" height="0">
-            <filter id="heat-haze" x="-5%" y="-5%" width="110%" height="110%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.06" numOctaves="2" seed="7" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="24" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            <filter id="heat-haze-reflection" x="-5%" y="-5%" width="110%" height="110%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.006 0.09" numOctaves="2" seed="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-        </svg>
-    </section>
 
     <!-- The wall: an endless grid of photos you can drag in any direction -->
     <main class="wall" aria-label="Photos">
@@ -170,6 +118,5 @@
     <script src="js/mirage.js"></script>
     <script src="js/cursor.js"></script>
     <script src="js/gallery.js"></script>
-    <script src="js/about.js"></script>
 </body>
 </html>

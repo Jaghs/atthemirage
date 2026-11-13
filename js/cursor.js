@@ -47,7 +47,7 @@
         const target = event.target instanceof Element ? event.target : null;
         const over = !!(target && target.closest(CLICKABLE));
         const body = document.body.classList;
-        const onWall = !over && !!(target && target.closest('.wall')) && !body.contains('is-viewing') && !body.contains('is-about');
+        const onWall = !over && !!(target && target.closest('.wall')) && !body.contains('is-viewing');
         document.documentElement.classList.toggle('haze-over', over);
         document.documentElement.classList.toggle('haze-grab', onWall);
     }, { passive: true });
