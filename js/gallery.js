@@ -135,10 +135,11 @@
     function renderSet() {
         // Taller than the screen? It scrolls up and down (offY), within bounds
         const height = rows * cellH;
-        const lowest = Math.min(0, window.innerHeight - 136 - height);
+        const lowest = Math.min(0, window.innerHeight - 200 - height);
         offX = 0;
         offY = Math.max(lowest, Math.min(0, offY));
-        const top = Math.max(96, (window.innerHeight - height) / 2) + offY;
+        const below = document.querySelector('.site-head').getBoundingClientRect().bottom + 24;
+        const top = Math.max(below, (window.innerHeight - height) / 2) + offY;
         tiles.forEach((tile, i) => {
             const row = Math.floor(i / cols);
             const inRow = row === rows - 1 ? list.length - row * cols : cols;
