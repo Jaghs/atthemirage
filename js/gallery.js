@@ -681,7 +681,7 @@
     const menu = document.querySelector('.places-menu');
     const scrim = document.querySelector('.places-scrim');
 
-    // A row for each place, with how many photos it has
+    // A row for each place
     function menuRow(name, label, indexes) {
         const row = document.createElement('button');
         row.type = 'button';
@@ -690,10 +690,7 @@
         const title = document.createElement('span');
         title.className = 'places-name';
         title.textContent = label;
-        const count = document.createElement('span');
-        count.className = 'places-count';
-        count.textContent = indexes.length;
-        row.append(title, count);
+        row.append(title);
         row.addEventListener('click', () => {
             closeMenu();
             choose(name);
