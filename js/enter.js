@@ -5,6 +5,10 @@
     if (!link) return;
 
     const DURATION = 1400; // matches the dissolve animation in styles.css
+    // The version tag added when the site is published (see site.yml), so the
+    // gallery's files are fetched ahead of time under the same name the gallery uses
+    const script = document.currentScript;
+    const version = ((script && script.src.match(/\?v=[a-z0-9]+/)) || [''])[0];
 
     link.addEventListener('click', (event) => {
         // Let ctrl/cmd/shift-clicks open a new tab or window as usual.
@@ -21,7 +25,7 @@
     // As soon as the splash page has loaded, fetch everything the gallery needs
     // (its page, styles, code and every wall photo) so it opens from the cache.
     window.addEventListener('load', () => {
-        const files = ['main.html', 'css/gallery.css', 'js/gallery.js']
+        const files = ['main.html', 'css/gallery.css' + version, 'js/gallery.js' + version]
             .concat((window.PHOTOS || []).map((photo) => photo.src));
         files.forEach((href) => {
             const link = document.createElement('link');

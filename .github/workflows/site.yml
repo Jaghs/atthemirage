@@ -47,6 +47,11 @@ jobs:
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude 'tools' --exclude '_site' ./ _site/
           find _site/images -maxdepth 1 -type f -delete
+          # Tag the code and styles with this publish's version, so browsers fetch
+          # the new files instead of mixing them with copies they saved earlier
+          version="${GITHUB_SHA::8}"
+          sed -i -E "s#((src|href)=\"(js|css)/[^\"?]+\.(js|css))\"#\1?v=${version}\"#g" _site/*.html
+          grep -ho '\(js\|css\)/[^"]*?v=[a-z0-9]*' _site/*.html
           ls -R _site | head -50
 
       - uses: actions/upload-pages-artifact@v3
