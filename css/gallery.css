@@ -361,7 +361,8 @@
     padding: 6px;
     border: 1px solid var(--head-line);
     border-radius: 18px;
-    background: var(--head);
+    /* More solid than the header, so photos behind never compete with the names */
+    background: rgba(16, 14, 22, 0.86);
     -webkit-backdrop-filter: blur(28px) saturate(150%);
     backdrop-filter: blur(28px) saturate(150%);
     box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.45);
@@ -1073,32 +1074,15 @@
         left: max(16px, env(safe-area-inset-left, 0px));
     }
 
+    /* Phones get the same dropdown as computers, with bigger rows to tap */
     .places-menu {
-        position: fixed;
-        top: auto;
-        left: max(10px, env(safe-area-inset-left, 0px));
-        right: max(10px, env(safe-area-inset-right, 0px));
-        bottom: max(10px, env(safe-area-inset-bottom, 0px));
-        min-width: 0;
-        padding: 8px;
-        border-radius: 26px;
-        transform: translateY(40px);
-        transform-origin: bottom center;
+        min-width: 220px;
+        border-radius: 20px;
     }
 
     .places-menu button {
-        padding: 16px 14px;
+        padding: 14px 14px;
         font-size: 16px;
-    }
-
-    .places-scrim {
-        background: rgba(0, 0, 0, 0.35);
-        opacity: 0;
-        transition: opacity 0.3s var(--ease);
-    }
-
-    .is-choosing .places-scrim {
-        opacity: 1;
     }
 
     .site-mark {
