@@ -996,7 +996,14 @@
     }
 
     .site-mark {
-        font-size: 16px;
+        font-size: 18px;
+    }
+
+    /* A slimmer filter pill, so it sits level with the name as one row */
+    .places-button {
+        gap: 6px;
+        padding: 6px 11px 6px 13px;
+        font-size: 12px;
     }
 
     /* Phones: one row: name, then Gallery · About, then the toggle */
