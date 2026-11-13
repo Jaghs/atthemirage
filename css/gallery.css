@@ -412,6 +412,11 @@
     -webkit-user-drag: none;
 }
 
+/* Photos that are only black and white have no colour version to show */
+.tile-photo .tile-colour[hidden] {
+    display: none;
+}
+
 .tile-colour {
     position: absolute;
     inset: 0;
