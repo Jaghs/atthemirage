@@ -170,14 +170,21 @@
 /* ---------- the wall ---------- */
 
 .wall {
+    /* A real scrolling area: native (full refresh rate) dragging on touch screens
+       and trackpads, with the browser's own momentum */
     position: fixed;
     inset: 0;
     z-index: 1;
-    overflow: hidden;
-    touch-action: none;
+    overflow: scroll;
+    overscroll-behavior: none;
+    scrollbar-width: none;
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
+}
+
+.wall::-webkit-scrollbar {
+    display: none;
 }
 
 .wall.is-dragging {
@@ -185,8 +192,7 @@
 }
 
 .wall-plane {
-    position: absolute;
-    inset: 0;
+    position: relative;
 }
 
 /* Only the photo itself responds to the mouse, not the empty space around it */
@@ -205,7 +211,6 @@
     color: inherit;
     font: inherit;
     cursor: inherit;
-    will-change: transform;
 }
 
 /* On the wall every photo is black and white (a real b&w copy, so the browser

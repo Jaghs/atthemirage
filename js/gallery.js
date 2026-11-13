@@ -42,11 +42,19 @@
 
     // ------------------------------------------------------------------ wall
 
+    // The wall is a real scrolling area, so dragging and flicking it run on the
+    // browser's own scrolling (full refresh rate, e.g. 120Hz on a ProMotion
+    // iPhone, with native momentum). It's enormous, so it never runs out, and only
+    // a screenful of tiles exists, moved ahead of you while they're off screen.
+    const SPACE = 120000;
+    const ORIGIN = SPACE / 2;
+    const OVERSCAN = 2; // spare rows/columns of tiles beyond each edge of the screen
+
     let cellW = 0, cellH = 0, boxW = 0, boxH = 0;
     let cols = 0, rows = 0;
     let tiles = [];
-    let offX = 0, offY = 0;
-    let velX = 0, velY = 0;
+    let offX = 0, offY = 0; // how far the wall has moved from where it started
+    let velX = 0, velY = 0; // mouse-drag momentum
     let dirty = true;
 
     // Which photo sits in a given cell. Neighbours always differ, and the
@@ -65,8 +73,8 @@
             rows = Math.ceil(list.length / fitCols);
             cols = Math.ceil(list.length / rows); // balanced rows, e.g. 4 + 3 rather than 6 + 1
         } else {
-            cols = Math.ceil(w / cellW) + 2;
-            rows = Math.ceil(window.innerHeight / cellH) + 2;
+            cols = Math.ceil(w / cellW) + 1 + OVERSCAN * 2;
+            rows = Math.ceil(window.innerHeight / cellH) + 1 + OVERSCAN * 2;
         }
     }
 
@@ -77,75 +85,107 @@
             : { width: maxH * ratio, height: maxH };
     }
 
+    // The scrollable area, and the scroll position matching offX / offY
+    function sizePlane() {
+        if (isSet()) {
+            const top = setTop();
+            plane.style.width = '100%';
+            plane.style.height = Math.max(window.innerHeight, top + rows * cellH + 80) + 'px';
+        } else {
+            plane.style.width = SPACE + 'px';
+            plane.style.height = SPACE + 'px';
+        }
+    }
+
+    function applyScroll() {
+        if (isSet()) return;
+        wall.scrollLeft = ORIGIN - offX;
+        wall.scrollTop = ORIGIN - offY;
+    }
+
+    wall.addEventListener('scroll', () => {
+        if (isSet()) return;
+        offX = ORIGIN - wall.scrollLeft;
+        offY = ORIGIN - wall.scrollTop;
+        dirty = true;
+    }, { passive: true });
+
     function buildTiles() {
         plane.textContent = '';
         tiles = [];
+        sizePlane();
         const count = isSet() ? list.length : rows * cols;
         for (let i = 0; i < count; i++) {
-            {
-                const tile = document.createElement('button');
-                tile.type = 'button';
-                tile.className = 'tile';
-                tile.style.width = cellW + 'px';
-                tile.style.height = cellH + 'px';
-                // The photo: a black-and-white copy, with the colour version laid
-                // over it (invisible until hovered)
-                const frame = document.createElement('span');
-                frame.className = 'tile-photo';
-                const img = document.createElement('img');
-                img.decoding = 'async';
-                img.draggable = false;
-                const colour = document.createElement('img');
-                colour.className = 'tile-colour';
-                colour.decoding = 'async';
-                colour.draggable = false;
-                colour.alt = '';
-                frame.append(img, colour);
-                const label = document.createElement('span');
-                label.className = 'tile-label';
-                tile.append(frame, label);
-                tile.addEventListener('click', (event) => {
-                    // Mouse and touch open photos on pointerup (so drags don't);
-                    // this handles the keyboard (Enter / Space).
-                    if (event.detail === 0) open(tile);
-                });
-                plane.append(tile);
-                tiles.push({ el: tile, img, colour, frame, label, index: -1 });
-            }
+            const tile = document.createElement('button');
+            tile.type = 'button';
+            tile.className = 'tile';
+            tile.style.width = cellW + 'px';
+            tile.style.height = cellH + 'px';
+            // The photo: a black-and-white copy, with the colour version laid
+            // over it (invisible until hovered)
+            const frame = document.createElement('span');
+            frame.className = 'tile-photo';
+            const img = document.createElement('img');
+            img.decoding = 'async';
+            img.draggable = false;
+            const colour = document.createElement('img');
+            colour.className = 'tile-colour';
+            colour.decoding = 'async';
+            colour.draggable = false;
+            colour.alt = '';
+            frame.append(img, colour);
+            const label = document.createElement('span');
+            label.className = 'tile-label';
+            tile.append(frame, label);
+            tile.addEventListener('click', () => {
+                if (suppressClick) {
+                    suppressClick = false; // that was the end of a mouse drag
+                    return;
+                }
+                open(tile);
+            });
+            plane.append(tile);
+            tiles.push({ el: tile, img, colour, frame, label, index: -1 });
         }
         dirty = true;
     }
 
     function render() {
         if (isSet()) return renderSet();
-        const firstCol = Math.floor(-offX / cellW) - 1;
-        const firstRow = Math.floor(-offY / cellH) - 1;
+        // Cells are laid out on the scrolling area itself; only the tiles near
+        // the screen exist, and they're moved along while out of sight
+        const firstCol = Math.floor(-offX / cellW) - OVERSCAN;
+        const firstRow = Math.floor(-offY / cellH) - OVERSCAN;
         let i = 0;
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 const tile = tiles[i++];
                 const col = firstCol + c, row = firstRow + r;
-                tile.el.style.transform = `translate3d(${col * cellW + offX}px, ${row * cellH + offY}px, 0)`;
+                if (tile.col !== col || tile.row !== row) {
+                    tile.col = col;
+                    tile.row = row;
+                    tile.el.style.transform = `translate(${ORIGIN + col * cellW}px, ${ORIGIN + row * cellH}px)`;
+                }
                 fillTile(tile, photoAt(col, row));
             }
         }
     }
 
-    // A place's photos, centred on the screen (the last row centred too)
-    function renderSet() {
-        // Taller than the screen? It scrolls up and down (offY), within bounds
-        const height = rows * cellH;
-        const lowest = Math.min(0, window.innerHeight - 200 - height);
-        offX = 0;
-        offY = Math.max(lowest, Math.min(0, offY));
+    function setTop() {
         const below = document.querySelector('.site-head').getBoundingClientRect().bottom + 24;
-        const top = Math.max(below, (window.innerHeight - height) / 2) + offY;
+        return Math.max(below, (window.innerHeight - rows * cellH) / 2);
+    }
+
+    // A place's photos, centred on the screen (the last row centred too). Taller
+    // than the screen? The page simply scrolls.
+    function renderSet() {
+        const top = setTop();
         tiles.forEach((tile, i) => {
             const row = Math.floor(i / cols);
             const inRow = row === rows - 1 ? list.length - row * cols : cols;
             const left = (window.innerWidth - inRow * cellW) / 2;
             const x = left + (i - row * cols) * cellW;
-            tile.el.style.transform = `translate3d(${x}px, ${top + row * cellH}px, 0)`;
+            tile.el.style.transform = `translate(${x}px, ${top + row * cellH}px)`;
             fillTile(tile, list[i]);
         });
     }
@@ -168,11 +208,13 @@
     }
 
     function frame() {
+        // Momentum after a mouse drag (touch and trackpads use native momentum)
         if (!dragging && (Math.abs(velX) > 0.05 || Math.abs(velY) > 0.05)) {
             offX += velX;
             offY += velY;
             velX *= 0.93;
             velY *= 0.93;
+            applyScroll();
             dirty = true;
         }
         if (dirty) {
@@ -182,18 +224,19 @@
         requestAnimationFrame(frame);
     }
 
-    // Dragging, with a little momentum when you let go
+    // Dragging with a mouse (touch screens and trackpads scroll natively)
     let dragging = false, pointerId = null, lastX = 0, lastY = 0, travelled = 0, lastMove = 0;
+    let suppressClick = false;
 
     wall.addEventListener('pointerdown', (event) => {
-        if (event.button !== 0 || viewerOpen) return;
+        if (event.pointerType !== 'mouse' || event.button !== 0 || viewerOpen || isSet()) return;
         dragging = true;
         pointerId = event.pointerId;
         lastX = event.clientX;
         lastY = event.clientY;
         travelled = 0;
         velX = velY = 0;
-        wall.setPointerCapture(pointerId);
+        suppressClick = false;
     });
 
     wall.addEventListener('pointermove', (event) => {
@@ -203,11 +246,15 @@
         lastY = event.clientY;
         offX += dx;
         offY += dy;
+        applyScroll();
         velX = velX * 0.5 + dx * 0.5;
         velY = velY * 0.5 + dy * 0.5;
         lastMove = performance.now();
         travelled += Math.abs(dx) + Math.abs(dy);
         if (travelled > 6) {
+            // Only now hold on to the mouse (holding it from the start would stop
+            // a plain click from reaching the photo)
+            if (!wall.hasPointerCapture(pointerId)) wall.setPointerCapture(pointerId);
             wall.classList.add('is-dragging');
             hint.classList.add('is-gone');
         }
@@ -219,30 +266,21 @@
         dragging = false;
         wall.classList.remove('is-dragging');
         if (performance.now() - lastMove > 80) velX = velY = 0; // paused before letting go
-        if (travelled <= 6 && event.type === 'pointerup') {
-            const under = document.elementFromPoint(event.clientX, event.clientY);
-            const tile = under && under.closest('.tile');
-            if (tile) open(tile);
-        }
+        suppressClick = travelled > 6;
     }
 
     wall.addEventListener('pointerup', endDrag);
     wall.addEventListener('pointercancel', endDrag);
 
-    wall.addEventListener('wheel', (event) => {
-        if (viewerOpen) return;
-        event.preventDefault();
-        offX -= event.deltaX;
-        offY -= event.deltaY;
-        hint.classList.add('is-gone');
-        dirty = true;
-    }, { passive: false });
+    // Any touch or wheel movement counts as having found out how to explore
+    ['touchmove', 'wheel'].forEach((type) => wall.addEventListener(type, () => hint.classList.add('is-gone'), { passive: true }));
 
     // Arrow keys move the wall when it has focus
     document.addEventListener('keydown', (event) => {
-        if (viewerOpen) return;
+        if (viewerOpen || isSet()) return;
         const step = { ArrowLeft: [1, 0], ArrowRight: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[event.key];
         if (!step || !wall.contains(document.activeElement)) return;
+        event.preventDefault();
         velX = step[0] * 14;
         velY = step[1] * 14;
     });
@@ -423,6 +461,7 @@
         if (shown !== current) {
             const rect = sourceTile.getBoundingClientRect();
             offX -= mod(list.indexOf(current) - list.indexOf(shown), list.length) * cellW;
+            applyScroll();
             render();
             const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
             const tile = tiles.find((t) => {
@@ -578,6 +617,9 @@
     window.addEventListener('resize', () => {
         measure();
         buildTiles();
+        if (isSet()) wall.scrollTo(0, 0);
+        else applyScroll();
+        render();
         wall.classList.add('is-in');
         if (viewerOpen && !busy) {
             resetZoom(true);
@@ -618,6 +660,8 @@
         offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
         measure();
         buildTiles();
+        if (isSet()) wall.scrollTo(0, 0);
+        else applyScroll();
         render();
         markTab();
     }
@@ -678,6 +722,8 @@
     offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
     offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
     buildTiles();
+    if (isSet()) wall.scrollTo(0, 0);
+    else applyScroll();
     markTab();
 
     // Arriving: keep showing only the moving sky until every photo on the wall is
