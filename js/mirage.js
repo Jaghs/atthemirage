@@ -247,16 +247,29 @@
         handoff() {
             // Remember where the ribbon is in its motion, plus a small snapshot of
             // it, so the next page can show the same sky from its very first frame.
-            let still = null;
+            // A plain gradient of its colours too: that draws instantly, while
+            // phones can take a moment to decode the snapshot image.
+            let still = null, sky = null;
             try {
                 draw(performance.now());
                 const small = document.createElement('canvas');
-                small.width = 480;
-                small.height = Math.round(480 * canvas.height / canvas.width);
-                small.getContext('2d').drawImage(canvas, 0, 0, small.width, small.height);
+                small.width = 320;
+                small.height = Math.round(320 * canvas.height / canvas.width);
+                const ctx = small.getContext('2d');
+                ctx.drawImage(canvas, 0, 0, small.width, small.height);
                 still = small.toDataURL('image/jpeg', 0.8);
+                const column = (x) => {
+                    const stops = [];
+                    for (let i = 0; i <= 16; i++) {
+                        const y = Math.min(small.height - 1, Math.round(i / 16 * small.height));
+                        const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+                        stops.push(`rgb(${r},${g},${b}) ${(i / 16 * 100).toFixed(1)}%`);
+                    }
+                    return 'linear-gradient(' + stops.join(',') + ')';
+                };
+                sky = column(Math.round(small.width / 2));
             } catch (e) {}
-            try { sessionStorage.setItem('mirage', JSON.stringify({ time, still })); } catch (e) {}
+            try { sessionStorage.setItem('mirage', JSON.stringify({ time, still, sky })); } catch (e) {}
         },
     };
 

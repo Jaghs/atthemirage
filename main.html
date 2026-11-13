@@ -20,9 +20,13 @@
         (function () {
             try {
                 var handoff = JSON.parse(sessionStorage.getItem('mirage') || 'null');
-                if (handoff && handoff.still) {
+                if (handoff && (handoff.still || handoff.sky)) {
+                    // Snapshot on top (sharper), instant colour gradient underneath
+                    var layers = [];
+                    if (handoff.still) layers.push('url(' + handoff.still + ') center / cover no-repeat');
+                    if (handoff.sky) layers.push(handoff.sky);
                     document.documentElement.classList.add('has-still');
-                    document.documentElement.style.backgroundImage = 'url(' + handoff.still + ')';
+                    document.documentElement.style.background = layers.join(', ');
                 }
             } catch (e) {}
         })();

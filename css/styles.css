@@ -94,8 +94,6 @@ body {
    (set in the page's <head>), and the live ribbon fades in over it unnoticed */
 html.has-still {
     background-color: var(--bg);
-    background-size: cover;
-    background-position: center;
 }
 
 html.has-still body {
