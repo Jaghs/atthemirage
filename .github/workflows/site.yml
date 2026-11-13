@@ -49,7 +49,7 @@ jobs:
           # Only the web copies and the site icons are published from images/: never
           # an original photo, in any folder (they can contain GPS locations)
           find _site/images -mindepth 1 -maxdepth 1 ! -name gallery ! -name favicon -exec rm -rf {} +
-          rm -rf "_site/from google"
+          rm -rf "_site/from google" _site/from_google _site/originals
           # Tag the code and styles with this publish's version, so browsers fetch
           # the new files instead of mixing them with copies they saved earlier
           version="${GITHUB_SHA::8}"
