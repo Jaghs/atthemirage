@@ -37,7 +37,21 @@
 
     // "all" shows the endless wall; a place lays its photos out once, centred
     let group = 'all';
-    let list = photos.map((_, i) => i); // the photos (by index) in the current tab
+    // Everywhere: all the photos in a random order, shuffled fresh on each visit
+    // (and kept for the rest of the visit, so switching places doesn't reshuffle)
+    const randomOrder = photos.map((_, i) => i);
+    for (let i = randomOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [randomOrder[i], randomOrder[j]] = [randomOrder[j], randomOrder[i]];
+    }
+
+    // The photos (by index) shown for a place, or every photo for Everywhere
+    function photosFor(name) {
+        if (name === 'all') return randomOrder.slice();
+        return photos.map((_, i) => i).filter((i) => photos[i].group === name);
+    }
+
+    let list = randomOrder.slice(); // the photos (by index) in the current tab
     const isSet = () => group !== 'all';
 
     // ------------------------------------------------------------------ wall
@@ -848,7 +862,7 @@
     // Set the place without animating (on load), or with the fade (on choosing)
     function applyGroup(name) {
         group = groupNames.includes(name) ? name : 'all';
-        list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
+        list = photosFor(group);
         velX = velY = 0;
         offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
         offY = isSet() ? 0 : startY();
@@ -956,7 +970,7 @@
 
     const initial = fromHash();
     group = initial.group;
-    list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
+    list = photosFor(group);
     measure();
     // Start with a photo-filled view centred on the screen
     offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
