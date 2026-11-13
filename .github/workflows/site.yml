@@ -46,7 +46,10 @@ jobs:
         run: |
           mkdir _site
           rsync -a --exclude '.git' --exclude '.github' --exclude 'tools' --exclude '_site' ./ _site/
-          find _site/images -maxdepth 1 -type f -delete
+          # Only the web copies and the site icons are published from images/: never
+          # an original photo, in any folder (they can contain GPS locations)
+          find _site/images -mindepth 1 -maxdepth 1 ! -name gallery ! -name favicon -exec rm -rf {} +
+          rm -rf "_site/from google"
           # Tag the code and styles with this publish's version, so browsers fetch
           # the new files instead of mixing them with copies they saved earlier
           version="${GITHUB_SHA::8}"
