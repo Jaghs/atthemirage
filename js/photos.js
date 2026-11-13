@@ -231,8 +231,8 @@ window.PHOTOS = [
     {
         "id": "golden-gate-perhaps",
         "title": "golden gate perhaps",
-        "group": "Protugal",
-        "place": "Lisbon, Protugal",
+        "group": "Portugal",
+        "place": "Lisbon, Portugal",
         "date": "June 2024",
         "src": "images/gallery/golden-gate-perhaps-900.webp",
         "large": "images/gallery/golden-gate-perhaps-1800.webp",
@@ -600,12 +600,12 @@ window.PHOTOS = [
         "colour": true
     },
     {
-        "id": "moutain-stream",
-        "title": "moutain stream",
+        "id": "mountain-stream",
+        "title": "mountain stream",
         "group": "Canada",
         "place": "Kananaskis, Canada",
-        "src": "images/gallery/moutain-stream-900.webp",
-        "large": "images/gallery/moutain-stream-1800.webp",
+        "src": "images/gallery/mountain-stream-900.webp",
+        "large": "images/gallery/mountain-stream-1800.webp",
         "width": 635,
         "height": 957,
         "colour": true
