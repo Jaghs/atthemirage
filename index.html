@@ -27,7 +27,7 @@
     <!-- Visitor stats: GoatCounter (no cookies, nothing personal stored) -->
     <script data-goatcounter="https://atthemirage.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
-<body>
+<body class="splash-page">
     <canvas class="mirage" aria-hidden="true"></canvas>
 
 
@@ -52,6 +52,10 @@
 
     <p class="credit">© 2026 Jagvir</p>
 
+    <script>
+        // The splash page is a single image: no right-click menu here
+        document.addEventListener('contextmenu', (event) => event.preventDefault());
+    </script>
     <script src="js/mirage.js"></script>
     <script src="js/photos.js"></script>
     <script src="js/enter.js"></script>

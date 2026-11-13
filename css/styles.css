@@ -216,6 +216,18 @@ html.has-still body {
     letter-spacing: 0.02em;
 }
 
+/* The splash page can't be selected, dragged or long-pressed */
+.splash-page {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.splash-page a,
+.splash-page svg {
+    -webkit-user-drag: none;
+}
+
 /* ---------- credit ---------- */
 
 .credit {
