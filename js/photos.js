@@ -622,7 +622,7 @@ window.PHOTOS = [
         "title": "paris peek",
         "group": "France",
         "place": "Paris, France",
-        "date": "June 2023",
+        "date": "August 2022",
         "src": "images/gallery/paris-peek-900.webp",
         "large": "images/gallery/paris-peek-1800.webp",
         "width": 638,
