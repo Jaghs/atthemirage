@@ -226,8 +226,12 @@
         gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
+    // Paused while something covers the whole screen (an open photo), to save battery.
+    let paused = false;
+
     function loop(now) {
-        draw(now);
+        if (paused) last = now;
+        else draw(now);
         requestAnimationFrame(loop);
     }
 
@@ -244,6 +248,9 @@
         },
         handoff() {
             try { sessionStorage.setItem('mirage', JSON.stringify({ time })); } catch (e) {}
+        },
+        pause(value) {
+            paused = value;
         },
     };
 

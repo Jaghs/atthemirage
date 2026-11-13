@@ -17,6 +17,7 @@
     </script>
     <link rel="preload" href="fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/gallery.css">
     <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
@@ -24,7 +25,7 @@
     <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
 </head>
-<body>
+<body class="gallery-page">
     <canvas class="mirage" aria-hidden="true"></canvas>
 
     <!-- Theme toggle: a hazy sun that fades into a crescent moon -->
@@ -54,12 +55,44 @@
         </svg>
     </button>
 
-    <!-- Placeholder until the gallery layout is designed -->
-    <main class="hero">
-        <p class="tagline">find me where i don't exist</p>
+    <a class="site-mark" href="index.html">AT THE MIRAGE</a>
+    <p class="site-tagline">find me where i don't exist</p>
+    <p class="wall-hint" aria-hidden="true">drag to explore</p>
+
+    <!-- The wall: an endless grid of photos you can drag in any direction -->
+    <main class="wall" aria-label="Photos">
+        <div class="wall-plane"></div>
     </main>
 
+    <!-- One photo, opened: large on the left, details on the right
+         (on phones: photo on top, scroll down for details) -->
+    <div class="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
+        <div class="viewer-stage">
+            <img class="viewer-img" alt="">
+        </div>
+        <aside class="viewer-panel">
+            <button class="viewer-close" type="button" aria-label="Close photo">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg>
+            </button>
+            <div class="viewer-strip"></div>
+            <div class="viewer-heading">
+                <p class="viewer-meta"></p>
+                <h2 class="viewer-title" id="viewer-title"></h2>
+            </div>
+            <div class="viewer-foot">
+                <div class="viewer-versions" role="group" aria-label="Version">
+                    <button type="button" data-version="bw" aria-pressed="true">b&amp;w</button>
+                    <button type="button" data-version="colour" aria-pressed="false">colour</button>
+                </div>
+                <dl class="viewer-specs"></dl>
+                <p class="viewer-count"></p>
+            </div>
+        </aside>
+    </div>
+
     <script src="js/theme.js"></script>
+    <script src="js/photos.js"></script>
     <script src="js/mirage.js"></script>
+    <script src="js/gallery.js"></script>
 </body>
 </html>
