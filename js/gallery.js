@@ -450,14 +450,22 @@
         close();
     }
 
-    const touchScreen = window.matchMedia('(hover: none)');
+    // Was this "back" an edge swipe? Those always start with a finger at the very
+    // edge of the screen moments before. A swipe animates the page itself, so the
+    // photo closes instantly; any back button gets the fly-back animation.
+    let lastEdgeTouch = -Infinity;
+    document.addEventListener('touchstart', (event) => {
+        const x = event.touches[0].clientX;
+        if (x < 30 || x > window.innerWidth - 30) lastEdgeTouch = performance.now();
+    }, { passive: true, capture: true });
+
     window.addEventListener('popstate', function closeWhenReady() {
         if (ignoreNextPop) {
             ignoreNextPop = false;
             return;
         }
         if (!viewerOpen) return;
-        if (touchScreen.matches) return closeInstantly();
+        if (performance.now() - lastEdgeTouch < 1500) return closeInstantly();
         if (busy) setTimeout(closeWhenReady, 100); // still flying open: close once it lands
         else close();
     });
