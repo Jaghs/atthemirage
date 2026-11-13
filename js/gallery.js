@@ -63,9 +63,13 @@
     function measure() {
         const w = window.innerWidth;
         cellW = w < 600 ? 150 : Math.min(280, Math.max(200, w * 0.16));
-        cellH = cellW * 1.2;
         boxW = cellW * 0.7;
-        boxH = cellH * 0.7;
+        boxH = cellW * 1.2 * 0.7;
+        // Rows sit far enough apart that, with the first row just below the places
+        // button, the row above stays hidden behind the header
+        const head = document.querySelector('.site-head').getBoundingClientRect().bottom;
+        const needed = belowPlaces() - head + 4;
+        cellH = boxH + Math.max(cellW * 1.2 * 0.3, needed);
         if (isSet()) {
             // Just this place's photos, in as few rows as fit the screen
             const fitCols = Math.max(1, Math.floor((w - 32) / cellW));
@@ -170,8 +174,23 @@
         }
     }
 
+    // The space between the header and the places button; the first row of photos
+    // sits the same distance below the button, so nothing is behind it on arrival
+    function belowPlaces() {
+        const head = document.querySelector('.site-head').getBoundingClientRect();
+        const places = document.querySelector('.places').getBoundingClientRect();
+        return places.bottom + (places.top - head.bottom);
+    }
+
+    // Where the endless wall starts, so the first row's photos (centred in their
+    // cells) begin just below the places button
+    function startY() {
+        const tallest = Math.max(...list.map((i) => fit(photos[i], boxW, boxH).height));
+        return belowPlaces() - (cellH - tallest) / 2;
+    }
+
     function setTop() {
-        const below = document.querySelector('.places').getBoundingClientRect().bottom + 24;
+        const below = belowPlaces();
         return Math.max(below, (window.innerHeight - rows * cellH) / 2);
     }
 
@@ -827,7 +846,7 @@
         list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
         velX = velY = 0;
         offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
-        offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
+        offY = isSet() ? 0 : startY();
         measure();
         buildTiles();
         if (isSet()) wall.scrollTo(0, 0);
@@ -936,7 +955,7 @@
     measure();
     // Start with a photo-filled view centred on the screen
     offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
-    offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
+    offY = isSet() ? 0 : startY();
     buildTiles();
     if (isSet()) wall.scrollTo(0, 0);
     else applyScroll();

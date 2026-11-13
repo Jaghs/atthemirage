@@ -118,6 +118,9 @@
 
 .site-mark {
     flex: none;
+    /* Only the letters are clickable, not the rest of the header's column */
+    justify-self: start;
+    line-height: 1;
     color: var(--red);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
     font-size: 18px;
