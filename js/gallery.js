@@ -438,14 +438,24 @@
 
     // Close buttons, Escape and clicking outside all go through history, so the
     // extra step added on opening is used up and back works as expected afterwards
+    // (The close button, Escape and clicking outside always play the fly-back
+    // animation; the history step they use up is then ignored)
+    let ignoreNextPop = false;
     function requestClose() {
         if (!viewerOpen || busy) return;
-        if (history.state && history.state.photo) history.back();
-        else close();
+        if (history.state && history.state.photo) {
+            ignoreNextPop = true;
+            history.back();
+        }
+        close();
     }
 
     const touchScreen = window.matchMedia('(hover: none)');
     window.addEventListener('popstate', function closeWhenReady() {
+        if (ignoreNextPop) {
+            ignoreNextPop = false;
+            return;
+        }
         if (!viewerOpen) return;
         if (touchScreen.matches) return closeInstantly();
         if (busy) setTimeout(closeWhenReady, 100); // still flying open: close once it lands
