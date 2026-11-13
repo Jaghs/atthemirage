@@ -314,12 +314,15 @@
         const to = placeImage(targetRect(photo));
         viewImg.classList.remove('is-flying');
         viewImg.style.transform = flipFrom(from, to);
+        // Starts as it looked on the wall (colour if hovered, b&w otherwise)
+        viewImg.style.filter = tile.matches(':hover') ? 'none' : 'grayscale(1)';
         tile.classList.add('is-lifted');
         viewImg.getBoundingClientRect(); // apply the starting position before animating
 
         viewImg.classList.add('is-flying');
         viewer.classList.add('is-open');
         viewImg.style.transform = 'none';
+        viewImg.style.filter = 'none';
         onceTransitionEnds(viewImg, () => {
             viewImg.classList.remove('is-flying');
             busy = false;
@@ -358,6 +361,7 @@
             viewImg.classList.remove('is-flying');
             viewImg.style.transform = '';
             viewImg.style.opacity = '';
+            viewImg.style.filter = '';
             tiles.forEach((t) => t.el.classList.remove('is-lifted'));
             viewerOpen = false;
             busy = false;
@@ -379,6 +383,7 @@
         // Fly from the current spot back into the wall
         viewImg.classList.add('is-flying');
         viewImg.style.transform = flipFrom(from, to);
+        viewImg.style.filter = 'grayscale(1)'; // lands back in b&w, like the wall
         onceTransitionEnds(viewImg, finish, 1000);
     }
 

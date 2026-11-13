@@ -17,7 +17,7 @@
 /* After the bloom from the splash page, the sky settles into a soft glow
    behind the photos */
 .gallery-page .mirage.is-ready.is-dim {
-    opacity: 0.32;
+    opacity: 0.75;
     transition: opacity 2s var(--ease);
 }
 
@@ -83,7 +83,9 @@
     inset: 0;
 }
 
+/* Only the photo itself responds to the mouse, not the empty space around it */
 .tile {
+    pointer-events: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -100,15 +102,17 @@
     will-change: transform;
 }
 
+/* On the wall every photo is black and white; hovering brings back its colour */
 .tile img {
     display: block;
     box-shadow: var(--tile-shadow);
+    filter: grayscale(1);
     opacity: 0;
     transform: scale(0.94);
-    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
-    transition-delay: var(--delay, 0s);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease), filter 0.5s var(--ease);
+    transition-delay: var(--delay, 0s), var(--delay, 0s), 0s;
     -webkit-user-drag: none;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .wall.is-in .tile img {
@@ -137,6 +141,7 @@
 @media (hover: hover) {
     .wall:not(.is-dragging) .tile:hover img {
         transform: scale(1.03);
+        filter: grayscale(0);
         transition-delay: 0s;
     }
 
@@ -197,7 +202,7 @@
 }
 
 .viewer-img.is-flying {
-    transition: transform 0.8s cubic-bezier(0.22, 0.8, 0.2, 1), opacity 0.3s var(--ease);
+    transition: transform 0.8s cubic-bezier(0.22, 0.8, 0.2, 1), opacity 0.3s var(--ease), filter 0.8s var(--ease);
 }
 
 .viewer-img.is-swapping {
