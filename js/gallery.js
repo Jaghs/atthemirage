@@ -681,14 +681,7 @@
     const menu = document.querySelector('.places-menu');
     const scrim = document.querySelector('.places-scrim');
 
-    // A row for each place, with how many photos and which years
-    function yearsOf(indexes) {
-        const years = indexes.map((i) => parseInt((photos[i].date || '').slice(-4), 10)).filter(Boolean);
-        if (!years.length) return '';
-        const low = Math.min(...years), high = Math.max(...years);
-        return low === high ? String(low) : `${low}–${String(high).slice(-2)}`;
-    }
-
+    // A row for each place, with how many photos it has
     function menuRow(name, label, indexes) {
         const row = document.createElement('button');
         row.type = 'button';
@@ -700,10 +693,7 @@
         const count = document.createElement('span');
         count.className = 'places-count';
         count.textContent = indexes.length;
-        const years = document.createElement('span');
-        years.className = 'places-years';
-        years.textContent = name === 'all' ? '' : yearsOf(indexes);
-        row.append(title, count, years);
+        row.append(title, count);
         row.addEventListener('click', () => {
             closeMenu();
             choose(name);
