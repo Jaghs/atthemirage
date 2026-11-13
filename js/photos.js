@@ -11,8 +11,7 @@ window.PHOTOS = [
         "src": "images/gallery/jaghs-900.jpg",
         "large": "images/gallery/jaghs-1800.jpg",
         "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/jaghs-colour-1800.jpg"
+        "height": 1200
     },
     {
         "id": "tree",
@@ -24,8 +23,7 @@ window.PHOTOS = [
         "src": "images/gallery/tree-900.jpg",
         "large": "images/gallery/tree-1800.jpg",
         "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/tree-colour-1800.jpg"
+        "height": 1200
     },
     {
         "id": "jaghs-blurry",
@@ -40,16 +38,15 @@ window.PHOTOS = [
         "height": 1200
     },
     {
-        "id": "japan-road",
-        "title": "japan road",
-        "place": "Japan",
-        "date": "June 2023",
-        "camera": "iPhone 13 Pro Max",
-        "settings": "f/1.5 \u00b7 1/1209 s \u00b7 ISO 50",
-        "focal": "5.7 mm",
-        "src": "images/gallery/japan-road-900.jpg",
-        "large": "images/gallery/japan-road-1800.jpg",
-        "width": 800,
+        "id": "downtown",
+        "title": "downtown",
+        "date": "May 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 \u00b7 1/20 s \u00b7 ISO 1600",
+        "focal": "5.8 mm",
+        "src": "images/gallery/downtown-900.jpg",
+        "large": "images/gallery/downtown-1800.jpg",
+        "width": 900,
         "height": 1200
     },
     {
@@ -65,59 +62,6 @@ window.PHOTOS = [
         "height": 1200
     },
     {
-        "id": "downtown",
-        "title": "downtown",
-        "date": "May 2024",
-        "camera": "Canon PowerShot SD1000",
-        "settings": "f/2.8 \u00b7 1/20 s \u00b7 ISO 1600",
-        "focal": "5.8 mm",
-        "src": "images/gallery/downtown-900.jpg",
-        "large": "images/gallery/downtown-1800.jpg",
-        "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/downtown-colour-1800.jpg"
-    },
-    {
-        "id": "somewhere-in-paris",
-        "title": "somewhere in paris",
-        "place": "Paris",
-        "date": "January 2024",
-        "camera": "Canon PowerShot SD1000",
-        "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
-        "focal": "5.8 mm",
-        "src": "images/gallery/somewhere-in-paris-900.jpg",
-        "large": "images/gallery/somewhere-in-paris-1800.jpg",
-        "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/somewhere-in-paris-colour-1800.jpg"
-    },
-    {
-        "id": "family-mart",
-        "title": "family mart",
-        "place": "Japan",
-        "date": "June 2023",
-        "camera": "iPhone 13 Pro Max",
-        "settings": "f/1.5 \u00b7 1/120 s \u00b7 ISO 40",
-        "focal": "5.7 mm",
-        "src": "images/gallery/family-mart-900.jpg",
-        "large": "images/gallery/family-mart-1800.jpg",
-        "width": 800,
-        "height": 1200
-    },
-    {
-        "id": "lightbulb",
-        "title": "lightbulb",
-        "date": "January 2024",
-        "camera": "Canon PowerShot SD1000",
-        "settings": "f/2.8 \u00b7 1/125 s \u00b7 ISO 200",
-        "focal": "5.8 mm",
-        "src": "images/gallery/lightbulb-900.jpg",
-        "large": "images/gallery/lightbulb-1800.jpg",
-        "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/lightbulb-colour-1800.jpg"
-    },
-    {
         "id": "scary-bench",
         "title": "scary bench",
         "date": "May 2024",
@@ -127,8 +71,7 @@ window.PHOTOS = [
         "src": "images/gallery/scary-bench-900.jpg",
         "large": "images/gallery/scary-bench-1800.jpg",
         "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/scary-bench-colour-1800.jpg"
+        "height": 1200
     },
     {
         "id": "portugal",
@@ -144,17 +87,29 @@ window.PHOTOS = [
         "height": 1200
     },
     {
-        "id": "cemetery",
-        "title": "cemetery",
-        "date": "December 2023",
+        "id": "somewhere-in-paris",
+        "title": "somewhere in paris",
+        "place": "Paris",
+        "date": "January 2024",
         "camera": "Canon PowerShot SD1000",
-        "settings": "f/2.8 \u00b7 1/60 s \u00b7 ISO 250",
+        "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
         "focal": "5.8 mm",
-        "src": "images/gallery/cemetery-900.jpg",
-        "large": "images/gallery/cemetery-1800.jpg",
+        "src": "images/gallery/somewhere-in-paris-900.jpg",
+        "large": "images/gallery/somewhere-in-paris-1800.jpg",
         "width": 900,
-        "height": 1200,
-        "colour": "images/gallery/cemetery-colour-1800.jpg"
+        "height": 1200
+    },
+    {
+        "id": "lightbulb",
+        "title": "lightbulb",
+        "date": "January 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 \u00b7 1/125 s \u00b7 ISO 200",
+        "focal": "5.8 mm",
+        "src": "images/gallery/lightbulb-900.jpg",
+        "large": "images/gallery/lightbulb-1800.jpg",
+        "width": 900,
+        "height": 1200
     },
     {
         "id": "amour",
@@ -166,6 +121,43 @@ window.PHOTOS = [
         "src": "images/gallery/amour-900.jpg",
         "large": "images/gallery/amour-1800.jpg",
         "width": 900,
+        "height": 1200
+    },
+    {
+        "id": "cemetery",
+        "title": "cemetery",
+        "date": "December 2023",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 \u00b7 1/60 s \u00b7 ISO 250",
+        "focal": "5.8 mm",
+        "src": "images/gallery/cemetery-900.jpg",
+        "large": "images/gallery/cemetery-1800.jpg",
+        "width": 900,
+        "height": 1200
+    },
+    {
+        "id": "hotel",
+        "title": "hotel",
+        "date": "December 2023",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
+        "focal": "5.8 mm",
+        "src": "images/gallery/hotel-900.jpg",
+        "large": "images/gallery/hotel-1800.jpg",
+        "width": 1200,
+        "height": 900
+    },
+    {
+        "id": "family-mart",
+        "title": "family mart",
+        "place": "Japan",
+        "date": "June 2023",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 \u00b7 1/120 s \u00b7 ISO 40",
+        "focal": "5.7 mm",
+        "src": "images/gallery/family-mart-900.jpg",
+        "large": "images/gallery/family-mart-1800.jpg",
+        "width": 800,
         "height": 1200
     },
     {
@@ -182,16 +174,17 @@ window.PHOTOS = [
         "height": 1200
     },
     {
-        "id": "hotel",
-        "title": "hotel",
-        "date": "December 2023",
-        "camera": "Canon PowerShot SD1000",
-        "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
-        "focal": "5.8 mm",
-        "src": "images/gallery/hotel-900.jpg",
-        "large": "images/gallery/hotel-1800.jpg",
-        "width": 1200,
-        "height": 900
+        "id": "japan-road",
+        "title": "japan road",
+        "place": "Japan",
+        "date": "June 2023",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 \u00b7 1/1209 s \u00b7 ISO 50",
+        "focal": "5.7 mm",
+        "src": "images/gallery/japan-road-900.jpg",
+        "large": "images/gallery/japan-road-1800.jpg",
+        "width": 800,
+        "height": 1200
     },
     {
         "id": "garden",

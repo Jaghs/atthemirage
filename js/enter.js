@@ -18,6 +18,20 @@
         });
     });
 
+    // Once the splash page has settled, quietly fetch the gallery's photos so
+    // they're ready the moment the gallery opens.
+    window.addEventListener('load', () => {
+        const prefetch = () => (window.PHOTOS || []).forEach((photo) => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.as = 'image';
+            link.href = photo.src;
+            document.head.append(link);
+        });
+        if ('requestIdleCallback' in window) requestIdleCallback(prefetch, { timeout: 2000 });
+        else setTimeout(prefetch, 1000);
+    });
+
     // Coming back with the browser's back button can restore this page exactly as
     // it was left (faded out, fully bloomed), so put it back to its resting state.
     window.addEventListener('pageshow', (event) => {

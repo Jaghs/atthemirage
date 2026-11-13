@@ -21,9 +21,13 @@
     transition: opacity 2s var(--ease);
 }
 
+/* The theme toggle sits above the wall so it can be clicked */
+.gallery-page .theme-toggle {
+    z-index: 3;
+}
+
 /* Small fixed labels around the wall */
 .site-mark,
-.site-tagline,
 .wall-hint {
     position: fixed;
     z-index: 2;
@@ -41,17 +45,12 @@
     text-decoration: none;
 }
 
-.site-tagline,
 .wall-hint {
     bottom: max(22px, env(safe-area-inset-bottom));
     color: var(--muted);
     font-size: 13px;
     letter-spacing: 0.02em;
     pointer-events: none;
-}
-
-.site-tagline {
-    left: max(24px, env(safe-area-inset-left));
 }
 
 .wall-hint {
@@ -274,8 +273,7 @@
 }
 
 .viewer-close:focus-visible,
-.viewer-strip button:focus-visible,
-.viewer-versions button:focus-visible {
+.viewer-strip button:focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 2px;
 }
@@ -344,33 +342,6 @@
     gap: 18px;
 }
 
-.viewer-versions {
-    display: flex;
-    gap: 4px;
-}
-
-.viewer-versions[hidden] {
-    display: none;
-}
-
-.viewer-versions button {
-    padding: 6px 12px;
-    border: 1px solid var(--panel-line);
-    border-radius: 999px;
-    background: none;
-    color: var(--muted);
-    font: 12px/1 var(--sans);
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    transition: color 0.3s var(--ease), background-color 0.3s var(--ease);
-}
-
-.viewer-versions button[aria-pressed="true"] {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--bg);
-}
-
 .viewer-specs {
     display: grid;
     gap: 8px;
@@ -413,7 +384,6 @@
 
 /* While a photo is open, the labels around the wall step back */
 .is-viewing .site-mark,
-.is-viewing .site-tagline,
 .is-viewing .wall-hint,
 .is-viewing .theme-toggle {
     opacity: 0;

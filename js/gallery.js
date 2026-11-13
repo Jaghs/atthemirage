@@ -18,7 +18,6 @@
     const titleEl = viewer.querySelector('.viewer-title');
     const specsEl = viewer.querySelector('.viewer-specs');
     const countEl = viewer.querySelector('.viewer-count');
-    const versions = viewer.querySelector('.viewer-versions');
     const closeButton = viewer.querySelector('.viewer-close');
     const phone = window.matchMedia('(max-width: 760px)');
     const N = photos.length;
@@ -198,7 +197,6 @@
     let viewerOpen = false;
     let busy = false;
     let current = 0;
-    let version = 'bw';
     let sourceTile = null;
     let zoomed = false;
 
@@ -232,9 +230,6 @@
                 specsEl.append(row);
             });
         countEl.textContent = `${index + 1} / ${N}`;
-        versions.hidden = !photo.colour;
-        version = 'bw';
-        versions.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.version === 'bw')));
         strip.querySelectorAll('button').forEach((b, i) => {
             if (i === index) {
                 b.setAttribute('aria-current', 'true');
@@ -276,7 +271,7 @@
     }
 
     function loadLarge(photo, index) {
-        const src = version === 'colour' && photo.colour ? photo.colour : photo.large;
+        const src = photo.large;
         const large = new Image();
         large.src = src;
         large.decode().then(() => {
@@ -327,7 +322,6 @@
         onceTransitionEnds(viewImg, () => {
             viewImg.classList.remove('is-flying');
             busy = false;
-            if (window.mirage) window.mirage.pause(true);
         }, 1000);
         loadLarge(photo, current);
         closeButton.focus({ preventScroll: true });
@@ -355,7 +349,6 @@
     function close() {
         if (!viewerOpen || busy) return;
         busy = true;
-        if (window.mirage) window.mirage.pause(false);
         resetZoom(true);
         const tile = returnTile();
         const finish = () => {
@@ -408,21 +401,6 @@
             });
         }, 200);
     }
-
-    // b&w / colour, for photos that have both
-    versions.addEventListener('click', (event) => {
-        const button = event.target.closest('button');
-        if (!button || button.dataset.version === version) return;
-        version = button.dataset.version;
-        versions.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
-        viewImg.classList.add('is-swapping');
-        setTimeout(() => {
-            const photo = photos[current];
-            viewImg.src = version === 'colour' ? photo.colour.replace('-1800', '-900') : photo.src;
-            loadLarge(photo, current);
-            requestAnimationFrame(() => viewImg.classList.remove('is-swapping'));
-        }, 200);
-    });
 
     // Zoom: click the photo to look closer; the view follows the mouse
     const ZOOM = 2.6;
@@ -520,10 +498,21 @@
     render();
     requestAnimationFrame(frame);
 
-    // Arriving: the photos float in from the centre while the sky settles behind them
-    setTimeout(() => {
-        wall.classList.add('is-in');
-        const sky = document.querySelector('.mirage');
-        if (sky) sky.classList.add('is-dim');
-    }, 450);
+    // Arriving: decode the photos first (off the main thread), then float them in
+    // from the centre while the sky settles behind them. Waiting avoids the stutter
+    // of many images decoding mid-animation.
+    const ready = Promise.all(photos.map((photo) => {
+        const img = new Image();
+        img.src = photo.src;
+        return img.decode().catch(() => {});
+    }));
+    const atLeast = new Promise((resolve) => setTimeout(resolve, 450));
+    const atMost = new Promise((resolve) => setTimeout(resolve, 3000));
+    Promise.race([Promise.all([ready, atLeast]), atMost]).then(() => {
+        requestAnimationFrame(() => {
+            wall.classList.add('is-in');
+            const sky = document.querySelector('.mirage');
+            if (sky) sky.classList.add('is-dim');
+        });
+    });
 })();

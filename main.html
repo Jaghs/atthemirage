@@ -26,7 +26,7 @@
     <meta name="msapplication-TileColor" content="#da532c">
 </head>
 <body class="gallery-page">
-    <canvas class="mirage" aria-hidden="true"></canvas>
+    <canvas class="mirage" aria-hidden="true" data-max-resolution="1"></canvas>
 
     <!-- Theme toggle: a hazy sun that fades into a crescent moon -->
     <button class="theme-toggle" type="button" aria-label="Switch to dark theme">
@@ -56,7 +56,6 @@
     </button>
 
     <a class="site-mark" href="index.html">AT THE MIRAGE</a>
-    <p class="site-tagline">find me where i don't exist</p>
     <p class="wall-hint" aria-hidden="true">drag to explore</p>
 
     <!-- The wall: an endless grid of photos you can drag in any direction -->
@@ -80,10 +79,6 @@
                 <h2 class="viewer-title" id="viewer-title"></h2>
             </div>
             <div class="viewer-foot">
-                <div class="viewer-versions" role="group" aria-label="Version">
-                    <button type="button" data-version="bw" aria-pressed="true">b&amp;w</button>
-                    <button type="button" data-version="colour" aria-pressed="false">colour</button>
-                </div>
                 <dl class="viewer-specs"></dl>
                 <p class="viewer-count"></p>
             </div>

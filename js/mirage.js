@@ -165,9 +165,11 @@
     let night = isDark() ? 1 : 0;
 
     // Render at the screen's real pixel density (up to 2x) so the grain stays
-    // fine instead of being stretched into visible specks.
+    // fine instead of being stretched into visible specks. Pages where the sky is
+    // only a dim backdrop (the gallery) can ask for less, to keep things smooth.
+    const maxResolution = Number(canvas.dataset.maxResolution) || 2;
     function resize() {
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        const ratio = Math.min(window.devicePixelRatio || 1, maxResolution);
         const width = Math.round(canvas.clientWidth * ratio);
         const height = Math.round(canvas.clientHeight * ratio);
         if (canvas.width !== width || canvas.height !== height) {
@@ -226,12 +228,8 @@
         gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
-    // Paused while something covers the whole screen (an open photo), to save battery.
-    let paused = false;
-
     function loop(now) {
-        if (paused) last = now;
-        else draw(now);
+        draw(now);
         requestAnimationFrame(loop);
     }
 
@@ -248,9 +246,6 @@
         },
         handoff() {
             try { sessionStorage.setItem('mirage', JSON.stringify({ time })); } catch (e) {}
-        },
-        pause(value) {
-            paused = value;
         },
     };
 
