@@ -52,9 +52,21 @@ def parse_name(filename):
     return title or stem, group, place
 
 
+SCANNERS = ('NORITSU', 'EZ CONTROLLER', 'FRONTIER', 'FUJI FRONTIER', 'EPSON SCAN', 'SILVERFAST')
+
+
+def is_film_scan(exif):
+    text = ' '.join(str(exif.get(tag, '')) for tag in (271, 272, 305)).upper()
+    return any(name in text for name in SCANNERS)
+
+
 def details(image):
     exif = image.getexif()
     sub = exif.get_ifd(0x8769)
+    if is_film_scan(exif):
+        # A lab scan of film: the "camera" is the scanner and the date is the
+        # scan date, so neither belongs in the details (set them in details.json)
+        return {}, None
     get = lambda name: sub.get(TAGS[name]) or exif.get(TAGS[name])
     info, taken = {}, None
     stamp = get('DateTimeOriginal') or get('DateTime')
@@ -183,8 +195,20 @@ def spread(photos):
     return order
 
 
+def load_overrides():
+    """images/details.json: details to set by hand, by photo title, e.g.
+    {"como stairs": {"camera": "Fujifilm film camera", "date": "June 2023"}}"""
+    path = os.path.join(SOURCE, 'details.json')
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding='utf-8') as f:
+        data = json.load(f)
+    return {k.lower(): v for k, v in data.items() if not k.startswith('_')}
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
+    overrides = load_overrides()
     files = sorted(f for f in os.listdir(SOURCE)
                    if f.lower().endswith(TYPES) and os.path.isfile(os.path.join(SOURCE, f)))
     photos, used, made = [], set(), set()
@@ -208,6 +232,12 @@ def main():
         if place:
             entry['place'] = place
         entry.update(info)
+        for key, value in overrides.get(title.lower(), {}).items():
+            if key in ('camera', 'date', 'settings', 'focal', 'place'):
+                if value:
+                    entry[key] = value
+                else:
+                    entry.pop(key, None)
         entry.update({'src': f'images/gallery/{slug}-900.webp', 'large': f'images/gallery/{slug}-1800.webp',
                       'width': width, 'height': height})
         if is_colour(image):

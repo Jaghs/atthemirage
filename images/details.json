@@ -1,0 +1,24 @@
+{
+    "_how to use": "Set details by photo title. Use camera, date (e.g. June 2023), settings, focal or place. An empty value hides that detail.",
+    "como stairs": {
+        "camera": "Fujifilm film camera"
+    },
+    "somewhere in paris": {
+        "date": "September 2022"
+    },
+    "lightbulb": {
+        "date": "September 2022"
+    },
+    "amour": {
+        "date": "September 2022"
+    },
+    "cemetery": {
+        "date": "September 2022"
+    },
+    "sunset": {
+        "date": "September 2022"
+    },
+    "market": {
+        "date": "September 2022"
+    }
+}
