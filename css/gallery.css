@@ -245,7 +245,9 @@
     z-index: 3;
     top: var(--head-centre, 34px);
     left: var(--places-left, 180px);
-    transform: translateY(-50%);
+    /* Centred on the title's capital letters (which sit high in their line),
+       not on its line box, so the two read as level */
+    transform: translateY(calc(-50% - 2px));
 }
 
 .places-button {
