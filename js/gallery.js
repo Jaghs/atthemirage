@@ -631,11 +631,15 @@
     // Zoom: click the photo to look closer; the view follows the mouse
     const ZOOM = 2.6;
 
+    // Where the pointer is on the photo, measured against the photo's resting
+    // (unzoomed) place, which doesn't move while the zoom animates. Zooming
+    // around that point keeps it under the pointer; moving pans evenly.
     function zoomOrigin(event) {
-        const r = viewImg.getBoundingClientRect();
-        const scale = zoomed ? ZOOM : 1;
-        const x = (event.clientX - r.left) / (r.width / scale) * 100;
-        const y = (event.clientY - r.top) / (r.height / scale) * 100;
+        const box = stage.getBoundingClientRect();
+        const left = box.left + parseFloat(viewImg.style.left);
+        const top = box.top + parseFloat(viewImg.style.top);
+        const x = (event.clientX - left) / parseFloat(viewImg.style.width) * 100;
+        const y = (event.clientY - top) / parseFloat(viewImg.style.height) * 100;
         return `${Math.max(0, Math.min(100, x))}% ${Math.max(0, Math.min(100, y))}%`;
     }
 
@@ -668,7 +672,9 @@
         }
         zoomed = true;
         viewer.classList.add('is-zoomed-in');
+        // Set the zoom point first, so it doesn't slide in from the corner
         viewImg.style.transformOrigin = zoomOrigin(event);
+        viewImg.getBoundingClientRect();
         viewImg.classList.add('is-zoomed');
         viewImg.style.transform = `scale(${ZOOM})`;
     });
