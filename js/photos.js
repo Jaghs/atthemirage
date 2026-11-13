@@ -635,10 +635,13 @@ window.PHOTOS = [
         "group": "Italy",
         "place": "Verona, Italy",
         "date": "June 2023",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 · 1/1377 s · ISO 50",
+        "focal": "5.7 mm",
         "src": "images/gallery/verona-view-900.webp",
         "large": "images/gallery/verona-view-1800.webp",
-        "width": 638,
-        "height": 957,
+        "width": 800,
+        "height": 1200,
         "colour": true
     },
     {
@@ -647,10 +650,13 @@ window.PHOTOS = [
         "group": "Italy",
         "place": "Florence, Italy",
         "date": "June 2023",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 · 1/2353 s · ISO 50",
+        "focal": "5.7 mm",
         "src": "images/gallery/florence-view-900.webp",
         "large": "images/gallery/florence-view-1800.webp",
-        "width": 638,
-        "height": 957,
+        "width": 800,
+        "height": 1200,
         "colour": true
     },
     {
