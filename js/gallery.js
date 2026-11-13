@@ -330,7 +330,10 @@
             b.hidden = !list.includes(i);
             if (i === index) {
                 b.setAttribute('aria-current', 'true');
-                b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: viewerOpen ? 'smooth' : 'auto' });
+                // Centre this thumbnail in the reel by scrolling the reel sideways only
+                // (scrollIntoView would also scroll the whole view down to the reel)
+                const left = b.offsetLeft - (strip.clientWidth - b.offsetWidth) / 2;
+                strip.scrollTo({ left, behavior: viewerOpen ? 'smooth' : 'auto' });
             } else {
                 b.removeAttribute('aria-current');
             }
@@ -340,12 +343,15 @@
     // Where the large photo should sit, in page coordinates
     function targetRect(photo) {
         if (phone.matches) {
-            const pad = 20;
-            const size = fit(photo, window.innerWidth - pad * 2, window.innerHeight * 0.72);
-            const stageHeight = size.height + 88;
-            stage.style.setProperty('--stage-height', stageHeight + 'px');
+            // Sized so the whole photo and its title and details fit on one screen,
+            // the same for every photo; the reel waits just below
+            const pad = 20, above = 64, gap = 20;
+            const details = heading.getBoundingClientRect().height;
+            const room = window.innerHeight - above - gap - details - 28;
+            const size = fit(photo, window.innerWidth - pad * 2, Math.max(room, window.innerHeight * 0.35));
+            stage.style.setProperty('--stage-height', above + size.height + gap + 'px');
             const top = stage.getBoundingClientRect().top;
-            return { left: (window.innerWidth - size.width) / 2, top: top + 64, ...size };
+            return { left: (window.innerWidth - size.width) / 2, top: top + above, ...size };
         }
         const box = stage.getBoundingClientRect();
         const pad = Math.max(32, box.width * 0.05);
