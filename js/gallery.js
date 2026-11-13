@@ -71,9 +71,6 @@
                 const label = document.createElement('span');
                 label.className = 'tile-label';
                 tile.append(img, label);
-                // Photos appear from the centre outwards on arrival
-                const dist = Math.hypot((c - 1) * cellW + cellW / 2 - cx, (r - 1) * cellH + cellH / 2 - cy);
-                img.style.setProperty('--delay', (dist / 2400).toFixed(2) + 's');
                 tile.addEventListener('click', (event) => {
                     // Mouse and touch open photos on pointerup (so drags don't);
                     // this handles the keyboard (Enter / Space).
@@ -512,21 +509,16 @@
     render();
     requestAnimationFrame(frame);
 
-    // Arriving: decode the photos first (off the main thread), then float them in
-    // from the centre while the sky settles behind them. Waiting avoids the stutter
-    // of many images decoding mid-animation.
-    const ready = Promise.all(photos.map((photo) => {
-        const img = new Image();
-        img.src = photo.src;
-        return img.decode().catch(() => {});
-    }));
-    const atLeast = new Promise((resolve) => setTimeout(resolve, 450));
-    const atMost = new Promise((resolve) => setTimeout(resolve, 3000));
+    // Arriving: keep showing only the moving sky until every photo on the wall is
+    // fully decoded, then fade the whole wall in as one (a single cheap fade,
+    // rather than dozens of photos animating while they load).
+    const ready = Promise.all(tiles.map((tile) => tile.img.decode().catch(() => {})));
+    const atLeast = new Promise((resolve) => setTimeout(resolve, 300));
+    const atMost = new Promise((resolve) => setTimeout(resolve, 8000));
     Promise.race([Promise.all([ready, atLeast]), atMost]).then(() => {
         requestAnimationFrame(() => {
             wall.classList.add('is-in');
-            const sky = document.querySelector('.mirage');
-            if (sky) sky.classList.add('is-dim');
+            document.body.classList.add('is-arrived');
         });
     });
 })();

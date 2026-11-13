@@ -4,21 +4,35 @@
     --panel: #fbfaf8;
     --panel-line: rgba(17, 17, 17, 0.08);
     --muted: rgba(17, 17, 17, 0.5);
-    --tile-shadow: 0 10px 30px -12px rgba(40, 30, 50, 0.35);
+    --tile-shadow: 0 1px 3px rgba(20, 15, 30, 0.18);
 }
 
 :root[data-theme="dark"] {
     --panel: #0c0b10;
     --panel-line: rgba(241, 239, 236, 0.1);
     --muted: rgba(241, 239, 236, 0.5);
-    --tile-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.8);
+    --tile-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
-/* After the bloom from the splash page, the sky settles into a soft glow
-   behind the photos */
-.gallery-page .mirage.is-ready.is-dim {
-    opacity: 0.75;
-    transition: opacity 2s var(--ease);
+/* Arriving from the splash page: the sky carries straight on, and once every
+   photo is loaded the wall, the name and the toggle all fade in together */
+.gallery-page .wall-plane,
+.gallery-page .site-mark,
+.gallery-page .wall-hint,
+.gallery-page .theme-toggle {
+    opacity: 0;
+    transition: opacity 1s var(--ease);
+}
+
+.gallery-page .theme-toggle {
+    animation: none;
+}
+
+.gallery-page.is-arrived .wall-plane,
+.gallery-page.is-arrived:not(.is-viewing) .site-mark,
+.gallery-page.is-arrived:not(.is-viewing) .wall-hint:not(.is-gone),
+.gallery-page.is-arrived:not(.is-viewing) .theme-toggle {
+    opacity: 1;
 }
 
 /* The theme toggle sits above the wall so it can be clicked */
@@ -107,17 +121,9 @@
     display: block;
     box-shadow: var(--tile-shadow);
     filter: grayscale(1);
-    opacity: 0;
-    transform: scale(0.94);
-    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease), filter 0.5s var(--ease);
-    transition-delay: var(--delay, 0s), var(--delay, 0s), 0s;
+    transition: transform 0.5s var(--ease), filter 0.5s var(--ease);
     -webkit-user-drag: none;
     pointer-events: auto;
-}
-
-.wall.is-in .tile img {
-    opacity: 1;
-    transform: none;
 }
 
 /* Hovering a photo: it lifts slightly and its name appears underneath */
@@ -142,7 +148,6 @@
     .wall:not(.is-dragging) .tile:hover img {
         transform: scale(1.03);
         filter: grayscale(0);
-        transition-delay: 0s;
     }
 
     .wall:not(.is-dragging) .tile:hover .tile-label {
@@ -482,9 +487,3 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .tile img {
-        transition: opacity 0.4s var(--ease);
-        transform: none;
-    }
-}

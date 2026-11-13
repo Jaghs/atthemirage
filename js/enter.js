@@ -18,18 +18,22 @@
         });
     });
 
-    // Once the splash page has settled, quietly fetch the gallery's photos so
-    // they're ready the moment the gallery opens.
+    // As soon as the splash page has loaded, fetch everything the gallery needs
+    // (its page, styles, code and every wall photo) so it opens from the cache.
     window.addEventListener('load', () => {
-        const prefetch = () => (window.PHOTOS || []).forEach((photo) => {
+        const files = ['main.html', 'css/gallery.css', 'js/gallery.js']
+            .concat((window.PHOTOS || []).map((photo) => photo.src));
+        files.forEach((href) => {
             const link = document.createElement('link');
             link.rel = 'prefetch';
-            link.as = 'image';
-            link.href = photo.src;
+            link.href = href;
             document.head.append(link);
         });
-        if ('requestIdleCallback' in window) requestIdleCallback(prefetch, { timeout: 2000 });
-        else setTimeout(prefetch, 1000);
+        // Also decode the photos now, which warms the browser's image cache further.
+        (window.PHOTOS || []).forEach((photo) => {
+            const img = new Image();
+            img.src = photo.src;
+        });
     });
 
     // Coming back with the browser's back button can restore this page exactly as
