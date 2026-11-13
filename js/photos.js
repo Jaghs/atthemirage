@@ -812,6 +812,7 @@ window.PHOTOS = [
         "group": "Italy",
         "place": "Lake Como, Italy",
         "camera": "Fujifilm film camera",
+        "date": "June 2023",
         "src": "images/gallery/como-stairs-900.webp",
         "large": "images/gallery/como-stairs-1800.webp",
         "width": 796,
