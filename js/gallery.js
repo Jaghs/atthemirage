@@ -27,10 +27,10 @@
 
     // ---------------------------------------------------------------- places
 
-    // Tabs for each place that has photos, in this order (any other place a photo
-    // is given gets its own tab at the end automatically)
-    const ORDER = ['Calgary', 'Portugal', 'Japan', 'France', 'Amsterdam', 'Barcelona', 'London', 'India'];
-    const LABELS = { Calgary: 'Calgary, Canada' };
+    // A tab for each country that has photos, in this order (any other country a
+    // photo is given gets its own tab at the end automatically)
+    const ORDER = ['Canada', 'Portugal', 'Japan', 'France', 'Netherlands', 'Spain', 'United Kingdom', 'India'];
+    const LABELS = {};
     const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const groupNames = [...new Set(photos.map((p) => p.group).filter(Boolean))]
         .sort((a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99));
