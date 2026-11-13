@@ -1,11 +1,15 @@
 // The photos in the gallery, in order (arranged so the self-portraits never sit
-// next to each other on the wall). Edit titles freely, and add a "place" to any
-// photo to show its location ("colour" marks photos the wall shows in b&w until
-// hovered); leave out any detail you don't want shown.
+// next to each other on the wall).
+//
+// "group" puts a photo under a tab at the top of the gallery (tabs appear only for
+// groups that have photos, so a new group like "London" shows up automatically).
+// "place" is the exact location shown in the details; without one, the group's
+// name is shown instead. "colour" marks photos the wall shows in b&w until hovered.
 window.PHOTOS = [
     {
         "id": "jaghs",
         "title": "jaghs",
+        "group": "Calgary",
         "date": "June 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/4.5 \u00b7 1/2 s \u00b7 ISO 800",
@@ -19,6 +23,7 @@ window.PHOTOS = [
     {
         "id": "tree",
         "title": "tree",
+        "group": "Calgary",
         "date": "May 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/8 \u00b7 1/640 s \u00b7 ISO 400",
@@ -32,6 +37,7 @@ window.PHOTOS = [
     {
         "id": "jaghs-blurry",
         "title": "jaghs, blurry",
+        "group": "Calgary",
         "date": "June 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/3.2 \u00b7 1/13 s \u00b7 ISO 1600",
@@ -44,6 +50,7 @@ window.PHOTOS = [
     {
         "id": "downtown",
         "title": "downtown",
+        "group": "Calgary",
         "date": "May 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/20 s \u00b7 ISO 1600",
@@ -57,6 +64,7 @@ window.PHOTOS = [
     {
         "id": "jaghs-ii",
         "title": "jaghs ii",
+        "group": "Calgary",
         "date": "June 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/3.5 \u00b7 1/30 s \u00b7 ISO 1600",
@@ -69,6 +77,7 @@ window.PHOTOS = [
     {
         "id": "scary-bench",
         "title": "scary bench",
+        "group": "Calgary",
         "date": "May 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/60 s \u00b7 ISO 400",
@@ -82,6 +91,7 @@ window.PHOTOS = [
     {
         "id": "portugal",
         "title": "portugal",
+        "group": "Portugal",
         "place": "Porto, Portugal",
         "date": "July 2024",
         "camera": "iPhone 13 Pro Max",
@@ -95,6 +105,7 @@ window.PHOTOS = [
     {
         "id": "somewhere-in-paris",
         "title": "somewhere in paris",
+        "group": "France",
         "place": "Paris, France",
         "date": "January 2024",
         "camera": "Canon PowerShot SD1000",
@@ -109,6 +120,7 @@ window.PHOTOS = [
     {
         "id": "lightbulb",
         "title": "lightbulb",
+        "group": "France",
         "date": "January 2024",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/125 s \u00b7 ISO 200",
@@ -122,6 +134,7 @@ window.PHOTOS = [
     {
         "id": "amour",
         "title": "amour",
+        "group": "France",
         "date": "December 2023",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/4.9 \u00b7 1/8 s \u00b7 ISO 200",
@@ -135,6 +148,7 @@ window.PHOTOS = [
     {
         "id": "cemetery",
         "title": "cemetery",
+        "group": "France",
         "date": "December 2023",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/60 s \u00b7 ISO 250",
@@ -148,6 +162,7 @@ window.PHOTOS = [
     {
         "id": "hotel",
         "title": "hotel",
+        "group": "Calgary",
         "date": "December 2023",
         "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 \u00b7 1/8 s \u00b7 ISO 200",
@@ -161,6 +176,7 @@ window.PHOTOS = [
     {
         "id": "family-mart",
         "title": "family mart",
+        "group": "Japan",
         "place": "Kyoto, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
@@ -174,6 +190,7 @@ window.PHOTOS = [
     {
         "id": "japan",
         "title": "japan",
+        "group": "Japan",
         "place": "Tokyo, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
@@ -187,6 +204,7 @@ window.PHOTOS = [
     {
         "id": "japan-road",
         "title": "japan road",
+        "group": "Japan",
         "place": "Tokyo, Japan",
         "date": "June 2023",
         "camera": "iPhone 13 Pro Max",
@@ -200,6 +218,7 @@ window.PHOTOS = [
     {
         "id": "garden",
         "title": "garden",
+        "group": "France",
         "place": "Versailles, France",
         "date": "August 2022",
         "camera": "iPhone 13 Pro Max",

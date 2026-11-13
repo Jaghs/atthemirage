@@ -21,8 +21,24 @@
     const closeButton = viewer.querySelector('.viewer-close');
     const phone = window.matchMedia('(max-width: 760px)');
     const N = photos.length;
+    const tabsNav = document.querySelector('.tabs');
 
     const mod = (a, n) => ((a % n) + n) % n;
+
+    // ---------------------------------------------------------------- places
+
+    // Tabs for each place that has photos, in this order (any other place a photo
+    // is given gets its own tab at the end automatically)
+    const ORDER = ['Calgary', 'Portugal', 'Japan', 'France', 'Amsterdam', 'Barcelona', 'London', 'India'];
+    const LABELS = { Calgary: 'Calgary, Canada' };
+    const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const groupNames = [...new Set(photos.map((p) => p.group).filter(Boolean))]
+        .sort((a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99));
+
+    // "all" shows the endless wall; a place lays its photos out once, centred
+    let group = 'all';
+    let list = photos.map((_, i) => i); // the photos (by index) in the current tab
+    const isSet = () => group !== 'all';
 
     // ------------------------------------------------------------------ wall
 
@@ -35,7 +51,7 @@
 
     // Which photo sits in a given cell. Neighbours always differ, and the
     // pattern repeats far enough apart that the wall never feels like a grid of copies.
-    const photoAt = (col, row) => mod(col + row * 7, N);
+    const photoAt = (col, row) => list[mod(col + row * 7, list.length)];
 
     function measure() {
         const w = window.innerWidth;
@@ -43,8 +59,15 @@
         cellH = cellW * 1.2;
         boxW = cellW * 0.7;
         boxH = cellH * 0.7;
-        cols = Math.ceil(w / cellW) + 2;
-        rows = Math.ceil(window.innerHeight / cellH) + 2;
+        if (isSet()) {
+            // Just this place's photos, in as few rows as fit the screen
+            const fitCols = Math.max(1, Math.floor((w - 32) / cellW));
+            rows = Math.ceil(list.length / fitCols);
+            cols = Math.ceil(list.length / rows); // balanced rows, e.g. 4 + 3 rather than 6 + 1
+        } else {
+            cols = Math.ceil(w / cellW) + 2;
+            rows = Math.ceil(window.innerHeight / cellH) + 2;
+        }
     }
 
     function fit(photo, maxW, maxH) {
@@ -57,9 +80,9 @@
     function buildTiles() {
         plane.textContent = '';
         tiles = [];
-        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
+        const count = isSet() ? list.length : rows * cols;
+        for (let i = 0; i < count; i++) {
+            {
                 const tile = document.createElement('button');
                 tile.type = 'button';
                 tile.className = 'tile';
@@ -94,6 +117,7 @@
     }
 
     function render() {
+        if (isSet()) return renderSet();
         const firstCol = Math.floor(-offX / cellW) - 1;
         const firstRow = Math.floor(-offY / cellH) - 1;
         let i = 0;
@@ -102,24 +126,44 @@
                 const tile = tiles[i++];
                 const col = firstCol + c, row = firstRow + r;
                 tile.el.style.transform = `translate3d(${col * cellW + offX}px, ${row * cellH + offY}px, 0)`;
-                const index = photoAt(col, row);
-                if (tile.index !== index) {
-                    const photo = photos[index];
-                    const size = fit(photo, boxW, boxH);
-                    tile.index = index;
-                    tile.img.src = photo.wall || photo.src;
-                    tile.img.alt = photo.title;
-                    if (photo.wall) tile.colour.src = photo.src;
-                    else tile.colour.removeAttribute('src');
-                    tile.colour.hidden = !photo.wall;
-                    tile.frame.style.width = size.width + 'px';
-                    tile.frame.style.height = size.height + 'px';
-                    tile.label.textContent = photo.title;
-                    tile.el.setAttribute('aria-label', photo.title);
-                    tile.el.dataset.index = index;
-                }
+                fillTile(tile, photoAt(col, row));
             }
         }
+    }
+
+    // A place's photos, centred on the screen (the last row centred too)
+    function renderSet() {
+        // Taller than the screen? It scrolls up and down (offY), within bounds
+        const height = rows * cellH;
+        const lowest = Math.min(0, window.innerHeight - 136 - height);
+        offX = 0;
+        offY = Math.max(lowest, Math.min(0, offY));
+        const top = Math.max(96, (window.innerHeight - height) / 2) + offY;
+        tiles.forEach((tile, i) => {
+            const row = Math.floor(i / cols);
+            const inRow = row === rows - 1 ? list.length - row * cols : cols;
+            const left = (window.innerWidth - inRow * cellW) / 2;
+            const x = left + (i - row * cols) * cellW;
+            tile.el.style.transform = `translate3d(${x}px, ${top + row * cellH}px, 0)`;
+            fillTile(tile, list[i]);
+        });
+    }
+
+    function fillTile(tile, index) {
+        if (tile.index === index) return;
+        const photo = photos[index];
+        const size = fit(photo, boxW, boxH);
+        tile.index = index;
+        tile.img.src = photo.wall || photo.src;
+        tile.img.alt = photo.title;
+        if (photo.wall) tile.colour.src = photo.src;
+        else tile.colour.removeAttribute('src');
+        tile.colour.hidden = !photo.wall;
+        tile.frame.style.width = size.width + 'px';
+        tile.frame.style.height = size.height + 'px';
+        tile.label.textContent = photo.title;
+        tile.el.setAttribute('aria-label', photo.title);
+        tile.el.dataset.index = index;
     }
 
     function frame() {
@@ -221,7 +265,8 @@
         img.alt = '';
         img.loading = 'lazy';
         button.append(img);
-        button.addEventListener('click', () => show(index));
+        button.dataset.index = index;
+        button.addEventListener('click', () => show(list.indexOf(index)));
         strip.append(button);
     });
 
@@ -229,7 +274,8 @@
         metaEl.textContent = photo.date || '';
         titleEl.textContent = photo.title;
         specsEl.textContent = '';
-        [['Location', photo.place], ['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal]]
+        const where = photo.place || LABELS[photo.group] || photo.group;
+        [['Location', where], ['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal]]
             .filter(([, value]) => value)
             .forEach(([label, value]) => {
                 const row = document.createElement('div');
@@ -240,8 +286,10 @@
                 row.append(dt, dd);
                 specsEl.append(row);
             });
-        countEl.textContent = `${index + 1} / ${N}`;
-        strip.querySelectorAll('button').forEach((b, i) => {
+        countEl.textContent = `${list.indexOf(index) + 1} / ${list.length}`;
+        strip.querySelectorAll('button').forEach((b) => {
+            const i = Number(b.dataset.index);
+            b.hidden = !list.includes(i);
             if (i === index) {
                 b.setAttribute('aria-current', 'true');
                 b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: viewerOpen ? 'smooth' : 'auto' });
@@ -345,11 +393,15 @@
     // another photo while it was open, the wall (hidden behind the viewer) quietly
     // shifts sideways so that same spot now holds the photo being closed.
     function returnTile() {
+        if (isSet()) {
+            const tile = tiles.find((t) => t.index === current);
+            return tile ? tile.el : null;
+        }
         if (!sourceTile) return null;
         const shown = Number(sourceTile.dataset.index);
         if (shown !== current) {
             const rect = sourceTile.getBoundingClientRect();
-            offX -= mod(current - shown, N) * cellW;
+            offX -= mod(list.indexOf(current) - list.indexOf(shown), list.length) * cellW;
             render();
             const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
             const tile = tiles.find((t) => {
@@ -398,8 +450,8 @@
     }
 
     // Move to another photo inside the viewer
-    function show(index) {
-        index = mod(index, N);
+    function show(position) {
+        const index = list[mod(position, list.length)];
         if (!viewerOpen || busy || index === current) return;
         resetZoom(true);
         current = index;
@@ -483,8 +535,8 @@
             closedByKeyboard = true;
             close();
         }
-        else if (event.key === 'ArrowRight') show(current + 1);
-        else if (event.key === 'ArrowLeft') show(current - 1);
+        else if (event.key === 'ArrowRight') show(list.indexOf(current) + 1);
+        else if (event.key === 'ArrowLeft') show(list.indexOf(current) - 1);
     });
 
     // Keep keyboard focus inside the open photo
@@ -512,6 +564,66 @@
         }
     });
 
+    // ------------------------------------------------------------------ tabs
+
+    function tabButton(name, label) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = label;
+        button.dataset.group = name;
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => choose(name));
+        tabsNav.append(button);
+    }
+
+    tabButton('all', 'All');
+    groupNames.forEach((name) => tabButton(name, name));
+
+    function markTab() {
+        tabsNav.querySelectorAll('button').forEach((b) => {
+            const on = b.dataset.group === group;
+            b.setAttribute('aria-pressed', String(on));
+            if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        });
+        hint.textContent = isSet() ? '' : 'drag to explore';
+    }
+
+    // Set the tab without animating (on load), or with the fade (on click)
+    function applyGroup(name) {
+        group = groupNames.includes(name) ? name : 'all';
+        list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
+        velX = velY = 0;
+        offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
+        offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
+        measure();
+        buildTiles();
+        render();
+        markTab();
+    }
+
+    let switching = false;
+    function choose(name) {
+        if (name === group || switching || viewerOpen) return;
+        switching = true;
+        wall.classList.add('is-switching');
+        history.replaceState(null, '', name === 'all' ? location.pathname : '#' + slug(name));
+        setTimeout(() => {
+            applyGroup(name);
+            requestAnimationFrame(() => {
+                wall.classList.remove('is-switching');
+                switching = false;
+            });
+        }, 350);
+    }
+
+    // A link like main.html#japan opens straight onto that place
+    function groupFromHash() {
+        const wanted = decodeURIComponent(location.hash.slice(1));
+        return groupNames.find((name) => slug(name) === wanted) || 'all';
+    }
+
+    window.addEventListener('hashchange', () => choose(groupFromHash()));
+
     // ----------------------------------------------------------------- start
 
     // The wall shows colour photos in black and white. Rather than storing a second
@@ -538,11 +650,14 @@
         }).catch(() => {});
     }
 
+    group = groupFromHash();
+    list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
     measure();
     // Start with a photo-filled view centred on the screen
-    offX = (window.innerWidth % cellW) / 2;
-    offY = (window.innerHeight % cellH) / 2;
+    offX = isSet() ? 0 : (window.innerWidth % cellW) / 2;
+    offY = isSet() ? 0 : (window.innerHeight % cellH) / 2;
     buildTiles();
+    markTab();
 
     // Arriving: keep showing only the moving sky until every photo on the wall is
     // ready, then fade the whole wall in as one (a single cheap fade, rather than

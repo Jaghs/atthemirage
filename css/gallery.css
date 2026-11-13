@@ -17,7 +17,7 @@
 /* Arriving from the splash page: the sky carries straight on, and once every
    photo is loaded the wall, the name and the toggle all fade in together */
 .gallery-page .wall-plane,
-.gallery-page .site-mark,
+.gallery-page .site-head,
 .gallery-page .wall-hint,
 .gallery-page .theme-toggle {
     /* Not quite 0, so the browser draws everything before the fade begins */
@@ -34,7 +34,7 @@
 }
 
 .gallery-page.is-arrived .wall-plane,
-.gallery-page.is-arrived:not(.is-viewing) .site-mark,
+.gallery-page.is-arrived:not(.is-viewing) .site-head,
 .gallery-page.is-arrived:not(.is-viewing) .wall-hint:not(.is-gone),
 .gallery-page.is-arrived:not(.is-viewing) .theme-toggle {
     opacity: 1;
@@ -45,8 +45,14 @@
     z-index: 3;
 }
 
+/* Switching tabs: the wall fades out, rearranges, and fades back in */
+.gallery-page.is-arrived .wall.is-switching .wall-plane {
+    opacity: 0;
+    transition-duration: 0.35s;
+}
+
 /* Small fixed labels around the wall */
-.site-mark,
+.site-head,
 .wall-hint {
     position: fixed;
     z-index: 2;
@@ -54,9 +60,17 @@
     transition: opacity 0.6s var(--ease);
 }
 
-.site-mark {
-    top: max(26px, env(safe-area-inset-top));
+.site-head {
+    top: max(22px, env(safe-area-inset-top));
     left: max(24px, env(safe-area-inset-left));
+    right: 84px;
+    display: flex;
+    align-items: baseline;
+    gap: 28px;
+}
+
+.site-mark {
+    flex: none;
     color: var(--red);
     font-family: 'Vogue', Didot, 'Bodoni 72', serif;
     font-size: 18px;
@@ -78,6 +92,65 @@
 
 .wall-hint.is-gone {
     opacity: 0;
+}
+
+/* Place tabs, after the name */
+.tabs {
+    display: flex;
+    gap: 4px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tabs button {
+    position: relative;
+    flex: none;
+    padding: 6px 10px 8px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: 13px/1 var(--sans);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color 0.3s var(--ease);
+}
+
+/* The chosen place sits on a short horizon line, like the enter arrow */
+.tabs button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 1px;
+    width: 0;
+    height: 1px;
+    transform: translateX(-50%);
+    background: currentColor;
+    transition: width 0.4s var(--ease);
+}
+
+.tabs button[aria-pressed="true"] {
+    color: var(--ink);
+}
+
+.tabs button[aria-pressed="true"]::after {
+    width: calc(100% - 20px);
+}
+
+.tabs button:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 1px;
+    border-radius: 4px;
+}
+
+@media (hover: hover) {
+    .tabs button:hover {
+        color: var(--ink);
+    }
 }
 
 /* ---------- the wall ---------- */
@@ -423,7 +496,7 @@
 }
 
 /* While a photo is open, the labels around the wall step back */
-.is-viewing .site-mark,
+.is-viewing .site-head,
 .is-viewing .wall-hint,
 .is-viewing .theme-toggle {
     opacity: 0;
@@ -502,6 +575,19 @@
 
     .site-mark {
         font-size: 16px;
+    }
+
+    .site-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        right: 72px;
+    }
+
+    .tabs {
+        max-width: 100%;
+        margin-left: -10px;
+        padding-right: 16px;
     }
 
     .wall-hint {
