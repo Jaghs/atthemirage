@@ -11,6 +11,7 @@
     --tab-on: rgba(255, 255, 255, 0.9);
     --tab-track: rgba(17, 17, 17, 0.05);
     --head-height: 68px;
+    --swap: 0.35s; /* toggle ↔ close button cross-fade */
 }
 
 :root[data-theme="dark"] {
@@ -51,6 +52,14 @@
 .gallery-page.is-arrived:not(.is-viewing) .wall-hint:not(.is-gone),
 .gallery-page.is-arrived:not(.is-viewing) .theme-toggle {
     opacity: 1;
+}
+
+/* Once the gallery has arrived, the header, places and toggle step aside and
+   come back on the same quick timing as the close button, so they cross-fade */
+.gallery-page.is-settled .site-head,
+.gallery-page.is-settled .places,
+.gallery-page.is-settled .theme-toggle {
+    transition: opacity var(--swap) ease-in-out;
 }
 
 /* The theme toggle sits above the wall so it can be clicked */
@@ -584,16 +593,12 @@
 
 .viewer-close {
     opacity: 0;
-    transition: opacity 0.4s var(--ease), color 0.3s var(--ease), background-color 0.3s var(--ease);
+    /* Cross-fades with the theme toggle underneath it, on the same timing */
+    transition: opacity var(--swap) ease-in-out, color 0.3s var(--ease), background-color 0.3s var(--ease);
 }
 
 .viewer.is-open .viewer-close {
     opacity: 1;
-    transition-delay: 0.25s, 0s, 0s;
-}
-
-.viewer:not(.is-open) .viewer-close {
-    transition-duration: 0.2s;
 }
 
 .viewer-close:hover {
@@ -822,8 +827,6 @@
         width: 32px;
         height: 32px;
         border-width: 1px;
-        opacity: 0;
-        transition: opacity 0.4s var(--ease) 0.3s;
     }
 
     .viewer.is-open .viewer-close {

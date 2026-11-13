@@ -880,6 +880,9 @@
         requestAnimationFrame(() => {
             wall.classList.add('is-in');
             document.body.classList.add('is-arrived');
+            // After the slow arrival fade, switch to the quick timing used when
+            // photos open and close
+            setTimeout(() => document.body.classList.add('is-settled'), 1500);
         });
     });
 })();
