@@ -529,10 +529,10 @@
     right: 0;
     bottom: 0;
     width: var(--panel-width);
-    display: grid;
-    grid-template-rows: auto 1fr auto;
+    display: flex;
+    flex-direction: column;
     gap: 24px;
-    padding: 40px 36px 32px;
+    padding: 40px 36px 28px;
     background: var(--panel);
     border-left: 1px solid var(--panel-line);
     color: var(--ink);
@@ -609,8 +609,8 @@
 .viewer-strip {
     display: flex;
     gap: 8px;
-    margin: 12px -36px 0;
-    padding: 0 36px 6px;
+    margin: 0 -36px;
+    padding: 0 36px 4px;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -644,7 +644,8 @@
 }
 
 .viewer-heading {
-    align-self: center;
+    /* Sits in the middle of the panel; the reel is pinned to the bottom */
+    margin: auto 0;
 }
 
 .viewer-meta {
@@ -672,7 +673,7 @@
 .viewer-specs {
     display: grid;
     gap: 8px;
-    margin: 0;
+    margin: 28px 0 0;
     font-size: 13px;
 }
 
@@ -705,7 +706,7 @@
 }
 
 .viewer-heading,
-.viewer-foot {
+.viewer-count {
     transition: opacity 0.4s var(--ease);
 }
 
@@ -777,6 +778,11 @@
         cursor: default;
     }
 
+    /* Up and down scrolls to the details; sideways swipes between photos */
+    .viewer-stage {
+        touch-action: pan-y;
+    }
+
     .viewer-panel {
         position: relative;
         width: auto;
@@ -798,8 +804,7 @@
     }
 
     .viewer-heading {
-        order: -1;
-        align-self: stretch;
+        margin: 0;
     }
 
     .viewer-strip {

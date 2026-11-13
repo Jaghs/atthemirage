@@ -13,7 +13,6 @@
     const viewImg = viewer.querySelector('.viewer-img');
     const strip = viewer.querySelector('.viewer-strip');
     const heading = viewer.querySelector('.viewer-heading');
-    const foot = viewer.querySelector('.viewer-foot');
     const metaEl = viewer.querySelector('.viewer-meta');
     const titleEl = viewer.querySelector('.viewer-title');
     const specsEl = viewer.querySelector('.viewer-specs');
@@ -518,7 +517,7 @@
         const photo = photos[index];
         viewImg.classList.add('is-swapping');
         heading.classList.add('is-fading');
-        foot.classList.add('is-fading');
+        countEl.classList.add('is-fading');
         setTimeout(() => {
             fillDetails(photo, index);
             viewImg.src = photo.src;
@@ -528,7 +527,7 @@
             requestAnimationFrame(() => {
                 viewImg.classList.remove('is-swapping');
                 heading.classList.remove('is-fading');
-                foot.classList.remove('is-fading');
+                countEl.classList.remove('is-fading');
             });
         }, 200);
     }
@@ -577,6 +576,23 @@
         viewImg.classList.add('is-zoomed');
         viewImg.style.transform = `scale(${ZOOM})`;
     });
+
+    // Phones: swipe the large photo left or right for the next or previous one
+    let swipeX = null, swipeY = 0;
+    stage.addEventListener('touchstart', (event) => {
+        if (event.touches.length !== 1) return;
+        swipeX = event.touches[0].clientX;
+        swipeY = event.touches[0].clientY;
+    }, { passive: true });
+    stage.addEventListener('touchend', (event) => {
+        if (swipeX === null) return;
+        const dx = event.changedTouches[0].clientX - swipeX;
+        const dy = event.changedTouches[0].clientY - swipeY;
+        swipeX = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            show(list.indexOf(current) + (dx < 0 ? 1 : -1));
+        }
+    }, { passive: true });
 
     stage.addEventListener('mousemove', (event) => {
         if (zoomed) viewImg.style.transformOrigin = zoomOrigin(event);
