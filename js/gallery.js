@@ -431,6 +431,10 @@
         }, 1000);
         loadLarge(photo, current);
         closeButton.focus({ preventScroll: true });
+        // Visitor stats: which photos people open (nothing personal is recorded)
+        if (window.goatcounter && window.goatcounter.count) {
+            window.goatcounter.count({ path: 'photo/' + photo.id, title: photo.title, event: true });
+        }
         // Opening a photo is a step in the browser's history, so the back button
         // (or swiping back on a phone) closes it instead of leaving the gallery
         history.pushState({ photo: true }, '', location.href);
@@ -872,6 +876,27 @@
     measureHeader();
     window.addEventListener('resize', measureHeader);
 
+    // ------------------------------------------------- first visit on a phone
+
+    // A one-time note explaining the wall; it goes as soon as they touch it
+    function showTouchHint() {
+        const note = document.querySelector('.touch-hint');
+        if (!note || !window.matchMedia('(hover: none)').matches) return;
+        try {
+            if (localStorage.getItem('seen-touch-hint')) return;
+            localStorage.setItem('seen-touch-hint', '1');
+        } catch (e) { return; }
+        note.hidden = false;
+        setTimeout(() => note.classList.add('is-showing'), 900);
+        const hide = () => {
+            note.classList.remove('is-showing');
+            setTimeout(() => (note.hidden = true), 600);
+            wall.removeEventListener('touchstart', hide);
+        };
+        wall.addEventListener('touchstart', hide, { passive: true });
+        setTimeout(hide, 6500);
+    }
+
     // ----------------------------------------------------------------- start
 
     // The wall shows colour photos in black and white. Rather than storing a second
@@ -932,6 +957,7 @@
             // After the slow arrival fade, switch to the quick timing used when
             // photos open and close
             setTimeout(() => document.body.classList.add('is-settled'), 1500);
+            showTouchHint();
         });
     });
 })();

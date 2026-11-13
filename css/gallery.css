@@ -31,6 +31,7 @@
 .gallery-page .wall-plane,
 .gallery-page .site-head,
 .gallery-page .places,
+.gallery-page .credit,
 .gallery-page .wall-hint,
 .gallery-page .theme-toggle {
     /* Not quite 0, so the browser draws everything before the fade begins */
@@ -48,6 +49,7 @@
 
 .gallery-page.is-arrived .wall-plane,
 .gallery-page.is-arrived:not(.is-viewing) .site-head,
+.gallery-page.is-arrived:not(.is-viewing) .credit,
 .gallery-page.is-arrived:not(.is-viewing):not(.is-about) .places,
 .gallery-page.is-arrived:not(.is-viewing) .wall-hint:not(.is-gone),
 .gallery-page.is-arrived:not(.is-viewing) .theme-toggle {
@@ -57,6 +59,7 @@
 /* Once the gallery has arrived, the header, places and toggle step aside and
    come back on the same quick timing as the close button, so they cross-fade */
 .gallery-page.is-settled .site-head,
+.gallery-page.is-settled .credit,
 .gallery-page.is-settled .places,
 .gallery-page.is-settled .theme-toggle {
     transition: opacity var(--swap) ease-in-out;
@@ -205,6 +208,98 @@
     .tabs button:hover {
         color: var(--ink);
     }
+}
+
+/* ---------- credit, loading, first-visit hint ---------- */
+
+.gallery-page .credit {
+    left: max(24px, env(safe-area-inset-left, 0px));
+    transform: none;
+    animation: none;
+}
+
+/* Loading: a hazy line of slits that shimmer, shown only if the photos take a
+   moment (it fades in after a short wait, and away as the wall arrives) */
+.loading {
+    position: fixed;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: 160px;
+    transform: translate(-50%, -50%);
+    color: var(--ink);
+    opacity: 0;
+    pointer-events: none;
+    animation: loading-in 0.8s var(--ease) 0.7s forwards;
+}
+
+.loading svg {
+    display: block;
+    width: 100%;
+    height: 4px;
+    overflow: visible;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+}
+
+.loading line {
+    opacity: 0.15;
+    animation: loading-shimmer 1.6s ease-in-out infinite;
+}
+
+.loading line:nth-child(2) { animation-delay: 0.12s; }
+.loading line:nth-child(3) { animation-delay: 0.24s; }
+.loading line:nth-child(4) { animation-delay: 0.36s; }
+.loading line:nth-child(5) { animation-delay: 0.48s; }
+.loading line:nth-child(6) { animation-delay: 0.6s; }
+.loading line:nth-child(7) { animation-delay: 0.72s; }
+
+@keyframes loading-in {
+    to { opacity: 0.7; }
+}
+
+@keyframes loading-shimmer {
+    0%, 100% { opacity: 0.12; }
+    40%      { opacity: 0.9; }
+}
+
+.is-arrived .loading {
+    animation: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease), visibility 0s 0.4s;
+}
+
+/* First visit on a phone: a frosted note at the bottom, shown once */
+.touch-hint {
+    position: fixed;
+    z-index: 3;
+    left: 50%;
+    bottom: max(48px, calc(env(safe-area-inset-bottom, 0px) + 40px));
+    margin: 0;
+    padding: 12px 18px;
+    border: 1px solid var(--head-line);
+    border-radius: 999px;
+    background: var(--head);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    backdrop-filter: blur(22px) saturate(140%);
+    color: var(--ink);
+    font: 14px/1 var(--sans);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, 10px);
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+    pointer-events: none;
+}
+
+.touch-hint[hidden] {
+    display: none;
+}
+
+.touch-hint.is-showing {
+    opacity: 1;
+    transform: translate(-50%, 0);
 }
 
 /* ---------- places filter ---------- */
@@ -732,6 +827,7 @@
 /* While a photo is open, the labels around the wall step back */
 .is-viewing .site-head,
 .is-viewing .places,
+.is-viewing .credit,
 .is-viewing .wall-hint,
 .is-viewing .theme-toggle {
     opacity: 0;

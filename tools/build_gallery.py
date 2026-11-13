@@ -7,7 +7,7 @@ Put full-size photos straight into images/, named like:
     Road.jpg                    -> no tab; it only appears under "All"
 
 The tab is whatever comes after the last comma in the brackets. For each photo
-this makes two web-sized copies in images/gallery/ (with all hidden data, GPS
+this makes two web-sized WebP copies in images/gallery/ (with all hidden data, GPS
 included, removed) and rewrites js/photos.js with the titles, tabs, dates and
 camera settings. GitHub runs it on every push (see .github/workflows/site.yml);
 the originals themselves are never published to the website.
@@ -84,8 +84,9 @@ def details(image):
 def save(image, path, long_edge):
     copy = image.copy()
     copy.thumbnail((long_edge, long_edge), Image.LANCZOS)
-    # No exif is passed on, so the copy carries no hidden data (GPS included)
-    copy.save(path, 'JPEG', quality=82, optimize=True, progressive=True)
+    # WebP: much smaller than JPEG and supported by every current browser. No exif
+    # is passed on, so the copy carries no hidden data (GPS included).
+    copy.save(path, 'WEBP', quality=80, method=6)
     return copy.size
 
 
@@ -134,16 +135,16 @@ def main():
         original = Image.open(os.path.join(SOURCE, filename))
         info, taken = details(original)
         image = ImageOps.exif_transpose(original).convert('RGB')
-        width, height = save(image, os.path.join(OUT, f'{slug}-900.jpg'), 1200)
-        save(image, os.path.join(OUT, f'{slug}-1800.jpg'), 2000)
-        made.update({f'{slug}-900.jpg', f'{slug}-1800.jpg'})
+        width, height = save(image, os.path.join(OUT, f'{slug}-900.webp'), 1200)
+        save(image, os.path.join(OUT, f'{slug}-1800.webp'), 2000)
+        made.update({f'{slug}-900.webp', f'{slug}-1800.webp'})
         entry = {'id': slug, 'title': title}
         if group:
             entry['group'] = group
         if place:
             entry['place'] = place
         entry.update(info)
-        entry.update({'src': f'images/gallery/{slug}-900.jpg', 'large': f'images/gallery/{slug}-1800.jpg',
+        entry.update({'src': f'images/gallery/{slug}-900.webp', 'large': f'images/gallery/{slug}-1800.webp',
                       'width': width, 'height': height})
         if is_colour(image):
             entry['colour'] = True

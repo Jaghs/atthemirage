@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>nothing here — at the mirage</title>
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#000000">
+    <!-- Shown for any address that doesn't exist, so every link starts with "/" -->
+    <link rel="preload" href="/fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+    <style>
+        .lost {
+            margin: clamp(18px, 2.5vw, 28px) 0 0;
+            max-width: 32ch;
+            color: color-mix(in srgb, var(--ink) 70%, transparent);
+            font-size: clamp(14px, 1.4vw, 17px);
+            line-height: 1.5;
+            text-wrap: balance;
+            animation: rise 1.4s var(--ease) 0.25s both;
+        }
+
+        .back {
+            margin-top: clamp(28px, 4vw, 44px);
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 6px;
+            color: color-mix(in srgb, var(--ink) 65%, transparent);
+            font-size: 13px;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            transition: color 0.4s var(--ease);
+            animation: rise 1.4s var(--ease) 0.45s both;
+        }
+
+        .back:hover,
+        .back:focus-visible {
+            color: var(--ink);
+        }
+
+        .back:focus-visible {
+            outline: 1px solid var(--ink);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+    </style>
+    <!-- Visitor stats: GoatCounter (no cookies, nothing personal stored) -->
+    <script data-goatcounter="https://atthemirage.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</head>
+<body>
+    <canvas class="mirage" aria-hidden="true"></canvas>
+
+    <main class="hero">
+        <h1 class="title">NOTHING HERE</h1>
+        <p class="lost">This page was only a mirage. It looked real from a distance.</p>
+        <a class="back" href="/main.html">back to the photos</a>
+    </main>
+
+    <p class="credit">© 2026 Jagvir</p>
+
+    <script src="/js/mirage.js"></script>
+</body>
+</html>
