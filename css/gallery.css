@@ -554,19 +554,21 @@
 }
 
 .viewer-close {
+    /* Same size, place and circle as the theme toggle, so opening a photo looks
+       like the toggle turning into a close button */
     position: absolute;
     z-index: 2;
-    top: 14px;
-    right: calc(var(--panel-width) - 46px);
-    width: 32px;
-    height: 32px;
+    top: calc(env(safe-area-inset-top, 0px) + (var(--head-height) - 40px) / 2);
+    right: max(20px, env(safe-area-inset-right, 0px));
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
     padding: 0;
-    border: 0;
+    border: 1.25px solid var(--toggle-line);
     border-radius: 50%;
-    background: none;
-    color: var(--muted);
+    background: var(--toggle-track);
+    color: var(--ink);
     cursor: pointer;
     transition: color 0.3s var(--ease), background-color 0.3s var(--ease);
 }
@@ -813,15 +815,13 @@
     }
 
     .viewer-close {
+        /* Matches the phone-sized theme toggle exactly */
         position: fixed;
-        top: max(14px, env(safe-area-inset-top));
-        left: auto;
-        right: max(14px, env(safe-area-inset-right));
+        top: calc(env(safe-area-inset-top, 0px) + 14px);
         z-index: 1;
-        width: 38px;
-        height: 38px;
-        background: var(--panel);
-        color: var(--ink);
+        width: 32px;
+        height: 32px;
+        border-width: 1px;
         opacity: 0;
         transition: opacity 0.4s var(--ease) 0.3s;
     }
