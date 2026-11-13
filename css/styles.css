@@ -221,12 +221,13 @@ html.has-still body {
 .credit {
     position: fixed;
     z-index: 2;
-    bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    /* Clear of the home bar and Safari's toolbar on iPhones */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
     color: color-mix(in srgb, var(--ink) 45%, transparent);
-    font: 11px/1 var(--sans);
+    font: 11px/1.6 var(--sans);
     letter-spacing: 0.04em;
     white-space: nowrap;
     pointer-events: none;
