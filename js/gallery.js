@@ -639,17 +639,43 @@
         tabsNav.append(button);
     }
 
+    const pill = document.createElement('span');
+    pill.className = 'tabs-pill is-placing';
+    pill.setAttribute('aria-hidden', 'true');
+    tabsNav.append(pill);
+
     tabButton('all', 'All');
     groupNames.forEach((name) => tabButton(name, name));
 
-    function markTab() {
+    // Glide the pill under the chosen tab
+    function movePill(name) {
         tabsNav.querySelectorAll('button').forEach((b) => {
-            const on = b.dataset.group === group;
+            const on = b.dataset.group === name;
             b.setAttribute('aria-pressed', String(on));
-            if (on) b.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            if (on) {
+                pill.style.transform = `translateX(${b.offsetLeft}px)`;
+                pill.style.width = b.offsetWidth + 'px';
+                b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+            }
         });
+    }
+
+    function markTab() {
+        movePill(group);
         hint.textContent = isSet() ? '' : 'drag to explore';
     }
+
+    // Put the pill in place without gliding (first load, and once the font has
+    // loaded or the window changes size, since the tabs' widths change)
+    function placePill() {
+        pill.classList.add('is-placing');
+        movePill(group);
+        pill.getBoundingClientRect();
+        pill.classList.remove('is-placing');
+    }
+
+    window.addEventListener('resize', placePill);
+    if (document.fonts) document.fonts.ready.then(placePill);
 
     // Set the tab without animating (on load), or with the fade (on click)
     function applyGroup(name) {
@@ -670,6 +696,7 @@
     function choose(name) {
         if (name === group || switching || viewerOpen) return;
         switching = true;
+        movePill(name); // the pill moves straight away, while the wall changes behind
         wall.classList.add('is-switching');
         history.replaceState(null, '', name === 'all' ? location.pathname : '#' + slug(name));
         setTimeout(() => {
@@ -725,6 +752,7 @@
     if (isSet()) wall.scrollTo(0, 0);
     else applyScroll();
     markTab();
+    placePill();
 
     // Arriving: keep showing only the moving sky until every photo on the wall is
     // ready, then fade the whole wall in as one (a single cheap fade, rather than
