@@ -134,7 +134,7 @@
 }
 
 .wall-hint {
-    right: max(24px, env(safe-area-inset-right));
+    left: max(24px, env(safe-area-inset-left));
 }
 
 .wall-hint.is-gone {
@@ -213,7 +213,7 @@
 /* ---------- credit, loading, first-visit hint ---------- */
 
 .gallery-page .credit {
-    left: max(24px, env(safe-area-inset-left, 0px));
+    right: max(24px, env(safe-area-inset-right, 0px));
     transform: none;
     animation: none;
 }
