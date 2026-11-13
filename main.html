@@ -73,10 +73,26 @@
 
     <header class="site-head">
         <a class="site-mark" href="index.html">AT THE MIRAGE</a>
-        <!-- Filled in by gallery.js from the photos' groups -->
-        <nav class="tabs" aria-label="Places"></nav>
+        <nav class="tabs" aria-label="Pages">
+            <span class="tabs-pill is-placing" aria-hidden="true"></span>
+            <button type="button" data-view="gallery" aria-pressed="true">Gallery</button>
+            <button type="button" data-view="about" aria-pressed="false">About</button>
+        </nav>
     </header>
+    <!-- Places: filters the gallery (the list is filled in by gallery.js) -->
+    <div class="places">
+        <button class="places-button" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="places-current">Everywhere</span>
+            <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" /></svg>
+        </button>
+        <div class="places-menu" role="menu" aria-label="Places" hidden></div>
+    </div>
+    <div class="places-scrim" hidden></div>
+
     <p class="wall-hint" aria-hidden="true">drag to explore</p>
+
+    <!-- About: left empty for now -->
+    <section class="about" aria-label="About" hidden></section>
 
     <!-- The wall: an endless grid of photos you can drag in any direction -->
     <main class="wall" aria-label="Photos">

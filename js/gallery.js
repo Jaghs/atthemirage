@@ -172,7 +172,7 @@
     }
 
     function setTop() {
-        const below = document.querySelector('.site-head').getBoundingClientRect().bottom + 24;
+        const below = document.querySelector('.places').getBoundingClientRect().bottom + 24;
         return Math.max(below, (window.innerHeight - rows * cellH) / 2);
     }
 
@@ -627,49 +627,29 @@
         }
     });
 
-    // ------------------------------------------------------------------ tabs
+    // ------------------------------------------------- pages (Gallery · About)
 
-    function tabButton(name, label) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = label;
-        button.dataset.group = name;
-        button.setAttribute('aria-pressed', 'false');
-        button.addEventListener('click', () => choose(name));
-        tabsNav.append(button);
-    }
+    const pill = tabsNav.querySelector('.tabs-pill');
+    const aboutSection = document.querySelector('.about');
+    let view = 'gallery';
 
-    const pill = document.createElement('span');
-    pill.className = 'tabs-pill is-placing';
-    pill.setAttribute('aria-hidden', 'true');
-    tabsNav.append(pill);
-
-    tabButton('all', 'All');
-    groupNames.forEach((name) => tabButton(name, name));
-
-    // Glide the pill under the chosen tab
+    // Glide the pill under the chosen page
     function movePill(name) {
         tabsNav.querySelectorAll('button').forEach((b) => {
-            const on = b.dataset.group === name;
+            const on = b.dataset.view === name;
             b.setAttribute('aria-pressed', String(on));
             if (on) {
                 pill.style.transform = `translateX(${b.offsetLeft}px)`;
                 pill.style.width = b.offsetWidth + 'px';
-                b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
             }
         });
-    }
-
-    function markTab() {
-        movePill(group);
-        hint.textContent = isSet() ? '' : 'drag to explore';
     }
 
     // Put the pill in place without gliding (first load, and once the font has
     // loaded or the window changes size, since the tabs' widths change)
     function placePill() {
         pill.classList.add('is-placing');
-        movePill(group);
+        movePill(view);
         pill.getBoundingClientRect();
         pill.classList.remove('is-placing');
     }
@@ -677,7 +657,104 @@
     window.addEventListener('resize', placePill);
     if (document.fonts) document.fonts.ready.then(placePill);
 
-    // Set the tab without animating (on load), or with the fade (on click)
+    function showView(name, instant) {
+        if (name === view && !instant) return;
+        view = name;
+        movePill(name);
+        const about = name === 'about';
+        if (about) closeMenu();
+        aboutSection.hidden = !about;
+        document.body.classList.toggle('is-about', about);
+    }
+
+    tabsNav.addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button || viewerOpen) return;
+        showView(button.dataset.view);
+        setHash();
+    });
+
+    // --------------------------------------------------------- places filter
+
+    const placesButton = document.querySelector('.places-button');
+    const placesLabel = placesButton.querySelector('.places-current');
+    const menu = document.querySelector('.places-menu');
+    const scrim = document.querySelector('.places-scrim');
+
+    // A row for each place, with how many photos and which years
+    function yearsOf(indexes) {
+        const years = indexes.map((i) => parseInt((photos[i].date || '').slice(-4), 10)).filter(Boolean);
+        if (!years.length) return '';
+        const low = Math.min(...years), high = Math.max(...years);
+        return low === high ? String(low) : `${low}–${String(high).slice(-2)}`;
+    }
+
+    function menuRow(name, label, indexes) {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.setAttribute('role', 'menuitemradio');
+        row.dataset.group = name;
+        const title = document.createElement('span');
+        title.className = 'places-name';
+        title.textContent = label;
+        const count = document.createElement('span');
+        count.className = 'places-count';
+        count.textContent = indexes.length;
+        const years = document.createElement('span');
+        years.className = 'places-years';
+        years.textContent = name === 'all' ? '' : yearsOf(indexes);
+        row.append(title, count, years);
+        row.addEventListener('click', () => {
+            closeMenu();
+            choose(name);
+        });
+        menu.append(row);
+    }
+
+    menuRow('all', 'Everywhere', photos.map((_, i) => i));
+    groupNames.forEach((name) => menuRow(name, name,
+        photos.map((_, i) => i).filter((i) => photos[i].group === name)));
+
+    function markPlace() {
+        placesLabel.textContent = group === 'all' ? 'Everywhere' : group;
+        menu.querySelectorAll('button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.group === group)));
+        hint.textContent = isSet() ? '' : 'drag to explore';
+    }
+
+    function openMenu() {
+        menu.hidden = false;
+        scrim.hidden = false;
+        placesButton.setAttribute('aria-expanded', 'true');
+        requestAnimationFrame(() => document.body.classList.add('is-choosing'));
+        const chosen = menu.querySelector('[aria-checked="true"]');
+        if (chosen) chosen.focus({ preventScroll: true });
+    }
+
+    function closeMenu() {
+        if (menu.hidden) return;
+        document.body.classList.remove('is-choosing');
+        placesButton.setAttribute('aria-expanded', 'false');
+        setTimeout(() => {
+            if (!document.body.classList.contains('is-choosing')) {
+                menu.hidden = true;
+                scrim.hidden = true;
+            }
+        }, 300);
+    }
+
+    placesButton.addEventListener('click', () => (menu.hidden ? openMenu() : closeMenu()));
+    scrim.addEventListener('click', closeMenu);
+    document.addEventListener('click', (event) => {
+        if (!menu.hidden && !event.target.closest('.places')) closeMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !menu.hidden) {
+            closeMenu();
+            placesButton.focus();
+        }
+    });
+
+    // Set the place without animating (on load), or with the fade (on choosing)
     function applyGroup(name) {
         group = groupNames.includes(name) ? name : 'all';
         list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
@@ -689,16 +766,18 @@
         if (isSet()) wall.scrollTo(0, 0);
         else applyScroll();
         render();
-        markTab();
+        markPlace();
     }
 
     let switching = false;
     function choose(name) {
+        if (view !== 'gallery') showView('gallery');
         if (name === group || switching || viewerOpen) return;
         switching = true;
-        movePill(name); // the pill moves straight away, while the wall changes behind
+        group = name; // so the label and link update straight away
+        markPlace();
+        setHash();
         wall.classList.add('is-switching');
-        history.replaceState(null, '', name === 'all' ? location.pathname : '#' + slug(name));
         setTimeout(() => {
             applyGroup(name);
             requestAnimationFrame(() => {
@@ -708,13 +787,32 @@
         }, 350);
     }
 
-    // A link like main.html#japan opens straight onto that place
-    function groupFromHash() {
-        const wanted = decodeURIComponent(location.hash.slice(1));
-        return groupNames.find((name) => slug(name) === wanted) || 'all';
+    // Links: main.html#about, main.html#japan, or plain main.html for everything
+    function setHash() {
+        const hash = view === 'about' ? '#about' : group === 'all' ? '' : '#' + slug(group);
+        history.replaceState(history.state, '', location.pathname + hash);
     }
 
-    window.addEventListener('hashchange', () => choose(groupFromHash()));
+    function fromHash() {
+        const wanted = decodeURIComponent(location.hash.slice(1));
+        if (wanted === 'about') return { view: 'about', group: 'all' };
+        return { view: 'gallery', group: groupNames.find((name) => slug(name) === wanted) || 'all' };
+    }
+
+    window.addEventListener('hashchange', () => {
+        const target = fromHash();
+        showView(target.view);
+        if (target.view === 'gallery') choose(target.group);
+    });
+
+    // Keep the places button and a place's photos clear of the header, whose
+    // height differs between phones and computers
+    function measureHeader() {
+        const bottom = document.querySelector('.site-head').getBoundingClientRect().bottom;
+        document.documentElement.style.setProperty('--head-bottom', bottom + 'px');
+    }
+    measureHeader();
+    window.addEventListener('resize', measureHeader);
 
     // ----------------------------------------------------------------- start
 
@@ -742,7 +840,8 @@
         }).catch(() => {});
     }
 
-    group = groupFromHash();
+    const initial = fromHash();
+    group = initial.group;
     list = photos.map((_, i) => i).filter((i) => group === 'all' || photos[i].group === group);
     measure();
     // Start with a photo-filled view centred on the screen
@@ -751,7 +850,8 @@
     buildTiles();
     if (isSet()) wall.scrollTo(0, 0);
     else applyScroll();
-    markTab();
+    markPlace();
+    showView(initial.view, true);
     placePill();
 
     // Arriving: keep showing only the moving sky until every photo on the wall is

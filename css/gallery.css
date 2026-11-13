@@ -29,6 +29,7 @@
    photo is loaded the wall, the name and the toggle all fade in together */
 .gallery-page .wall-plane,
 .gallery-page .site-head,
+.gallery-page .places,
 .gallery-page .wall-hint,
 .gallery-page .theme-toggle {
     /* Not quite 0, so the browser draws everything before the fade begins */
@@ -46,6 +47,7 @@
 
 .gallery-page.is-arrived .wall-plane,
 .gallery-page.is-arrived:not(.is-viewing) .site-head,
+.gallery-page.is-arrived:not(.is-viewing):not(.is-about) .places,
 .gallery-page.is-arrived:not(.is-viewing) .wall-hint:not(.is-gone),
 .gallery-page.is-arrived:not(.is-viewing) .theme-toggle {
     opacity: 1;
@@ -187,6 +189,157 @@
     .tabs button:hover {
         color: var(--ink);
     }
+}
+
+/* ---------- places filter ---------- */
+
+.places {
+    position: fixed;
+    z-index: 3;
+    top: calc(var(--head-bottom, 68px) + 14px);
+    left: max(24px, env(safe-area-inset-left, 0px));
+}
+
+.places-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px 9px 16px;
+    border: 1px solid var(--head-line);
+    border-radius: 999px;
+    background: var(--head);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    backdrop-filter: blur(22px) saturate(140%);
+    color: var(--ink);
+    font: 500 13px/1 var(--sans);
+    letter-spacing: 0.01em;
+    cursor: pointer;
+}
+
+.places-button svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.6;
+    transition: transform 0.3s var(--ease);
+}
+
+.places-button[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+}
+
+.places-button:focus-visible,
+.places-menu button:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+/* The menu: a frosted panel under the button (a sheet from the bottom on phones) */
+.places-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 260px;
+    padding: 6px;
+    border: 1px solid var(--head-line);
+    border-radius: 18px;
+    background: var(--head);
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    backdrop-filter: blur(28px) saturate(150%);
+    box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+    transform-origin: top left;
+    transition: opacity 0.25s var(--ease), transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+
+.places-menu[hidden] {
+    display: none;
+}
+
+.is-choosing .places-menu {
+    opacity: 1;
+    transform: none;
+}
+
+.places-menu button {
+    display: grid;
+    grid-template-columns: 1fr auto 64px;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 12px;
+    border: 0;
+    border-radius: 12px;
+    background: none;
+    color: var(--ink);
+    font: 14px/1 var(--sans);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease);
+}
+
+.places-menu button[aria-checked="true"] {
+    background: var(--tab-on);
+}
+
+.places-count,
+.places-years {
+    white-space: nowrap;
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+@media (hover: hover) {
+    .places-menu button:hover {
+        background: var(--tab-track);
+    }
+
+    .places-menu button[aria-checked="true"]:hover {
+        background: var(--tab-on);
+    }
+}
+
+.places-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+}
+
+.places-scrim[hidden] {
+    display: none;
+}
+
+/* ---------- about (empty for now) ---------- */
+
+.about {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+
+.about[hidden] {
+    display: none;
+}
+
+/* On the About page the wall steps away; the sky stays */
+.wall,
+.wall-hint {
+    transition: opacity 0.5s var(--ease), visibility 0s;
+}
+
+.is-about .wall,
+.is-about .wall-hint,
+.is-about .places {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s var(--ease), visibility 0s 0.5s;
 }
 
 /* ---------- the wall ---------- */
@@ -567,6 +720,7 @@
 
 /* While a photo is open, the labels around the wall step back */
 .is-viewing .site-head,
+.is-viewing .places,
 .is-viewing .wall-hint,
 .is-viewing .theme-toggle {
     opacity: 0;
@@ -576,6 +730,38 @@
 /* ---------- phones: photo on top, scroll down for the details ---------- */
 
 @media (max-width: 760px) {
+    .places {
+        left: max(16px, env(safe-area-inset-left, 0px));
+    }
+
+    .places-menu {
+        position: fixed;
+        top: auto;
+        left: max(10px, env(safe-area-inset-left, 0px));
+        right: max(10px, env(safe-area-inset-right, 0px));
+        bottom: max(10px, env(safe-area-inset-bottom, 0px));
+        min-width: 0;
+        padding: 8px;
+        border-radius: 26px;
+        transform: translateY(40px);
+        transform-origin: bottom center;
+    }
+
+    .places-menu button {
+        padding: 16px 14px;
+        font-size: 16px;
+    }
+
+    .places-scrim {
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+    }
+
+    .is-choosing .places-scrim {
+        opacity: 1;
+    }
+
     .viewer {
         --panel-width: 0px;
         overflow-y: auto;
@@ -652,20 +838,24 @@
         font-size: 16px;
     }
 
-    /* Phones: name (and toggle) on the first row, places scrolling on the second */
+    /* Phones: one row: name, then Gallery · About, then the toggle */
     .site-head {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 26px);
-        padding-bottom: 12px;
+        --head-height: 60px;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        padding-right: 60px;
     }
 
     .tabs {
-        justify-self: start;
+        justify-self: end;
+    }
+
+    .tabs button {
+        padding: 8px 13px;
     }
 
     .gallery-page .theme-toggle {
-        top: calc(env(safe-area-inset-top, 0px) + 19px);
+        top: calc(env(safe-area-inset-top, 0px) + 14px);
         width: 32px;
         height: 32px;
     }
