@@ -1007,6 +1007,7 @@ window.PHOTOS = [
         "group": "Canada",
         "place": "Calgary, Canada",
         "camera": "Fujifilm film camera",
+        "date": "During covid",
         "src": "images/gallery/masked-900.webp",
         "large": "images/gallery/masked-1800.webp",
         "width": 1200,
