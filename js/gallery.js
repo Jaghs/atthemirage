@@ -851,7 +851,7 @@
         }, 350);
     }
 
-    // Links: main.html#japan, or plain main.html for everything
+    // Links: gallery#japan, or plain gallery for everything
     function setHash() {
         const hash = group === 'all' ? '' : '#' + slug(group);
         history.replaceState(history.state, '', location.pathname + hash);
@@ -966,7 +966,7 @@
         });
     });
 
-    // A shared photo link (main.html#photo-family-mart): open that photo once the
+    // A shared photo link (gallery#photo-family-mart): open that photo once the
     // wall has arrived, from the nearest tile showing it
     function openFromLink() {
         const wanted = initial.photo;
@@ -996,7 +996,7 @@
     const shareLabel = shareButton.querySelector('span');
     shareButton.addEventListener('click', async () => {
         const photo = photos[current];
-        const url = location.origin + '/p/' + photo.id + '.html';
+        const url = location.origin + '/p/' + photo.id;
         if (navigator.share && window.matchMedia('(hover: none)').matches) {
             try {
                 await navigator.share({ title: photo.title + ' — at the mirage', url });

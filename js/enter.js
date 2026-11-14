@@ -25,7 +25,7 @@
     // As soon as the splash page has loaded, fetch everything the gallery needs
     // (its page, styles, code and every wall photo) so it opens from the cache.
     window.addEventListener('load', () => {
-        const files = ['main.html', 'css/gallery.css' + version, 'js/gallery.js' + version]
+        const files = ['gallery', 'css/gallery.css' + version, 'js/gallery.js' + version]
             .concat((window.PHOTOS || []).map((photo) => photo.src));
         files.forEach((href) => {
             const link = document.createElement('link');

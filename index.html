@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>at the mirage</title>
+    <script>
+        // Keep the address clean: atthemirage.com/ rather than index.html
+        if (location.protocol.startsWith('http') && /\/index\.html$/.test(location.pathname))
+            history.replaceState(history.state, '', location.pathname.replace(/\/index\.html$/, '/') + location.search + location.hash);
+    </script>
     <meta name="description" content="photography in the twilight zone...">
     <meta name="theme-color" content="#000000">
     <!-- Link previews (iMessage, Instagram, Discord, X, ...) -->
@@ -35,7 +40,7 @@
     <main class="hero">
         <h1 class="title">AT THE MIRAGE</h1>
         <!-- Enter: an arrow whose tail breaks up into heat haze -->
-        <a class="enter" href="main.html" aria-label="Enter">
+        <a class="enter" href="gallery" aria-label="Enter">
             <svg viewBox="0 0 120 16" aria-hidden="true">
                 <g class="haze">
                     <line x1="2" y1="8" x2="6" y2="8" style="--o: 0.18" />

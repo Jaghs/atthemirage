@@ -1,123 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>at the mirage — gallery</title>
-    <meta name="description" content="photography in the twilight zone...">
-    <meta name="theme-color" content="#000000">
-    <!-- Link previews (iMessage, Instagram, Discord, X, ...) -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="at the mirage">
-    <meta property="og:title" content="at the mirage — gallery">
-    <meta property="og:description" content="photography in the twilight zone...">
-    <meta property="og:url" content="https://atthemirage.com/main.html">
-    <meta property="og:image" content="https://atthemirage.com/social/preview.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <script>
-        // Arriving from the splash page: open on a snapshot of the sky as it was,
-        // so there's no blank frame before the live gradient starts.
-        (function () {
-            try {
-                var handoff = JSON.parse(sessionStorage.getItem('mirage') || 'null');
-                if (handoff && (handoff.still || handoff.sky)) {
-                    // Snapshot on top (sharper), instant colour gradient underneath
-                    var layers = [];
-                    if (handoff.still) layers.push('url(' + handoff.still + ') center / cover no-repeat');
-                    if (handoff.sky) layers.push(handoff.sky);
-                    document.documentElement.classList.add('has-still');
-                    document.documentElement.style.background = layers.join(', ');
-                }
-            } catch (e) {}
-        })();
-    </script>
-    <link rel="preload" href="fonts/Vogue.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/gallery.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/svg+xml" href="images/favicon/icon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
-    <link rel="manifest" href="images/favicon/site.webmanifest">
-    <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#eb7352">
-    <meta name="msapplication-TileColor" content="#000000">
-    <!-- Visitor stats: GoatCounter (no cookies, nothing personal stored) -->
-    <script data-goatcounter="https://atthemirage.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    <title>at the mirage</title>
+    <meta name="robots" content="noindex">
+    <!-- The gallery moved to atthemirage.com/gallery. Old links still work. -->
+    <meta http-equiv="refresh" content="0; url=gallery">
+    <script>location.replace('gallery' + location.hash);</script>
+    <style>html { background: #000; }</style>
 </head>
-<body class="gallery-page">
-    <canvas class="mirage" aria-hidden="true" data-max-resolution="1"></canvas>
-
-
-    <header class="site-head">
-        <a class="site-mark" href="index.html">AT THE MIRAGE</a>
-    </header>
-    <!-- Places: filters the gallery (the list is filled in by gallery.js) -->
-    <div class="places">
-        <button class="places-button" type="button" aria-haspopup="true" aria-expanded="false">
-            <span class="places-current">Everywhere</span>
-            <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" /></svg>
-        </button>
-        <div class="places-menu" role="menu" aria-label="Places" hidden></div>
-    </div>
-    <div class="places-scrim" hidden></div>
-
-    <p class="wall-hint" aria-hidden="true">drag to explore</p>
-    <p class="credit">© 2026 Jagvir</p>
-
-    <!-- Shown only while the photos are still loading on a slow connection -->
-    <div class="loading" role="status" aria-label="Loading photos">
-        <svg viewBox="0 0 120 4" aria-hidden="true">
-            <line x1="2" y1="2" x2="8" y2="2" />
-            <line x1="14" y1="2" x2="24" y2="2" />
-            <line x1="30" y1="2" x2="44" y2="2" />
-            <line x1="50" y1="2" x2="70" y2="2" />
-            <line x1="76" y1="2" x2="90" y2="2" />
-            <line x1="96" y1="2" x2="106" y2="2" />
-            <line x1="112" y1="2" x2="118" y2="2" />
-        </svg>
-    </div>
-
-    <!-- First visit on a phone: how the wall works (shown once) -->
-    <p class="touch-hint" aria-hidden="true" hidden>swipe to explore</p>
-
-
-    <!-- The wall: an endless grid of photos you can drag in any direction -->
-    <main class="wall" aria-label="Photos">
-        <div class="wall-plane"></div>
-    </main>
-
-    <!-- One photo, opened: large on the left, details on the right
-         (on phones: photo on top, scroll down for details) -->
-    <div class="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
-        <div class="viewer-stage">
-            <img class="viewer-img" alt="">
-        </div>
-        <button class="viewer-close" type="button" aria-label="Close photo">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg>
-        </button>
-        <aside class="viewer-panel">
-            <!-- The photo's details first, then the reel of other photos -->
-            <div class="viewer-heading">
-                <p class="viewer-meta"></p>
-                <h2 class="viewer-title" id="viewer-title"></h2>
-                <dl class="viewer-specs"></dl>
-                <button class="viewer-share" type="button">
-                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10V2.5M5 5.5l3-3 3 3M3.5 8.5v4.5h9V8.5" /></svg>
-                    <span>Share</span>
-                </button>
-            </div>
-            <div class="viewer-foot">
-                <p class="viewer-count"></p>
-                <div class="viewer-strip"></div>
-            </div>
-        </aside>
-    </div>
-
-    <script src="js/photos.js"></script>
-    <script src="js/mirage.js"></script>
-    <script src="js/cursor.js"></script>
-    <script src="js/gallery.js"></script>
-</body>
+<body></body>
 </html>

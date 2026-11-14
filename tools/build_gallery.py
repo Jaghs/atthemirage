@@ -135,11 +135,11 @@ SHARE_PAGE = '''<!DOCTYPE html>
     <meta property="og:site_name" content="at the mirage">
     <meta property="og:title" content="{title}">
     <meta property="og:description" content="{description}">
-    <meta property="og:url" content="{url}/p/{id}.html">
+    <meta property="og:url" content="{url}/p/{id}">
     <meta property="og:image" content="{url}/images/gallery/{id}-share.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta http-equiv="refresh" content="0; url=../main.html#photo-{id}">
-    <script>location.replace('../main.html#photo-{id}');</script>
+    <meta http-equiv="refresh" content="0; url=../gallery#photo-{id}">
+    <script>location.replace('../gallery#photo-{id}');</script>
     <style>html {{ background: #000; }}</style>
 </head>
 <body></body>
