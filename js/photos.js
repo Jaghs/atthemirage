@@ -849,6 +849,36 @@ window.PHOTOS = [
         "colour": true
     },
     {
+        "id": "creds-to-v",
+        "title": "creds to V",
+        "group": "France",
+        "place": "Paris, France",
+        "date": "August 2022",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 · 1/20 s · ISO 1000",
+        "focal": "5.7 mm",
+        "src": "images/gallery/creds-to-v-900.webp",
+        "large": "images/gallery/creds-to-v-1800.webp",
+        "width": 900,
+        "height": 1200,
+        "colour": true
+    },
+    {
+        "id": "cpm35-2022-09-03-233211-347",
+        "title": "cpm35 2022-09-03 233211.347",
+        "group": "Netherlands",
+        "place": "Amsterdam, Netherlands",
+        "date": "August 2022",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 · 1/14 s · ISO 1600",
+        "focal": "5.7 mm",
+        "src": "images/gallery/cpm35-2022-09-03-233211-347-900.webp",
+        "large": "images/gallery/cpm35-2022-09-03-233211-347-1800.webp",
+        "width": 800,
+        "height": 1200,
+        "colour": true
+    },
+    {
         "id": "morning-light",
         "title": "morning light",
         "group": "France",
@@ -862,6 +892,35 @@ window.PHOTOS = [
         "width": 800,
         "height": 1200,
         "colour": true
+    },
+    {
+        "id": "cpm35-2022-09-19-210226-168",
+        "title": "cpm35 2022-09-19 210226.168",
+        "group": "Netherlands",
+        "place": "Amsterdam, Netherlands",
+        "date": "August 2022",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/2.2 · 1/54 s · ISO 100",
+        "focal": "2.7 mm",
+        "src": "images/gallery/cpm35-2022-09-19-210226-168-900.webp",
+        "large": "images/gallery/cpm35-2022-09-19-210226-168-1800.webp",
+        "width": 800,
+        "height": 1200,
+        "colour": true
+    },
+    {
+        "id": "20220821-224626-05-saved",
+        "title": "20220821_224626_05_saved",
+        "group": "Spain",
+        "place": "Barcelona, Spain",
+        "date": "August 2022",
+        "camera": "SM-G965W",
+        "settings": "f/1.5 · 1/50 s · ISO 160",
+        "focal": "4.3 mm",
+        "src": "images/gallery/20220821-224626-05-saved-900.webp",
+        "large": "images/gallery/20220821-224626-05-saved-1800.webp",
+        "width": 900,
+        "height": 1200
     },
     {
         "id": "amsterdam-dusk",
@@ -913,6 +972,17 @@ window.PHOTOS = [
         "large": "images/gallery/cool-guy-1800.webp",
         "width": 1200,
         "height": 796,
+        "colour": true
+    },
+    {
+        "id": "covid-fuji-film",
+        "title": "covid fuji film",
+        "group": "Canada",
+        "place": "Calgary, Canada",
+        "src": "images/gallery/covid-fuji-film-900.webp",
+        "large": "images/gallery/covid-fuji-film-1800.webp",
+        "width": 1200,
+        "height": 783,
         "colour": true
     },
     {
