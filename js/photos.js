@@ -526,7 +526,7 @@ window.PHOTOS = [
         "group": "Canada",
         "place": "Calgary, Canada",
         "date": "May 2024",
-        "camera": "Fujifilm film camera",
+        "camera": "Canon PowerShot SD1000",
         "settings": "f/2.8 · 1/60 s · ISO 400",
         "focal": "5.8 mm",
         "src": "images/gallery/bois-i-900.webp",
