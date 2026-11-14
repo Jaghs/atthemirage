@@ -127,6 +127,23 @@ html.has-still body {
     line-height: 0.9;
     letter-spacing: 0.01em;
     white-space: nowrap;
+    /* Heat haze: the lower third of the letters breaks into slits that thin
+       out, spread apart and fade towards the ground, like the enter arrow's
+       tail. Measured in em against Vogue's capitals (top 0, baseline 0.69em),
+       so the slits stay in the same place at every size. */
+    --slits: linear-gradient(to bottom,
+        #000 0.460em,
+        transparent 0.460em, transparent 0.482em,
+        rgba(0, 0, 0, 0.9) 0.482em, rgba(0, 0, 0, 0.9) 0.522em,
+        transparent 0.522em, transparent 0.548em,
+        rgba(0, 0, 0, 0.75) 0.548em, rgba(0, 0, 0, 0.75) 0.580em,
+        transparent 0.580em, transparent 0.610em,
+        rgba(0, 0, 0, 0.6) 0.610em, rgba(0, 0, 0, 0.6) 0.636em,
+        transparent 0.636em, transparent 0.670em,
+        rgba(0, 0, 0, 0.45) 0.670em, rgba(0, 0, 0, 0.45) 0.700em,
+        transparent 0.700em);
+    -webkit-mask-image: var(--slits);
+    mask-image: var(--slits);
 }
 
 /* Enter: a fine arrow whose tail breaks up into slits of heat haze, each one
