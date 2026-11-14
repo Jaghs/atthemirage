@@ -134,17 +134,28 @@ html.has-still body {
     --slits: linear-gradient(to bottom,
         #000 0.460em,
         transparent 0.460em, transparent 0.482em,
-        rgba(0, 0, 0, 0.9) 0.482em, rgba(0, 0, 0, 0.9) 0.522em,
+        rgba(0, 0, 0, var(--s1)) 0.482em, rgba(0, 0, 0, var(--s1)) 0.522em,
         transparent 0.522em, transparent 0.548em,
-        rgba(0, 0, 0, 0.75) 0.548em, rgba(0, 0, 0, 0.75) 0.580em,
+        rgba(0, 0, 0, var(--s2)) 0.548em, rgba(0, 0, 0, var(--s2)) 0.580em,
         transparent 0.580em, transparent 0.610em,
-        rgba(0, 0, 0, 0.6) 0.610em, rgba(0, 0, 0, 0.6) 0.636em,
+        rgba(0, 0, 0, var(--s3)) 0.610em, rgba(0, 0, 0, var(--s3)) 0.636em,
         transparent 0.636em, transparent 0.670em,
-        rgba(0, 0, 0, 0.45) 0.670em, rgba(0, 0, 0, 0.45) 0.700em,
+        rgba(0, 0, 0, var(--s4)) 0.670em, rgba(0, 0, 0, var(--s4)) 0.700em,
         transparent 0.700em);
     -webkit-mask-image: var(--slits);
     mask-image: var(--slits);
 }
+
+/* The slits flicker gently, each a little out of step, like the arrow's tail */
+@property --s1 { syntax: "<number>"; inherits: false; initial-value: 0.9; }
+@property --s2 { syntax: "<number>"; inherits: false; initial-value: 0.75; }
+@property --s3 { syntax: "<number>"; inherits: false; initial-value: 0.6; }
+@property --s4 { syntax: "<number>"; inherits: false; initial-value: 0.45; }
+
+@keyframes slit-1 { 50% { --s1: 0.62; } }
+@keyframes slit-2 { 50% { --s2: 0.45; } }
+@keyframes slit-3 { 50% { --s3: 0.3; } }
+@keyframes slit-4 { 50% { --s4: 0.18; } }
 
 /* Enter: a fine arrow whose tail breaks up into slits of heat haze, each one
    flickering slightly out of step. On hover the arrow glides forward and the
@@ -427,6 +438,15 @@ html.has-still body {
 }
 
 .tagline      { animation-delay: 0.4s; }
+
+.title {
+    animation:
+        rise 1.4s var(--ease) both,
+        slit-1 3.4s ease-in-out -0.4s infinite,
+        slit-2 3.4s ease-in-out -1.2s infinite,
+        slit-3 3.4s ease-in-out -2s infinite,
+        slit-4 3.4s ease-in-out -2.8s infinite;
+}
 
 .enter        { animation-delay: 0.3s; }
 .theme-toggle { animation-delay: 0.6s; }
