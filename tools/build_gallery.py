@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 from datetime import datetime
 
 from PIL import Image, ImageOps, ImageStat, ExifTags
@@ -38,6 +39,8 @@ MONTHS = 'January February March April May June July August September October No
 
 
 def slugify(text):
+    # Accents become plain letters, so "café" gives "cafe" rather than "caf"
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode()
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-') or 'photo'
 
 
