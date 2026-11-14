@@ -392,10 +392,13 @@ window.PHOTOS = [
         "group": "Portugal",
         "place": "Lisbon, Portugal",
         "date": "June 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 · 1/8 s · ISO 400",
+        "focal": "5.8 mm",
         "src": "images/gallery/lisbon-nights-i-900.webp",
         "large": "images/gallery/lisbon-nights-i-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
@@ -446,10 +449,13 @@ window.PHOTOS = [
         "group": "Portugal",
         "place": "Lisbon, Portugal",
         "date": "June 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 · 1/60 s · ISO 400",
+        "focal": "5.8 mm",
         "src": "images/gallery/lisbon-nights-iii-900.webp",
         "large": "images/gallery/lisbon-nights-iii-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
@@ -567,27 +573,18 @@ window.PHOTOS = [
         "colour": true
     },
     {
-        "id": "market",
-        "title": "market",
-        "group": "France",
-        "place": "Strasbourg, France",
-        "date": "September 2022",
-        "src": "images/gallery/market-900.webp",
-        "large": "images/gallery/market-1800.webp",
-        "width": 718,
-        "height": 957,
-        "colour": true
-    },
-    {
         "id": "colorado-state-capitol",
         "title": "colorado state capitol",
         "group": "USA",
         "place": "Denver, USA",
         "date": "December 2023",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 · 1/8 s · ISO 200",
+        "focal": "5.8 mm",
         "src": "images/gallery/colorado-state-capitol-900.webp",
         "large": "images/gallery/colorado-state-capitol-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
@@ -596,10 +593,13 @@ window.PHOTOS = [
         "group": "USA",
         "place": "Denver, USA",
         "date": "December 2023",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/8 · 1/125 s · ISO 80",
+        "focal": "5.8 mm",
         "src": "images/gallery/denver-crossing-900.webp",
         "large": "images/gallery/denver-crossing-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
@@ -615,18 +615,6 @@ window.PHOTOS = [
         "large": "images/gallery/hotel-1800.webp",
         "width": 1200,
         "height": 900,
-        "colour": true
-    },
-    {
-        "id": "paris-peek",
-        "title": "paris peek",
-        "group": "France",
-        "place": "Paris, France",
-        "date": "August 2022",
-        "src": "images/gallery/paris-peek-900.webp",
-        "large": "images/gallery/paris-peek-1800.webp",
-        "width": 638,
-        "height": 957,
         "colour": true
     },
     {
