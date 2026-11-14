@@ -6,7 +6,7 @@
     <title>at the mirage</title>
     <script>
         // Keep the address clean: atthemirage.com/ rather than index.html
-        if (location.protocol.startsWith('http') && /\/index\.html$/.test(location.pathname))
+        if (location.hostname.endsWith('atthemirage.com') && /\/index\.html$/.test(location.pathname))
             history.replaceState(history.state, '', location.pathname.replace(/\/index\.html$/, '/') + location.search + location.hash);
     </script>
     <meta name="description" content="photography in the twilight zone...">

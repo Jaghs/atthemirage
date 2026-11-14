@@ -6,7 +6,7 @@
     <title>at the mirage — gallery</title>
     <script>
         // Keep the address clean: atthemirage.com/gallery rather than gallery.html
-        if (location.protocol.startsWith('http') && /\.html$/.test(location.pathname))
+        if (location.hostname.endsWith('atthemirage.com') && /\.html$/.test(location.pathname))
             history.replaceState(history.state, '', location.pathname.replace(/\.html$/, '') + location.search + location.hash);
     </script>
     <meta name="description" content="photography in the twilight zone...">

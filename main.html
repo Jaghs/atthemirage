@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex">
     <!-- The gallery moved to atthemirage.com/gallery. Old links still work. -->
     <meta http-equiv="refresh" content="0; url=gallery">
-    <script>location.replace('gallery' + location.hash);</script>
+    <script>location.replace((location.hostname.endsWith('atthemirage.com') ? 'gallery' : 'gallery.html') + location.hash);</script>
     <style>html { background: #000; }</style>
 </head>
 <body></body>

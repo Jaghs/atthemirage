@@ -2,6 +2,12 @@
 // a photo flies it into a large view with its details beside it (below it on
 // phones); clicking the large photo zooms in, and the zoom follows the mouse.
 (function () {
+    // On your own computer, the title links to the splash page file itself
+    // (the real site uses the clean address "/")
+    if (!location.hostname.endsWith('atthemirage.com')) {
+        const home = document.querySelector('.site-mark');
+        if (home) home.setAttribute('href', 'index.html');
+    }
     const photos = window.PHOTOS || [];
     if (!photos.length) return;
 

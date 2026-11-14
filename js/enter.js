@@ -3,6 +3,10 @@
 (function () {
     const link = document.querySelector('.enter');
     if (!link) return;
+    // On your own computer there's no web server to find "gallery", so link
+    // straight to the file there. The real site keeps the clean address.
+    const live = location.hostname.endsWith('atthemirage.com');
+    if (!live) link.setAttribute('href', 'gallery.html');
 
     const DURATION = 1400; // matches the dissolve animation in styles.css
     // The version tag added when the site is published (see site.yml), so the
@@ -25,7 +29,7 @@
     // As soon as the splash page has loaded, fetch everything the gallery needs
     // (its page, styles, code and every wall photo) so it opens from the cache.
     window.addEventListener('load', () => {
-        const files = ['gallery', 'css/gallery.css' + version, 'js/gallery.js' + version]
+        const files = [link.getAttribute('href'), 'css/gallery.css' + version, 'js/gallery.js' + version]
             .concat((window.PHOTOS || []).map((photo) => photo.src));
         files.forEach((href) => {
             const link = document.createElement('link');
