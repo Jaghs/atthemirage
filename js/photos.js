@@ -740,10 +740,13 @@ window.PHOTOS = [
         "group": "Japan",
         "place": "Tokyo, Japan",
         "date": "June 2023",
+        "camera": "iPhone 13 Pro Max",
+        "settings": "f/1.5 · 1/1209 s · ISO 50",
+        "focal": "5.7 mm",
         "src": "images/gallery/tokyo-road-900.webp",
         "large": "images/gallery/tokyo-road-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
