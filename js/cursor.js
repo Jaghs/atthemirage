@@ -58,8 +58,9 @@
     window.addEventListener('blur', () => show(false));
 
     function frame() {
-        // The glow trails behind the point, easing towards it
-        const follow = still ? 1 : 0.18;
+        // The glow trails behind the point, easing towards it (a shorter
+        // trail for people who've asked their computer for less motion)
+        const follow = still ? 0.3 : 0.18;
         gx += (x - gx) * follow;
         gy += (y - gy) * follow;
         dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;

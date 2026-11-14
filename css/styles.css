@@ -400,11 +400,20 @@ html.has-still body {
     opacity: 0;
 }
 
+/* Less motion asked for: the same effects, but calmer and slower */
 @media (prefers-reduced-motion: reduce) {
-    .haze-glow::before,
-    .haze-hand svg {
-        animation: none;
+    .haze-glow::before {
+        animation: haze-breathe-soft 4.8s ease-in-out infinite alternate;
     }
+
+    .haze-hand svg {
+        animation-duration: 4.8s;
+    }
+}
+
+@keyframes haze-breathe-soft {
+    from { scale: 0.95; }
+    to   { scale: 1.06; }
 }
 
 /* ---------- credit ---------- */
