@@ -864,6 +864,19 @@ window.PHOTOS = [
         "colour": true
     },
     {
+        "id": "amsterdam-dusk",
+        "title": "amsterdam dusk",
+        "group": "Netherlands",
+        "place": "Amsterdam, Netherlands",
+        "camera": "Fujifilm film camera",
+        "date": "August 2022",
+        "src": "images/gallery/amsterdam-dusk-900.webp",
+        "large": "images/gallery/amsterdam-dusk-1800.webp",
+        "width": 1200,
+        "height": 796,
+        "colour": true
+    },
+    {
         "id": "arc-de-triomphe",
         "title": "arc de triomphe",
         "group": "France",
@@ -1002,19 +1015,6 @@ window.PHOTOS = [
         "date": "August 2022",
         "src": "images/gallery/the-long-walk-900.webp",
         "large": "images/gallery/the-long-walk-1800.webp",
-        "width": 1200,
-        "height": 796,
-        "colour": true
-    },
-    {
-        "id": "the-seine",
-        "title": "the seine",
-        "group": "France",
-        "place": "Paris, France",
-        "camera": "Fujifilm film camera",
-        "date": "August 2022",
-        "src": "images/gallery/the-seine-900.webp",
-        "large": "images/gallery/the-seine-1800.webp",
         "width": 1200,
         "height": 796,
         "colour": true
