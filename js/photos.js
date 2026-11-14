@@ -107,6 +107,32 @@ window.PHOTOS = [
         "colour": true
     },
     {
+        "id": "img-2735",
+        "title": "IMG_2735",
+        "date": "September 2025",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/8 · 1/160 s · ISO 400",
+        "focal": "5.8 mm",
+        "src": "images/gallery/img-2735-900.webp",
+        "large": "images/gallery/img-2735-1800.webp",
+        "width": 900,
+        "height": 1200,
+        "colour": true
+    },
+    {
+        "id": "img-2714",
+        "title": "IMG_2714",
+        "date": "September 2025",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/10 · 1/1250 s · ISO 400",
+        "focal": "10.1 mm",
+        "src": "images/gallery/img-2714-900.webp",
+        "large": "images/gallery/img-2714-1800.webp",
+        "width": 900,
+        "height": 1200,
+        "colour": true
+    },
+    {
         "id": "white-buddha",
         "title": "white buddha",
         "group": "Canada",
@@ -122,16 +148,14 @@ window.PHOTOS = [
         "colour": true
     },
     {
-        "id": "weeknd",
-        "title": "weeknd",
-        "group": "Canada",
-        "place": "Edmonton, Canada",
-        "date": "July 2025",
+        "id": "img-2720",
+        "title": "IMG_2720",
+        "date": "September 2025",
         "camera": "Canon PowerShot SD1000",
-        "settings": "f/4.9 · 1/50 s · ISO 400",
-        "focal": "17.4 mm",
-        "src": "images/gallery/weeknd-900.webp",
-        "large": "images/gallery/weeknd-1800.webp",
+        "settings": "f/8 · 1/1500 s · ISO 400",
+        "focal": "5.8 mm",
+        "src": "images/gallery/img-2720-900.webp",
+        "large": "images/gallery/img-2720-1800.webp",
         "width": 900,
         "height": 1200,
         "colour": true
@@ -147,6 +171,21 @@ window.PHOTOS = [
         "focal": "5.8 mm",
         "src": "images/gallery/green-trail-900.webp",
         "large": "images/gallery/green-trail-1800.webp",
+        "width": 900,
+        "height": 1200,
+        "colour": true
+    },
+    {
+        "id": "weeknd",
+        "title": "weeknd",
+        "group": "Canada",
+        "place": "Edmonton, Canada",
+        "date": "July 2025",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/4.9 · 1/50 s · ISO 400",
+        "focal": "17.4 mm",
+        "src": "images/gallery/weeknd-900.webp",
+        "large": "images/gallery/weeknd-1800.webp",
         "width": 900,
         "height": 1200,
         "colour": true
@@ -382,6 +421,19 @@ window.PHOTOS = [
         "focal": "8.5 mm",
         "src": "images/gallery/pena-palace-900.webp",
         "large": "images/gallery/pena-palace-1800.webp",
+        "width": 900,
+        "height": 1200,
+        "colour": true
+    },
+    {
+        "id": "img-1120",
+        "title": "IMG_1120",
+        "date": "June 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/8 · 1/320 s · ISO 400",
+        "focal": "5.8 mm",
+        "src": "images/gallery/img-1120-900.webp",
+        "large": "images/gallery/img-1120-1800.webp",
         "width": 900,
         "height": 1200,
         "colour": true
