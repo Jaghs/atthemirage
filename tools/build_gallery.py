@@ -236,7 +236,7 @@ def main():
             entry['place'] = place
         entry.update(info)
         for key, value in overrides.get(title.lower(), {}).items():
-            if key in ('camera', 'date', 'settings', 'focal', 'place'):
+            if key in ('camera', 'date', 'settings', 'focal', 'place', 'credit'):
                 if value:
                     entry[key] = value
                 else:

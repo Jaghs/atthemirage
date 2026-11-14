@@ -1,5 +1,5 @@
 {
-    "_how to use": "Set details by photo title. Use camera, date (e.g. June 2023), settings, focal or place. An empty value hides that detail.",
+    "_how to use": "Set details by photo title. Use camera, date (e.g. June 2023), settings, focal, place or credit (who took it). An empty value hides that detail.",
     "como stairs": {
         "camera": "Fujifilm film camera",
         "date": "June 2023"
@@ -70,5 +70,20 @@
     "shinjuku gyoen": {
         "camera": "Fujifilm film camera",
         "date": "June 2023"
+    },
+    "late dinner": {
+        "camera": "Samsung Galaxy S9+"
+    },
+    "masked": {
+        "camera": "Fujifilm film camera"
+    },
+    "amsterdam nights": {
+        "camera": "iPhone 13 Pro Max · CPM35"
+    },
+    "huddle": {
+        "camera": "iPhone 13 Pro Max · CPM35"
+    },
+    "tower lights": {
+        "credit": "V"
     }
 }

@@ -355,7 +355,7 @@
         titleEl.textContent = photo.title;
         specsEl.textContent = '';
         const where = photo.place || LABELS[photo.group] || photo.group;
-        [['Location', where], ['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal]]
+        [['Location', where], ['Camera', photo.camera], ['Settings', photo.settings], ['Focal length', photo.focal], ['Photo by', photo.credit]]
             .filter(([, value]) => value)
             .forEach(([label, value]) => {
                 const row = document.createElement('div');
