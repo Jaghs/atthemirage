@@ -422,10 +422,13 @@ window.PHOTOS = [
         "group": "Portugal",
         "place": "Lisbon, Portugal",
         "date": "June 2024",
+        "camera": "Canon PowerShot SD1000",
+        "settings": "f/2.8 · 1/8 s · ISO 400",
+        "focal": "5.8 mm",
         "src": "images/gallery/lisbon-nights-ii-900.webp",
         "large": "images/gallery/lisbon-nights-ii-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
@@ -524,10 +527,12 @@ window.PHOTOS = [
         "place": "Calgary, Canada",
         "date": "May 2024",
         "camera": "Fujifilm film camera",
+        "settings": "f/2.8 · 1/60 s · ISO 400",
+        "focal": "5.8 mm",
         "src": "images/gallery/bois-i-900.webp",
         "large": "images/gallery/bois-i-1800.webp",
-        "width": 718,
-        "height": 957,
+        "width": 900,
+        "height": 1200,
         "colour": true
     },
     {
